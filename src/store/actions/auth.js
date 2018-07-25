@@ -7,9 +7,6 @@ import axios from 'axios'
 
 import * as actionTypes from './actionTypes'
 
-// DEFINE SINGUP URL
-
-const url = process.env.BASE_URL || "http://localhost:3231/api"
 // START THE SPINNER AND RESET POTENTIAL RESIDUAL ERRORS
 export const authStart = () => {
     return {
@@ -53,7 +50,7 @@ export const auth = (email, password) => {
         }
 
         // SEND HTTP REQUEST
-        return axios.post(`${url}/user/login`, authData)
+        return axios.post(`/user/login`, authData)
             // ON SUCCESS
             .then(response => {
               console.log(response)
