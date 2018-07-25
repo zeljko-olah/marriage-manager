@@ -1,4 +1,4 @@
-require('./config')
+// require('./config')
 
 const http = require('http')
 const app = require('./app')
