@@ -26,7 +26,7 @@
     "styled-components": "^3.3.3"
   },
   "scripts": {
-    "start": "npm run server",
+    "start": "concurrently 'npm run react' 'npm run server'",
     "react": "react-scripts start",
     "server": "nodemon src/server/index.js",
     "build": "react-scripts build",
