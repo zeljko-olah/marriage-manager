@@ -50,7 +50,7 @@ export const auth = (email, password) => {
         }
 
         // SEND HTTP REQUEST
-        return axios.post(`/user/login`, authData)
+        return axios.post(`api/user/login`, authData)
             // ON SUCCESS
             .then(response => {
               console.log(response)
