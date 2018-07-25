@@ -1,4 +1,3 @@
-
 // Mongoose
 require('./db/mongoose')
 
@@ -51,7 +50,7 @@ app.use((req, res, next) => {
  *
  */
 
-app.use("/user", userRoutes)
+app.use("/api/user", userRoutes)
 
 // Serve React Build
 app.get('/', (req, res) => {

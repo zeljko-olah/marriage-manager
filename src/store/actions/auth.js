@@ -8,8 +8,8 @@ import axios from 'axios'
 import * as actionTypes from './actionTypes'
 
 // DEFINE SINGUP URL
-const url = process.env.BASE_URL || "http://localhost:3231"
 
+const url = process.env.BASE_URL || "http://localhost:3231/api"
 // START THE SPINNER AND RESET POTENTIAL RESIDUAL ERRORS
 export const authStart = () => {
     return {

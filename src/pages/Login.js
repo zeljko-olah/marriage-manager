@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import LoginForm from '../components/Login/LoginForm'
 
 import styled from 'styled-components'
-import { danger } from '../styles/variables'
+import { primary_color, danger } from '../styles/variables'
 
 import MDArrowUp from 'react-icons/lib/md/keyboard-arrow-up'
 import MDArrowDown from 'react-icons/lib/md/keyboard-arrow-down'
@@ -169,7 +169,7 @@ const LoginFormWrapper = styled.div`
   text-align: center;
   font-weight: 900;
   color: grey;
-  background-color: Aquamarine;
+  background-color: ${primary_color};
   cursor: pointer;
 
   & p {

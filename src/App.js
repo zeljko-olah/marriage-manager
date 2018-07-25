@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 
 import 'normalize.css/normalize.css';
-
 import styled, { injectGlobal } from 'styled-components';
 
-// Router
 import AppRouter from './router/AppRouter';
 
 class App extends Component {
