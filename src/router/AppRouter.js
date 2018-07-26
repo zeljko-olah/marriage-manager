@@ -1,6 +1,5 @@
 // REACT
 import React from 'react'
-import styled from 'styled-components';
 
 // ROUTER - SWITCH ROUTER COMPONENT
 import { Router, Switch, Redirect } from 'react-router-dom'
@@ -14,8 +13,7 @@ import Dashboard from '../pages/Dashboard.js'
 
 // PRIVATE ROUTES FOR AUTHENTICATED USERS
 import PrivateRoute from './PrivateRoute'
-
-// PUBLIC ROUTES FOR GUEST
+// PUBLIC ROUTES
 import PublicRoute from './PublicRoute'
 
 // pass history to every component props
@@ -24,27 +22,16 @@ export const history = createHistory()
 
 // APP ROUTER HOC COMPONENT
 const AppRouter = () => (
-  <PageWrapper>
-    <Router history={history}>
-      <div>
-        { /* RENDER JUST ONE COMPONENT AT THE TIME */ }
-        <Switch>
-          <PublicRoute path="/" component={LoginPage} exact={true} />
-          <PrivateRoute path="/dashboard" component={Dashboard} />
-          <Redirect to="/" />
-        </Switch>
-      </div>
-    </Router>
-  </PageWrapper>
+  <Router history={history}>
+    <div>
+      <Switch>
+        <PublicRoute path="/" component={LoginPage} exact={true} />
+        <PrivateRoute path="/dashboard" component={Dashboard} />
+        <Redirect to="/" />
+      </Switch>
+    </div>
+  </Router>
 )
-
-const PageWrapper = styled.div`
-  width: 100vw;
-  height: 100vh;
-  background: linear-gradient(#12ddff, transparent 40%), linear-gradient(0deg, Azure, transparent), #ffa949 url("img/hero.jpg") no-repeat center;
-  background-size: cover;
-
-`
 
 // EXPORT COMPONENT
 export default AppRouter

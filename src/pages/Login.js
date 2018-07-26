@@ -171,6 +171,7 @@ const LoginFormWrapper = styled.div`
   color: grey;
   background-color: ${primary_color};
   cursor: pointer;
+  
 
   & p {
     position: relative;
