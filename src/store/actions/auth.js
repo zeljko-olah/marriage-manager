@@ -3,8 +3,7 @@
  *
  */
 
-import axios from 'axios'
-
+import axios from '../../http'
 import * as actionTypes from './actionTypes'
 
 // START THE SPINNER AND RESET POTENTIAL RESIDUAL ERRORS
@@ -49,7 +48,7 @@ export const auth = (email, password) => {
             password,
         }
 
-        // SEND HTTP REQUEST
+        // SEND HTTP REQUEST - and return promise
         return axios.post(`api/user/login`, authData)
             // ON SUCCESS
             .then(response => {

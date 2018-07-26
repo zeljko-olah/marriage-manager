@@ -16,7 +16,7 @@ class App extends Component {
   }
 }
 
-
+// Define global styles
 injectGlobal`
   * {
     box-sizing: border-box;
@@ -27,7 +27,6 @@ injectGlobal`
     font-family: Roboto, sans-serif;
   }
 `
-
 const PageWrapper = styled.div`
   width: 100vw;
   height: 100vh;
