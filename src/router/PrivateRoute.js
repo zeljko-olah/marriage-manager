@@ -87,6 +87,9 @@ const StyledMain = styled.main`
       border-bottom: 1px solid ${primary_color}
       text-shadow: 1px 1px 0 ${primary_color};
       font-size: 50px;
+      @media (max-width: 768px) {
+        font-size: 30px;
+      }
       font-style: italic;
       color: tomato;
     }

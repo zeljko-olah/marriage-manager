@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+
+import NavItems from '../components/Header/NavItems'
 import styled from 'styled-components';
 import {
   primary_color,
@@ -6,18 +8,12 @@ import {
   backdrop
 } from '../styles/variables'
 
-// NAVLINK
-import { NavLink } from 'react-router-dom';
+
 // INJECT HISTORY
 import { history } from '../router/AppRouter' 
 
 // ICONS
 import MenuIcon from 'react-icons/lib/md/menu'
-import HomeIcon from 'react-icons/lib/md/home'
-import ChatIcon from 'react-icons/lib/md/forum'
-import HeartIcon from 'react-icons/lib/md/favorite-border'
-import AddIcon from 'react-icons/lib/md/add'
-import LocationIcon from 'react-icons/lib/md/location-on'
 import LogoutIcon from 'react-icons/lib/md/eject'
 
 // REDUX CONNECT
@@ -35,83 +31,23 @@ class Header extends Component {
   render () {
     return (
       <StyledHeader>
-        <nav>
-          <ul>
-  
-            { /* MENU */ }
-            <li>
-              <i>
-                <MenuIcon />
-              </i>
-            </li>
-  
-            { /* HOME */ }
-            <li>
-              <NavLink
-                to='/welcome'
-                exact 
-                activeClassName='active'
-              >
-                <i>
-                  <HomeIcon />
-                </i>
-              </NavLink>
-            </li>
-  
-            { /* CHAT */ }
-            <li>
-              <NavLink
-                to='/chat'
-                exact
-                activeClassName='active'
-              >
-                <i>
-                  <ChatIcon />
-                </i>
-              </NavLink>
-            </li>
-            
-            { /* TODOS */ }
-            <li>
-              <NavLink
-                to='/todos'
-                exact
-                activeClassName='active'
-              >
-                <i>
-                  <AddIcon />
-                </i>
-              </NavLink>
-            </li>
-            
-            { /* LOCATION */ }
-            <li>
-              <NavLink
-                to='/location'
-                exact
-                activeClassName='active'
-              >
-                <i>
-                  <LocationIcon />
-                </i>
-              </NavLink>
-            </li>
-  
-            { /* FAVORITE */ }
-            <li>
-              <i>
-                <HeartIcon />
-              </i>
-            </li>
-  
-            { /* LOGOUT */ }
-            <li onClick={this.handleLogout}>
-              <i>
-                <LogoutIcon />
-              </i>
-            </li>
-          </ul>
-        </nav>
+      
+      { /* MENU */ }
+      <span>
+        <i>
+          <MenuIcon />
+        </i>
+      </span>
+
+      <NavItems />
+      
+        
+      { /* LOGOUT */ }
+      <span onClick={this.handleLogout}>
+        <i>
+          <LogoutIcon />
+        </i>
+      </span>
       </StyledHeader>
     )
   }
@@ -132,6 +68,16 @@ const StyledHeader = styled.header`
   padding: 10px 30px;
   border-bottom: 2px solid ${primary_color};
   background-color: ${backdrop};
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  & nav {
+    flex-basis: 70%;
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
 
   & ul {
     list-style-type: none;
@@ -140,11 +86,19 @@ const StyledHeader = styled.header`
     justify-content: space-around;
   }
 
-  & li {
-    flex-basis: 20%;
+  & li,
+  & span {
     padding: 0px 20px;
     text-align: center;
     cursor: pointer;
+  }
+
+  & li {
+    flex-basis: 20%;
+  }
+
+  & span {
+    display: inline-block;
   }
 
   & a.active i {

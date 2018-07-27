@@ -12,6 +12,7 @@ import LoginPage from '../pages/Login.js'
 import Welcome from '../pages/Welcome.js'
 import Chat from '../pages/Chat.js'
 import Todos from '../pages/Todos.js'
+import Reminder from '../pages/Reminder.js'
 import Location from '../pages/Location.js'
 
 // PRIVATE ROUTES FOR AUTHENTICATED USERS
@@ -32,6 +33,7 @@ const AppRouter = () => (
       <PrivateRoute path="/welcome" component={Welcome} />
       <PrivateRoute path="/chat" component={Chat} />
       <PrivateRoute path="/todos" component={Todos} />
+      <PrivateRoute path="/reminder" component={Reminder} />
       <PrivateRoute path="/location" component={Location} />
         <Redirect to="/" />
       </Switch>
