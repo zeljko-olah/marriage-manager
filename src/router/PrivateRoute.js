@@ -7,6 +7,15 @@ import { connect } from 'react-redux';
 // ROUTER
 import { Route, Redirect } from 'react-router-dom';
 
+// HEADER
+import Header from '../components/Header'
+// AUX
+import Aux from '../hoc/Aux'
+
+// STYLED
+import styled from 'styled-components'
+import { primary_color } from '../styles/variables'
+
 /*
  * DEFINE PRIVATE ROUTE COMPONENT
  * @props {boolean} isAuthenticated - if user is authenticated
@@ -25,9 +34,15 @@ export const PrivateRoute = ({
    */
   const cmp = (props) => (
     isAuthenticated ? (
-      <div>
-        <Component {...props} />
-      </div>
+      <Aux>
+        <Header/>
+        
+        <StyledMain>
+
+          <Component {...props} />
+        </StyledMain>
+      
+      </Aux>
     ) : (
       <Redirect to="/" />
     )
@@ -47,3 +62,22 @@ const mapStateToProps = (state) => ({
 
 // EXPORT CONNECTED COMPONENT
 export default connect(mapStateToProps)(PrivateRoute);
+
+// STYLED
+const StyledMain = styled.main`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 600px;
+  padding: 10px;
+  margin: 50px auto 0;
+
+  & section {
+    text-align: center;
+    border: 3px solid ${primary_color};
+    border-top-left-radius: 20px;
+  }
+
+
+`

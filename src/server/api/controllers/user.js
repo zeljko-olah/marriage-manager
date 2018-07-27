@@ -113,8 +113,11 @@ exports.user_login = (req, res, next) => {
             message: "Auth successful",
             token: token,
             userId: user[0]._id,
-            user: user[0]
-
+            user: {
+              id: user[0]._id,
+              name: user[0].name,
+              email: user[0].email
+            }
           })
         }
         // If there is no result

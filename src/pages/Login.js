@@ -184,6 +184,7 @@ const LoginFormWrapper = styled.div`
 
   & p.error {
     color: ${danger};
+    font-size: 12px;
   }
 
   & svg {

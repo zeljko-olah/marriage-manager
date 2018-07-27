@@ -25,7 +25,7 @@ export const PublicRoute = ({
   const cmp = (props) => (
     isAuthenticated ? (
       // if user is auth REDIRECT to dashboard
-      <Redirect to = "/dashboard" />
+      <Redirect to = "/welcome" />
     ) : (
       // otherwise render the COMPONENT
       <Component { ...props} />
