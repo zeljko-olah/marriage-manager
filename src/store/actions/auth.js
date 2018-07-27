@@ -72,6 +72,7 @@ export const auth = (email, password) => {
 
 // LOGOUT - remove token, expiration date and user id from local storage
 export const logout = () => {
+  console.log('CALLED FROM ACTIONS!')
   localStorage.removeItem('token')
   localStorage.removeItem('userId')
   localStorage.removeItem('user')

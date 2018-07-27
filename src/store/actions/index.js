@@ -4,5 +4,6 @@
 export {
   auth,
   authCheckState,
-  setErrors
-} from './auth';
+  setErrors,
+  logout
+} from './auth'

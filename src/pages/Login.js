@@ -151,7 +151,7 @@ const LoginFormWrapper = styled.div`
   background-color: WhiteSmoke;
   overflow: hidden;
   box-shadow: 0 0 5px #000000;
-  font-family: 'Roboto', serif;
+  font-family: 'Cardo', serif;
   font-weight: 400;
   font-size: 15px;
 
@@ -171,6 +171,7 @@ const LoginFormWrapper = styled.div`
   color: grey;
   background-color: ${primary_color};
   cursor: pointer;
+  
 
   & p {
     position: relative;
@@ -183,6 +184,7 @@ const LoginFormWrapper = styled.div`
 
   & p.error {
     color: ${danger};
+    font-size: 12px;
   }
 
   & svg {

@@ -20,6 +20,7 @@ const rootReducer = combineReducers({
     auth: authReducer
 })
 
+// Define store
 const store = createStore(rootReducer, composeEnhancers(
     applyMiddleware(thunk)
 ))

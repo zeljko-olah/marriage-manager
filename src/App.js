@@ -24,7 +24,7 @@ injectGlobal`
   body {
     margin: 0;
     padding: 0;
-    font-family: Roboto, sans-serif;
+    font-family: Cardo, sans-serif;
   }
 `
 const PageWrapper = styled.div`

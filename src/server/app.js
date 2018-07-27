@@ -1,3 +1,8 @@
+/*
+ * Dependencies
+ *
+ */
+
 // Mongoose
 require('./db/mongoose')
 
