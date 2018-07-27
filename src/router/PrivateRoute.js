@@ -14,7 +14,7 @@ import Aux from '../hoc/Aux'
 
 // STYLED
 import styled from 'styled-components'
-import { primary_color } from '../styles/variables'
+import { primary_color, backdrop } from '../styles/variables'
 
 /*
  * DEFINE PRIVATE ROUTE COMPONENT
@@ -71,12 +71,25 @@ const StyledMain = styled.main`
   justify-content: space-between;
   max-width: 600px;
   padding: 10px;
-  margin: 50px auto 0;
-
+  margin: 30px auto 0;
+  
   & section {
+    height: 70vh;
+    background-color: ${backdrop};
     text-align: center;
     border: 3px solid ${primary_color};
     border-top-left-radius: 20px;
+    box-shadow: 0 10px 6px -6px #777;
+
+    & h1 {
+      margin: 30px 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid ${primary_color}
+      text-shadow: 1px 1px 0 ${primary_color};
+      font-size: 50px;
+      font-style: italic;
+      color: tomato;
+    }
   }
 
 

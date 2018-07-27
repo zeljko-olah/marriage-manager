@@ -30,7 +30,8 @@ const mapStateToProps = state => {
 
 const WelcomeMessage = styled.h1`
   ${ props => props.user.name === 'Zeljko' ?
-    'color:' + boy_color +'; ' : 'color:' + girl_color +'; '}
+    'color:' + boy_color +'!important; ' :
+    'color:' + girl_color +'!important; '}
 `
 // CONNECT REDUX STATE AND ACTIONS TO AUTH COMPONENT
 export default connect( mapStateToProps )( Dashboard )

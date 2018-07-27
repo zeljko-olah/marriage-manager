@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import styled from 'styled-components';
 import {
   primary_color,
-  danger
+  danger,
+  backdrop
 } from '../styles/variables'
 
 // NAVLINK
@@ -128,9 +129,9 @@ export default connect(null, mapDispatchToProps)(Header);
 
 const StyledHeader = styled.header`
   margin: 0;
-  padding: 15px 30px;
+  padding: 10px 30px;
   border-bottom: 2px solid ${primary_color};
-  background-color: transparent;
+  background-color: ${backdrop};
 
   & ul {
     list-style-type: none;
@@ -141,7 +142,7 @@ const StyledHeader = styled.header`
 
   & li {
     flex-basis: 20%;
-    padding: 20px 20px;
+    padding: 0px 20px;
     text-align: center;
     cursor: pointer;
   }
