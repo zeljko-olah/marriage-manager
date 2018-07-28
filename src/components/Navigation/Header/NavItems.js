@@ -10,7 +10,7 @@ import HeartIcon from 'react-icons/lib/md/favorite-border'
 import AddIcon from 'react-icons/lib/md/add'
 import LocationIcon from 'react-icons/lib/md/location-on'
 
-export default () => {
+export default ({ showText }) => {
   return (
     <nav>
       <ul>
@@ -24,6 +24,7 @@ export default () => {
             <i>
               <HomeIcon />
             </i>
+            { showText && <span>Home</span> }
           </NavLink>
         </li>
 
@@ -37,6 +38,7 @@ export default () => {
             <i>
               <ChatIcon />
             </i>
+            { showText && <span>Chat</span> }
           </NavLink>
         </li>
         
@@ -50,6 +52,7 @@ export default () => {
             <i>
               <AddIcon />
             </i>
+            { showText && <span>Todos</span> }
           </NavLink>
         </li>
         
@@ -63,6 +66,7 @@ export default () => {
             <i>
               <HeartIcon />
             </i>
+            { showText && <span>Reminder</span> }
           </NavLink>
         </li>
         
@@ -76,6 +80,7 @@ export default () => {
             <i>
               <LocationIcon />
             </i>
+            { showText && <span>Location</span> }
           </NavLink>
         </li>
         

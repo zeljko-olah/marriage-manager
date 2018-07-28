@@ -7,14 +7,14 @@ import { connect } from 'react-redux';
 // ROUTER
 import { Route, Redirect } from 'react-router-dom';
 
-// HEADER
-import Header from '../components/Header'
 // AUX
 import Aux from '../hoc/Aux'
 
+import Navigation from '../components/Navigation'
+
 // STYLED
 import styled from 'styled-components'
-import { primary_color, backdrop } from '../styles/variables'
+import { primary_color, backdrop, text_shadow } from '../styles/variables'
 
 /*
  * DEFINE PRIVATE ROUTE COMPONENT
@@ -35,7 +35,7 @@ export const PrivateRoute = ({
   const cmp = (props) => (
     isAuthenticated ? (
       <Aux>
-        <Header/>
+        <Navigation />
         
         <StyledMain>
 
@@ -85,7 +85,7 @@ const StyledMain = styled.main`
       margin: 30px 30px;
       padding-bottom: 20px;
       border-bottom: 1px solid ${primary_color}
-      text-shadow: 1px 1px 0 ${primary_color};
+      text-shadow: ${text_shadow};
       font-size: 50px;
       @media (max-width: 768px) {
         font-size: 30px;

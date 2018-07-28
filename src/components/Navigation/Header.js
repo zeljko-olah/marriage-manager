@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 
-import NavItems from '../components/Header/NavItems'
+import NavItems from './Header/NavItems'
 import styled from 'styled-components';
 import {
   primary_color,
   danger,
   backdrop
-} from '../styles/variables'
+} from '../../styles/variables'
 
 
 // INJECT HISTORY
-import { history } from '../router/AppRouter' 
+import { history } from '../../router/AppRouter' 
 
 // ICONS
 import MenuIcon from 'react-icons/lib/md/menu'
@@ -19,7 +19,7 @@ import LogoutIcon from 'react-icons/lib/md/eject'
 // REDUX CONNECT
 import { connect } from 'react-redux';
 // authCheckState() is action we need to import
-import * as actions from '../store/actions/index';
+import * as actions from '../../store/actions/index';
 
 class Header extends Component {
 
@@ -29,21 +29,24 @@ class Header extends Component {
   }
   
   render () {
+    const { show } = this.props
     return (
       <StyledHeader>
       
       { /* MENU */ }
-      <span>
-        <i>
-          <MenuIcon />
-        </i>
+      <span
+        className="items"
+        onClick={ this.props.drawerToggleClicked }>
+        <i className={show ? 'rotate': null}><MenuIcon /></i>
       </span>
 
       <NavItems />
       
         
       { /* LOGOUT */ }
-      <span onClick={this.handleLogout}>
+      <span
+        className="items"
+        onClick={this.handleLogout}>
         <i>
           <LogoutIcon />
         </i>
@@ -87,10 +90,15 @@ const StyledHeader = styled.header`
   }
 
   & li,
-  & span {
+  & span.items {
+    width: 100px;
     padding: 0px 20px;
     text-align: center;
     cursor: pointer;
+  }
+
+  & span.items:first-child i {
+    transition: all 0.2s linear;
   }
 
   & li {
@@ -106,7 +114,20 @@ const StyledHeader = styled.header`
   }
 
   & i {
+    display: block;
     color: ${primary_color};
+    transition: all 0.1s ease-out;
+  }
+
+  & i:hover {
+    color: ${danger};
+    transform: scale(1.2);
+  }
+  
+  & i.rotate {
+    transform: rotate(180deg);
+    opacity: 0;
+    color: ${danger};
   }
   
   & svg {
