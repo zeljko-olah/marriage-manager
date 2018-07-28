@@ -14,66 +14,47 @@ import * as actions from '../store/actions/index'
 import { validateForm } from '../shared/utility'
 
 class Login extends Component {
-
-  /*
-   * STATE
-   *
-   */
   
   state = {
     openLogin: false
   }
 
-  /*
-   * HANDLERS
-   *
-   */
+  submit = (payload) => {
+    const { login } = this.props
+    const { email, password } = payload
+    const error = validateForm(email.value, password.value)
+    if (error) {
+    // Dispatch setErrors
+    this.props.setErrors({ error })
+    return
+    }
+    // Dispatch login
+    login(email.value, password.value)
+      .then((res) => {
+      this.clearForm(payload)
+    })
+  }
 
-   // SUBMIT METHOD
-   submit = (payload) => {
-     const { login } = this.props
-     const { email, password } = payload
-     const error = validateForm(email.value, password.value)
-     if (error) {
-      // Dispatch setErrors
-      this.props.setErrors({ error })
-      return
-     }
-     // Dispatch login
-     login(email.value, password.value)
-        .then((res) => {
-        this.clearForm(payload)
-      })
+  // CLEAR THE FORM
+  clearForm = (payload) => {
+    const { email, password } = payload
+    if (email && password) {
+      email.value = ''
+      password.value = ''
+    }
+  }
 
-   }
+  onFocusHandler = () => {
+    this.props.setErrors({ error: null })
+  }
 
-   // CLEAR THE FORM
-   clearForm = (payload) => {
-     const { email, password } = payload
-     if (email && password) {
-       email.value = ''
-       password.value = ''
-     }
-   }
-
-   // CLEAR ERRORS ON INPUT FOCUS
-   onFocusHandler = () => {
-     this.props.setErrors({ error: null })
-   }
-
-   // TOGGLE LOGIN
-   toggleLogin = () => {
-      this.setState({openLogin: !this.state.openLogin})
-   }
-  
-  
-  /*
-   * RENDER METHOD
-   *
-   */
+  toggleLogin = () => {
+    this.setState({openLogin: !this.state.openLogin})
+  }
   
   render() {
     const { openLogin } = this.state
+    const { error } = this.props
 
     return (
       <LoginFormWrapper>
@@ -81,11 +62,11 @@ class Login extends Component {
         { /* FORM HEADER */ }
         <StyledFormHeader>
           <p 
-            className={ this.props.error ? 'error' : null }
+            className={ error ? 'error' : null }
             onClick={ this.toggleLogin }>
 
           { /* SIGN IN OR ERROR */ }
-          { this.props.error ? this.props.error : 'Sign In' }
+          { error ? error : 'Sign In' }
 
             { /* ICON */ }
             <i>
@@ -97,7 +78,7 @@ class Login extends Component {
         { /* LOGIN FORM */ }
         {openLogin ? (
           <LoginForm
-            error={ this.props.error }
+            error={ error }
             submit={this.submit}
             onFocus={this.onFocusHandler} />
         ) : null }  
@@ -108,7 +89,7 @@ class Login extends Component {
             This App is <strong>private :)</strong>
           </StyledFormFooter> 
           : 
-          null }        
+          null }
       </LoginFormWrapper>
     )
   }
@@ -184,7 +165,7 @@ const LoginFormWrapper = styled.div`
 
   & p.error {
     color: ${danger};
-    font-size: 12px;
+    font-size: 14px;
   }
 
   & svg {

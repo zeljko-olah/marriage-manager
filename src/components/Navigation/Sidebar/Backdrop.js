@@ -2,13 +2,15 @@ import React from 'react';
 
 import styled from 'styled-components';
 
-const backdrop = (props) => (
-    // bind props clicked to native onclick event
-    props.show ? (
+const backdrop = ({show, clicked}) => (
+    show ? 
+    (
       <StyledBackdrop>
-        <div onClick={props.clicked}></div>
+        <div onClick={clicked}></div>
       </StyledBackdrop>
-    ) : null
+    )
+    :
+    null
 )
 
 export default backdrop;

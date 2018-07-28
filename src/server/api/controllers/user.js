@@ -80,7 +80,7 @@ exports.user_login = (req, res, next) => {
       if (user.length < 1) {
         // Return auth failed
         return res.status(401).json({
-          message: "Auth failed"
+          message: "Nice try :)"
         })
       }
       // Compare provided pasword with hashed one from database
@@ -89,7 +89,7 @@ exports.user_login = (req, res, next) => {
         if (err) {
           // Return auth failed
           return res.status(401).json({
-            message: "Auth failed"
+            message: "Nice try :)"
           })
         }
         // If there is a result
@@ -123,7 +123,7 @@ exports.user_login = (req, res, next) => {
         // If there is no result
         res.status(401).json({
           // Return atu failed
-          message: "Auth failed"
+          message: "Nice try :)"
         })
       })
     })

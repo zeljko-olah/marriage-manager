@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
 
-
 import Aux from '../hoc/Aux'
-// HEADER
 import Header from './Navigation/Header'
 import Sidebar from './Navigation/Sidebar'
 
-export default class Navigation extends Component {
+class Navigation extends Component {
 
   state = {
     showSideDrawer: false
@@ -22,19 +20,26 @@ export default class Navigation extends Component {
       return { showSideDrawer: !prevState.showSideDrawer }
     })
   }
+  
   render() {
+    const { showSideDrawer } = this.state
     return (
       <Aux>
+
+        { /* HEADER */ }
         <Header
-          show={this.state.showSideDrawer}
+          show={showSideDrawer}
           drawerToggleClicked={this.sideDrawerToggleHandler}
         />
 
+        { /* SIDEBAR */ }
         <Sidebar
-          open={this.state.showSideDrawer}
+          open={showSideDrawer}
           close={this.sideDrawerCloseHandler}
         />
       </Aux>
     )
   }
 }
+
+export default Navigation

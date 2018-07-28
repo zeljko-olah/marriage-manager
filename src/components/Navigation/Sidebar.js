@@ -7,31 +7,34 @@ import {
   text_shadow
 } from '../../styles/variables'
 
-import Backdrop from './Sidebar/Backdrop'
 import NavItems from './Header/NavItems'
+import Backdrop from './Sidebar/Backdrop'
 
 const SideDrawer = ( {open, close} ) => {
-  let cls = open ? 'open' : 'close' 
+  let toggleClass = open ? 'open' : 'close' 
   
   return (
     <div onClick={close}>
-     <Backdrop
-      show={open}
-     />
 
-     <StyledAside className={cls}>
+      { /* BACKDROP - OVERLAY */ }
+      <Backdrop
+      show={open}
+      />
+     
+      { /* ASIDE */ }
+      <StyledAside className={toggleClass}>
       <h1>MM</h1>
 
+      { /* NAV ITEMS */ }
       <NavItems showText />
      
-     </StyledAside>
+      </StyledAside>
     </div>
   )
 }
 
 export default SideDrawer
 
-// STYLED
 const StyledAside = styled.aside`
   position: fixed;
   width: 280px;
@@ -56,8 +59,8 @@ const StyledAside = styled.aside`
   & h1 {
     font-size: 50px;
     text-align: center;
-    padding-bottom: 20px;
-    margin-top: 100px;
+    padding-bottom: 13px;
+    margin-top: 0px;
     text-shadow: ${text_shadow};
     color: ${danger};
     border-bottom: 1px solid ${primary_color};
@@ -98,5 +101,4 @@ const StyledAside = styled.aside`
   & nav li a.active span {
     color: ${ danger };
   }
-
 `
