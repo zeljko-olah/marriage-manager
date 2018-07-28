@@ -1,19 +1,18 @@
 import React from 'react'
 
-// NAVLINK
 import { NavLink } from 'react-router-dom';
 
-// ICONS
 import HomeIcon from 'react-icons/lib/md/home'
 import ChatIcon from 'react-icons/lib/md/forum'
 import HeartIcon from 'react-icons/lib/md/favorite-border'
 import AddIcon from 'react-icons/lib/md/add'
 import LocationIcon from 'react-icons/lib/md/location-on'
 
-export default ({ showText }) => {
+const NavItems = ({ showText }) => {
   return (
     <nav>
       <ul>
+      
         { /* HOME */ }
         <li>
           <NavLink
@@ -88,3 +87,5 @@ export default ({ showText }) => {
     </nav>
   )
 }
+
+export default NavItems

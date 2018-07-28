@@ -10,7 +10,7 @@ export const updateObject = (oldObject, updatedProperties) => {
 export const validateForm = (email, password) => {
   // Check if fields are empty
   if (!email.trim() || !password.trim()) {
-    return 'Type something in'
+    return 'Type something...'
     }
 
   //  Test email

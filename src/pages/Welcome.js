@@ -33,5 +33,4 @@ const WelcomeMessage = styled.h1`
     'color:' + boy_color +'!important; ' :
     'color:' + girl_color +'!important; '}
 `
-// CONNECT REDUX STATE AND ACTIONS TO AUTH COMPONENT
 export default connect( mapStateToProps )( Dashboard )

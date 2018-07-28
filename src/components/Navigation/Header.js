@@ -1,6 +1,8 @@
-import React, { Component } from 'react'
+import React from 'react'
 
+// NAV ITEMS
 import NavItems from './Header/NavItems'
+
 import styled from 'styled-components';
 import {
   primary_color,
@@ -8,52 +10,43 @@ import {
   backdrop
 } from '../../styles/variables'
 
-
-// INJECT HISTORY
+// HISTORY
 import { history } from '../../router/AppRouter' 
 
 // ICONS
 import MenuIcon from 'react-icons/lib/md/menu'
 import LogoutIcon from 'react-icons/lib/md/eject'
 
-// REDUX CONNECT
+// REDUX
 import { connect } from 'react-redux';
-// authCheckState() is action we need to import
 import * as actions from '../../store/actions/index';
 
-class Header extends Component {
+const Header = ({ show, logout, drawerToggleClicked }) => {
 
-  handleLogout = () => {
-    this.props.logout()
-    history.go('/')
-  }
-  
-  render () {
-    const { show } = this.props
-    return (
-      <StyledHeader>
-      
-      { /* MENU */ }
+  return (
+    <StyledHeader>
+    
+      { /* MENU ICON */ }
       <span
         className="items"
-        onClick={ this.props.drawerToggleClicked }>
+        onClick={ drawerToggleClicked }>
         <i className={show ? 'rotate': null}><MenuIcon /></i>
       </span>
 
+      { /* NAV ITEMS */ }
       <NavItems />
       
         
       { /* LOGOUT */ }
       <span
         className="items"
-        onClick={this.handleLogout}>
+        onClick={() => {logout(); history.go('/');}}>
         <i>
           <LogoutIcon />
         </i>
       </span>
-      </StyledHeader>
-    )
-  }
+    </StyledHeader>
+  )
 }
 
 // MAP DISPATCH TO PROPS - available on props object
@@ -81,38 +74,41 @@ const StyledHeader = styled.header`
       display: none;
     }
   }
-
+  
   & ul {
     list-style-type: none;
-    color: red;
     display: flex;
     justify-content: space-around;
+    color: red;
+  }
+  
+  & li,
+  & span.items {
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  & li {
+    flex-basis: 20%;
+  }
+  
+  & span {
+    display: inline-block;
   }
 
-  & li,
   & span.items {
     width: 100px;
     padding: 0px 20px;
-    text-align: center;
-    cursor: pointer;
   }
 
   & span.items:first-child i {
     transition: all 0.2s linear;
   }
 
-  & li {
-    flex-basis: 20%;
-  }
-
-  & span {
-    display: inline-block;
-  }
-
   & a.active i {
     color: ${ danger };
   }
-
+  
   & i {
     display: block;
     color: ${primary_color};

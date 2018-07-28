@@ -13,13 +13,12 @@ const LoginFrom = ({ submit, onFocus, error }) => {
     <form onSubmit={ (e) => {e.preventDefault(); submit(payload)} }>
       <StyledForm>
 
+        { /* EMAIL */ }
         <div>
-          { /* LABEL EMAIL */ }
           <label htmlFor="email">
             <p>Email</p>
           </label>
 
-          { /* INPUT EMAIL */ }
         <p>
           <input
             type="text"
@@ -30,13 +29,12 @@ const LoginFrom = ({ submit, onFocus, error }) => {
         </p>
         </div>
 
-        { /* LABEL PASSWORD */ }
+        { /* PASSWORD */ }
         <div>
           <label htmlFor="password">
             <p>Password</p>
           </label>
 
-          { /* INPUT PASSWORD */ }
           <p>
             <input
               type="password"
@@ -46,7 +44,8 @@ const LoginFrom = ({ submit, onFocus, error }) => {
               />
           </p>
         </div>
-
+        
+        { /* SUBMIT BUTTON */ }
         <button
           type="submit"
           disabled={ !!error }
