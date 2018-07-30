@@ -2,17 +2,16 @@ import React, {Component} from 'react'
 import styled from 'styled-components'
 import { boy_color, girl_color } from '../styles/variables'
 
-
 import { connect } from 'react-redux'
 
-class Dashboard extends Component {
+class Welcome extends Component {
 
   render () {
-
+    const { user } = this.props
     return (
       <div>
       <section>
-        <WelcomeMessage user={ this.props.user }>
+        <WelcomeMessage user={ user } >
           Welcome { this.props.user.name }
         </WelcomeMessage>
       </section>
@@ -20,7 +19,6 @@ class Dashboard extends Component {
     )
   }
 }
-
 
 const mapStateToProps = state => {
   return {
@@ -33,4 +31,4 @@ const WelcomeMessage = styled.h1`
     'color:' + boy_color +'!important; ' :
     'color:' + girl_color +'!important; '}
 `
-export default connect( mapStateToProps )( Dashboard )
+export default connect( mapStateToProps )( Welcome );

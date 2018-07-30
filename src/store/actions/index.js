@@ -7,3 +7,8 @@ export {
   setErrors,
   logout
 } from './auth'
+
+// ORDER RELATED ACTIONS
+export {
+  socketInit
+} from './socket'
