@@ -15,6 +15,7 @@ import MessageInput from '../components/Chat/MessageInput'
 import io from 'socket.io-client'
 
 import styled from 'styled-components'
+import moment from 'moment';
 
 const socketUrl = "http://localhost:3231"
 
@@ -23,7 +24,8 @@ class Chat extends Component {
   // State
   state = {
     socket: null,
-    users: []
+    users: [],
+    messages: []
   }
   
   // Lifecycle
@@ -37,6 +39,7 @@ class Chat extends Component {
 		const { socket } = this.state
 		socket.off('USER_CONNECTED')
     socket.off('UPDATE_USER_LIST')
+    socket.off('NEW_MESSAGE')
     socket.emit('CLIENT_DISCONNECTED')
   }
   
@@ -59,6 +62,14 @@ class Chat extends Component {
       console.log("users", users)
       this.setState({users})
     })
+    socket.on('NEW_MESSAGE', (message) => {
+      const formatedTime = moment(message.createdAt).format('h:mm a')
+      const newMessage = Object.assign({}, message, {createdAt: formatedTime})
+      console.log(newMessage)
+      const newMessages = this.state.messages.concat(newMessage)
+      this.setState({messages: newMessages})
+
+    })
     socket.on('disconnect', (message) => {
       // Log
       console.log('Disconnected from server');
@@ -70,13 +81,16 @@ class Chat extends Component {
   handleSendMessage = (message) => {
     console.log('Sending message...', message)
     const { socket } = this.state
-    socket.emit('MESSAGE_SENT', message)
+    socket.emit('MESSAGE_SENT', message, () => {
+      console.log('AKNOWLEDGEMENT FIRED:::')
+    })
 
   }
   
 
   render () {
-    const { users, socket } = this.state
+    const { users, socket, messages } = this.state
+    const { user } = this.props
 
     return (
       <StyledSection>
@@ -87,7 +101,10 @@ class Chat extends Component {
           socket={socket}
         />
 
-        <Messages />
+        <Messages
+          messages={messages}
+          user={user}
+           />
 
         <MessageInput
           sendMessage={this.handleSendMessage} />

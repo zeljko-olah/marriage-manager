@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
+import Message from './Message'
+
 class Messages extends Component {
   render() {
+    const { messages, user } = this.props
     return (
       <StyledMessages>
         <StyledThread>
-          <div className="messages">
-            <div className="time">9.46</div>
-            <div>
-              <div className="message">A akako je lepo biti u drustvu moje zene</div>
-              <div className="sender">Zeljko said...</div>
-            </div>
-          
-          </div>
+          {messages.map((message) => {
+            return (<Message
+                      key={message.id}
+                      message={message}
+                      user={user} />)
+            })
+          }
         </StyledThread>
       </StyledMessages>  
     )
@@ -28,14 +30,27 @@ const StyledMessages = styled.div`
 const StyledThread = styled.div`
   margin: 0 30px;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
 
-  & div.messages {
+  & div.message-wrapper {
+    padding: 5px;
+  }
+
+  & div.message-inner {
     border: 1px solid white;
     border-radius: 10px;
     padding: 5px 10px;
     background: #efe;
-    width: 50%;
     color: white;
+    display:inline-block;
+  }
+
+  & div.left {
+    text-align: right;
+  }
+  & div.right {
+    text-align: left;
   }
 
   & div.time {

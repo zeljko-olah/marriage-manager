@@ -5,7 +5,7 @@ const ChatHeading = ({users}) => {
   let status = 'Wait a minute, please!'
   if (users) {
     status = users.map(user => {
-      return <p key={user}>{user}</p>
+      return <p key={user}>{user} is <span className='on'>online</span>!</p>
     })
   }
 
@@ -44,7 +44,7 @@ justify-content: center;
   }
 
   & span.on {
-    color: green;
+    color: LightGreen;
   }
 
 `

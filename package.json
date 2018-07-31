@@ -11,6 +11,7 @@
     "express": "^4.16.3",
     "history": "^4.7.2",
     "jsonwebtoken": "^8.3.0",
+    "moment": "^2.22.2",
     "mongoose": "^5.2.5",
     "morgan": "^1.9.0",
     "normalize.css": "^8.0.0",
@@ -25,7 +26,8 @@
     "redux-thunk": "^2.3.0",
     "serve-static": "^1.13.2",
     "socket.io": "^2.1.1",
-    "styled-components": "^3.3.3"
+    "styled-components": "^3.3.3",
+    "uuid": "^3.3.2"
   },
   "scripts": {
     "start": "nodemon src/server/index.js",

@@ -76,7 +76,7 @@ const StyledMain = styled.main`
   & section {
     height: 70vh;
     background-color: ${backdrop};
-    text-align: center;
+    // text-align: center;
     border: 3px solid ${primary_color};
     border-top-left-radius: 20px;
     box-shadow: ${box_shadow}
