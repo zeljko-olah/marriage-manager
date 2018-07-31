@@ -21,13 +21,6 @@ import {
   box_shadow
  } from '../styles/variables'
 
-/*
- * DEFINE PRIVATE ROUTE COMPONENT
- * @props {boolean} isAuthenticated - if user is authenticated
- * @props {React Component} - component to render when route is matched
- * @props { ...rest } - rest of the props spreaded
- * @returns {<Route />} - Configured Route component
- */
 export const PrivateRoute = ({
   isAuthenticated,
   component: Component,
@@ -89,8 +82,8 @@ const StyledMain = styled.main`
     box-shadow: ${box_shadow}
 
     & h1 {
-      margin: 30px 30px;
-      padding-bottom: 20px;
+      margin: 20px 30px 20px;
+      padding-bottom: 5px;
       border-bottom: 1px solid ${primary_color}
       text-shadow: ${text_shadow};
       font-size: 50px;

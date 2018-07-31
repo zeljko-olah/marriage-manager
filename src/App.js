@@ -4,17 +4,14 @@ import 'normalize.css/normalize.css'
 import styled, { injectGlobal } from 'styled-components'
 
 import AppRouter from './router/AppRouter'
-import WithChat from './hoc/WithChat'
 
 
 class App extends Component {
   render() {
     return (
       <PageWrapper>
-        <WithChat>
-          { /* APP ROUTER */ }
-          <AppRouter />
-        </WithChat>
+        { /* APP ROUTER */ }
+        <AppRouter />
       </PageWrapper>
     )
   }

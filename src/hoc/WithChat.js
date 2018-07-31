@@ -7,26 +7,30 @@ import io from 'socket.io-client'
 const socketUrl = "http://localhost:3231"
 
 class WithChat extends Component {
+  state = {
+    socket: null
+  }
+
   componentDidMount = () => {
     this.initSocket()
-    this.setState({ mounted: true })    
   }
 
   initSocket = () => {
     const socket = io(socketUrl)
+    this.setState({socket})
     this.props.socketInit(socket)
       socket.on('connect', ()=>{
         console.log("Connected");
       })
   }
   
-
   render () {
-      return (
-       <div>
-         { this.props.children }
-       </div>
-      )
+    const { socket } = this.state
+    return (
+      <div>
+        {React.cloneElement(this.props.children, { socket: socket })}
+      </div>
+    )
   }
 }
 

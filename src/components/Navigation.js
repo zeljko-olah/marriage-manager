@@ -11,7 +11,6 @@ class Navigation extends Component {
   }
 
   sideDrawerCloseHandler = () => {
-    console.log('CALLED')
     this.setState({ showSideDrawer: false })
   }
 
