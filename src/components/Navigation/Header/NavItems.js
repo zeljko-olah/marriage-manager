@@ -3,8 +3,8 @@ import React from 'react'
 import { NavLink } from 'react-router-dom';
 
 import HomeIcon from 'react-icons/lib/md/home'
-import ChatIcon from 'react-icons/lib/md/forum'
 import HeartIcon from 'react-icons/lib/md/favorite-border'
+import TodoIcon from 'react-icons/lib/md/playlist-add-check'
 import AddIcon from 'react-icons/lib/md/add'
 import LocationIcon from 'react-icons/lib/md/location-on'
 
@@ -30,21 +30,21 @@ const NavItems = ({ showText }) => {
         { /* CHAT */ }
         <li>
           <NavLink
-            to='/chat'
+            to='/todos'
             exact
             activeClassName='active'
           >
             <i>
-              <ChatIcon />
+              <TodoIcon />
             </i>
-            { showText && <span>Chat</span> }
+            { showText && <span>Todos</span> }
           </NavLink>
         </li>
         
         { /* TODOS */ }
         <li>
           <NavLink
-            to='/todos'
+            to='/add'
             exact
             activeClassName='active'
           >

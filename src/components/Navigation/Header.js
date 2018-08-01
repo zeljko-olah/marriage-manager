@@ -16,12 +16,16 @@ import { history } from '../../router/AppRouter'
 // ICONS
 import MenuIcon from 'react-icons/lib/md/menu'
 import LogoutIcon from 'react-icons/lib/md/eject'
+import ChatIcon from 'react-icons/lib/md/forum'
+
 
 // REDUX
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index';
 
-const Header = ({ show, logout, drawerToggleClicked }) => {
+const Header = ({
+  show, logout, menuToggleClicked, chatToggleClicked
+}) => {
 
   return (
     <StyledHeader>
@@ -29,7 +33,7 @@ const Header = ({ show, logout, drawerToggleClicked }) => {
       { /* MENU ICON */ }
       <span
         className="items"
-        onClick={ drawerToggleClicked }>
+        onClick={ menuToggleClicked }>
         <i className={show ? 'rotate': null}><MenuIcon /></i>
       </span>
 
@@ -37,6 +41,15 @@ const Header = ({ show, logout, drawerToggleClicked }) => {
       <NavItems />
       
         
+      { /* CHAT */ }
+      <span
+        className="items"
+        onClick={ chatToggleClicked }>
+        <i>
+          <ChatIcon />
+        </i>
+      </span>
+
       { /* LOGOUT */ }
       <span
         className="items"

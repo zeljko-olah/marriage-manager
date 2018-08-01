@@ -1,10 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import { 
-  prim_color,
   prim_light,
   prim_font,
-  sec_color,
   sec_light,
   sec_font
  } from '../../styles/variables'

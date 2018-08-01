@@ -15,6 +15,12 @@ import MessageInput from '../components/Chat/MessageInput'
 import io from 'socket.io-client'
 
 import styled from 'styled-components'
+import { 
+  prim_color,
+  text_shadow,
+  box_shadow
+ } from '../styles/variables'
+ 
 import moment from 'moment';
 
 const socketUrl = "http://localhost:3231"
@@ -83,10 +89,8 @@ class Chat extends Component {
     socket.emit('MESSAGE_SENT', message, () => {
       console.log('AKNOWLEDGEMENT FIRED:::')
     })
-
   }
   
-
   render () {
     const { users, socket, messages } = this.state
     const { user } = this.props
@@ -127,5 +131,24 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(Chat)
 
 const StyledSection = styled.section`
-  color: inherit;
+  background-color: #fefefe;
+  border: 3px solid ${prim_color};
+  border-top-left-radius: 20px;
+  box-shadow: ${box_shadow};
+  width: 600px;
+  margin: 0 auto;
+
+  & h1 {
+    text-align: center;
+    font-size: 50px;
+    @media (max-width: 768px) {
+      font-size: 30px;
+    }
+    font-style: italic;
+    padding-bottom: 5px;
+    margin: 20px 30px 20px;
+    border-bottom: 1px solid ${prim_color}
+    text-shadow: ${text_shadow};
+    color: tomato;
+  }
 `

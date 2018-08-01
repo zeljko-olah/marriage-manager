@@ -38,8 +38,9 @@ export const PrivateRoute = ({
         
         { /* MAIN CONTENT */ }
         <StyledMain>
-
-          <Component {...props} />
+          <StyledSection>
+            <Component {...props} />
+          </StyledSection>
         </StyledMain>
       
       </Aux>
@@ -72,26 +73,24 @@ const StyledMain = styled.main`
   max-width: 600px;
   padding: 10px;
   margin: 30px auto 0;
+`
+const StyledSection = styled.section`
+  background-color: ${backdrop};
+  border: 3px solid ${prim_color};
+  border-top-left-radius: 20px;
+  box-shadow: ${box_shadow};
   
-  & section {
-    background-color: ${backdrop};
-    border: 3px solid ${prim_color};
-    border-top-left-radius: 20px;
-    box-shadow: ${box_shadow}
-    
-    & h1 {
-      text-align: center;
-      font-size: 50px;
-      @media (max-width: 768px) {
-        font-size: 30px;
-      }
-      font-style: italic;
-      padding-bottom: 5px;
-      margin: 20px 30px 20px;
-      border-bottom: 1px solid ${prim_color}
-      text-shadow: ${text_shadow};
-      color: tomato;
+  & h1 {
+    text-align: center;
+    font-size: 50px;
+    @media (max-width: 768px) {
+      font-size: 30px;
     }
+    font-style: italic;
+    padding-bottom: 5px;
+    margin: 20px 30px 20px;
+    border-bottom: 1px solid ${prim_color}
+    text-shadow: ${text_shadow};
+    color: tomato;
   }
-
 `
