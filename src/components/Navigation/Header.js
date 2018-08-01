@@ -5,7 +5,7 @@ import NavItems from './Header/NavItems'
 
 import styled from 'styled-components';
 import {
-  primary_color,
+  prim_color,
   danger,
   backdrop
 } from '../../styles/variables'
@@ -62,7 +62,7 @@ export default connect(null, mapDispatchToProps)(Header);
 const StyledHeader = styled.header`
   margin: 0;
   padding: 10px 30px;
-  border-bottom: 2px solid ${primary_color};
+  border-bottom: 2px solid ${prim_color};
   background-color: ${backdrop};
   display: flex;
   justify-content: space-between;
@@ -111,7 +111,7 @@ const StyledHeader = styled.header`
   
   & i {
     display: block;
-    color: ${primary_color};
+    color: ${prim_color};
     transition: all 0.1s ease-out;
   }
 

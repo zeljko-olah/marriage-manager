@@ -15,7 +15,7 @@ import Navigation from '../components/Navigation'
 // STYLED
 import styled from 'styled-components'
 import { 
-  primary_color,
+  prim_color,
   backdrop,
   text_shadow,
   box_shadow
@@ -76,24 +76,23 @@ const StyledMain = styled.main`
   & section {
     height: 70vh;
     background-color: ${backdrop};
-    // text-align: center;
-    border: 3px solid ${primary_color};
+    border: 3px solid ${prim_color};
     border-top-left-radius: 20px;
     box-shadow: ${box_shadow}
-
+    
     & h1 {
-      margin: 20px 30px 20px;
-      padding-bottom: 5px;
-      border-bottom: 1px solid ${primary_color}
-      text-shadow: ${text_shadow};
+      text-align: center;
       font-size: 50px;
       @media (max-width: 768px) {
         font-size: 30px;
       }
       font-style: italic;
+      padding-bottom: 5px;
+      margin: 20px 30px 20px;
+      border-bottom: 1px solid ${prim_color}
+      text-shadow: ${text_shadow};
       color: tomato;
     }
   }
-
 
 `

@@ -1,14 +1,18 @@
+// IMPORT
 import React, { Component } from 'react'
 import styled from 'styled-components'
 
 
+// COMPONENT
 class MessageInput extends Component {
-
+  
+  // State
   state = {
     message: '',
     isTyping : false
   }
-
+  
+  // Methods
   handleSubmit = (e) => {
     e.preventDefault()
     this.sendMessage()
@@ -20,14 +24,19 @@ class MessageInput extends Component {
     this.props.sendMessage(this.state.message)
   }
   
-
+  
+  // Render
   render() {
     const { message } = this.state
     return (
       <StyledWrap>
+
+        { /* FORM */ }
         <form
           onSubmit={this.handleSubmit}>
-          <StyledForm>
+          
+          { /* INPUT */ }
+          <StyledInput>
             <input
               id = "message"
               type = "text"
@@ -40,24 +49,23 @@ class MessageInput extends Component {
                   this.setState({ message: target.value })
                 }
               } />
-          
-          </StyledForm>
-        
+          </StyledInput>
         </form>
       </StyledWrap>
     )
   }
 }
 
-
+// EXPORT
 export default MessageInput
 
+// STYLED
 const StyledWrap = styled.div`
   position: relative;
   top: 50px;
 `
 
-const StyledForm = styled.div`
+const StyledInput = styled.div`
   border: 2px solid Aquamarine;
   margin: 10px 30px 0;
 
@@ -69,10 +77,9 @@ const StyledForm = styled.div`
     color: white;
     
     &::placeholder {
-      color: #ddd;
       font-size: 20px;
       font-style: italic;
+      color: #ddd;
     }
-
   }
 `

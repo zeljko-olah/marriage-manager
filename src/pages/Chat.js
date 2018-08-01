@@ -30,7 +30,6 @@ class Chat extends Component {
   
   // Lifecycle
   componentDidMount = () => {
-    console.log('mounted')
     this.initSocket()
   }
 
@@ -63,10 +62,10 @@ class Chat extends Component {
       this.setState({users})
     })
     socket.on('NEW_MESSAGE', (message) => {
+      const { messages } = this.state
       const formatedTime = moment(message.createdAt).format('h:mm a')
       const newMessage = Object.assign({}, message, {createdAt: formatedTime})
-      console.log(newMessage)
-      const newMessages = this.state.messages.concat(newMessage)
+      const newMessages = messages.concat(newMessage)
       this.setState({messages: newMessages})
 
     })

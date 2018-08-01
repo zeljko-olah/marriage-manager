@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import {
-  primary_color,
+  prim_color,
   danger,
   backdrop,
   text_shadow
@@ -44,7 +44,7 @@ const StyledAside = styled.aside`
   top: 0;
   z-index: 200;
   background-color: ${backdrop};
-  border-right: 3px solid ${primary_color};
+  border-right: 3px solid ${prim_color};
   padding: 32px 16px;
   transition: transform 0.3s ease-out;
   
@@ -63,7 +63,7 @@ const StyledAside = styled.aside`
     margin-top: 0px;
     text-shadow: ${text_shadow};
     color: ${danger};
-    border-bottom: 1px solid ${primary_color};
+    border-bottom: 1px solid ${prim_color};
   }
 
   & nav ul {
@@ -77,7 +77,7 @@ const StyledAside = styled.aside`
   }
   
   & nav li a {
-    color: ${primary_color};
+    color: ${prim_color};
   }
 
   & nav li span {

@@ -1,15 +1,21 @@
+
 // MAIN COLORS
-export const primary_color = 'Aquamarine'
+export const prim_color = 'Aquamarine'
+export const prim_light = '#CCFFEE'
+export const sec_color = 'Tomato'
+export const sec_light = '#FFC4BA'
 
 // FONTS
-export const primary_font = 'white'
+export const prim_font = '#333'
+export const sec_font = 'WhiteSmoke'
 
 // UI
 export const danger = 'tomato'
 export const disabled_color = '#ddd'
 export const boy_color = 'tomato'
 export const girl_color = 'Violet'
-export const backdrop = 'rgba(1,1,1, 0.1)'
+export const backdrop = 'rgba(1,1,1, 0.3)'
+
 
 // TEXT SHADOW
 export const text_shadow = `
