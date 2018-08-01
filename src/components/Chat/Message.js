@@ -11,6 +11,8 @@ const Message = ({message, user}) => {
   let messageClass
   if (message.from === user.name ) {
     messageClass = "message-wrapper right"
+  } else if(message.from === 'Admin') {
+    messageClass = "message-wrapper admin"
   } else {
     messageClass = "message-wrapper left"
   }
@@ -60,6 +62,10 @@ const StyledMessage = styled.div`
   justify-content: flex-end;
 }
 
+& div.admin .message-outer {
+  justify-content: center;
+}
+
 & div.left .time {
   order: 2;
 }
@@ -100,8 +106,19 @@ const StyledMessage = styled.div`
   }
 }
 
+& div.admin .message-inner {
+  order: 1;
+  background: #ddd;
+  &:after {
+    border-bottom: 10px solid #ddd;
+    transform: skewX(-60deg);
+    top: -18px;
+    left: 25px;
+  }
+}
+
 & div.time {
-  color: ${sec_font};
+  color: ${prim_font};
   font-size: 12px;
   font-weight: bold;
   text-align: left;

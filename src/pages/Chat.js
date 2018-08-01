@@ -98,20 +98,20 @@ class Chat extends Component {
     return (
       <StyledSection>
         <h1>Chat</h1>
-
+        
+        { /* CHAT HEADING */ }
         <ChatHeading
           users={users}
-          socket={socket}
-        />
-
+          socket={socket} />
+        
+        { /* MESSAGES THREAD */ }
         <Messages
           messages={messages}
-          user={user}
-           />
+          user={user} />
 
+        { /* MESSAGE INPUT */ }
         <MessageInput
           sendMessage={this.handleSendMessage} />
-
 
       </StyledSection>
     )
@@ -135,8 +135,11 @@ const StyledSection = styled.section`
   border: 3px solid ${prim_color};
   border-top-left-radius: 20px;
   box-shadow: ${box_shadow};
-  width: 600px;
-  margin: 0 auto;
+  max-width: 600px;
+  margin: 0 auto 0;
+  @media (max-width: 768px) {
+    margin: 70px auto 0;
+  }
 
   & h1 {
     text-align: center;

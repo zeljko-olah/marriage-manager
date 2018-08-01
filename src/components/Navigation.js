@@ -2,10 +2,9 @@ import React, { Component } from 'react'
 
 import Aux from '../hoc/Aux'
 import Header from './Navigation/Header'
-import Sidebar from './Navigation/Sidebar'
 
 import NavItems from './Navigation/Header/NavItems'
-import Chat from '../pages/Chat'
+import Sidebar from './Navigation/Sidebar'
 
 import styled from 'styled-components'
 import {
@@ -18,14 +17,10 @@ class Navigation extends Component {
 
   state = {
     showMobileMenu: false,
-    showChat: false
   }
 
   sideDrawerCloseHandler = () => {
     this.setState({ showMobileMenu: false })
-  }
-  closeChatHandler = () => {
-    this.setState({ showChat: false })
   }
 
   menuToggleHandler = () => {
@@ -33,15 +28,9 @@ class Navigation extends Component {
       return { showMobileMenu: !prevState.showMobileMenu }
     })
   }
-
-  chatToggleHandler = () => {
-    this.setState( (prevState) => {
-      return { showChat: !prevState.showChat }
-    })
-  }
   
   render() {
-    const { showMobileMenu, showChat } = this.state
+    const { showMobileMenu } = this.state
     return (
       <Aux>
 
@@ -65,16 +54,6 @@ class Navigation extends Component {
           <StyledAsideNav>
             <NavItems showText />
           </StyledAsideNav>
-        </Sidebar>
-
-        { /* CHAT SIDEBAR */ }
-        <Sidebar
-          open={showChat}
-          close={this.closeChatHandler}
-          width="100%"
-          side="right"
-        >
-          <Chat />
         </Sidebar>
         
       </Aux>

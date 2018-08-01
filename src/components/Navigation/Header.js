@@ -16,7 +16,6 @@ import { history } from '../../router/AppRouter'
 // ICONS
 import MenuIcon from 'react-icons/lib/md/menu'
 import LogoutIcon from 'react-icons/lib/md/eject'
-import ChatIcon from 'react-icons/lib/md/forum'
 
 
 // REDUX
@@ -39,16 +38,6 @@ const Header = ({
 
       { /* NAV ITEMS */ }
       <NavItems />
-      
-        
-      { /* CHAT */ }
-      <span
-        className="items"
-        onClick={ chatToggleClicked }>
-        <i>
-          <ChatIcon />
-        </i>
-      </span>
 
       { /* LOGOUT */ }
       <span

@@ -32,7 +32,7 @@ module.exports = (socket) => {
     io.to(room).emit('UPDATE_USER_LIST', users.getUserList(room))
     console.log(users.getUserList(room))
 
-    socket.emit('NEW_MESSAGE', generateMessage('Admin', 'Welcome to the chat app.'))
+    socket.emit('NEW_MESSAGE', generateMessage('Admin', `Welcome ${user.name}! :)`))
     socket.broadcast.to(room).emit('NEW_MESSAGE', generateMessage('Admin', `${user.name} has joined`));
   })
 
@@ -71,7 +71,7 @@ module.exports = (socket) => {
     if(user) {
       // Update the room's users list
       io.to(room).emit('UPDATE_USER_LIST', users.getUserList(room))
-      io.to(room).emit('NEW_MESSAGE', generateMessage('', `${user.name} has left.`))
+      io.to(room).emit('NEW_MESSAGE', generateMessage('Admin', `${user.name} has left.`))
     }
     
     console.log(users.getUserList(room))

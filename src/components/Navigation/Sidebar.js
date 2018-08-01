@@ -7,10 +7,10 @@ import {
 } from '../../styles/variables'
 
 import Backdrop from './Sidebar/Backdrop'
-import BackIcon from 'react-icons/lib/md/keyboard-backspace'
+import ChatIcon from 'react-icons/lib/md/forum'
 
 const SideDrawer = ({
-  open, close, children, width, side
+  open, close, children, width, side, toggleChat
 }) => {
   let toggleClass = open ? 'open' : 'close' 
   
@@ -27,13 +27,18 @@ const SideDrawer = ({
         width={width}
         side={side}>
         {children}
-        {side !== 'right' && (
-          <i className="back">
-            <BackIcon
-              onClick={close}/>
-          </i>
-        )}
       </StyledAside>
+
+      {side === 'right' && (
+        <StyledChatIcon
+          open={open}>
+          <i
+            className="back"
+            onClick={toggleChat}>
+            <ChatIcon/>
+          </i>
+        </StyledChatIcon>
+      )}
     </div>
   )
 }
@@ -67,16 +72,34 @@ const StyledAside = styled.aside`
        'transform: translateX(-100%);'
     } };
   }
-  
+`
+
+const StyledChatIcon = styled.div`
   & i.back {
     display: block;
     text-align: center;
-    margin-top: 20px;
+    position: fixed;
+    z-index: 1000;
+    top: 50%;
+    right: 0;
+    background: ${backdrop};
+    padding: 10px;
+    border: 2px solid ${prim_color};
+    border-right: none;
+    cursor: pointer;
+
   }
 
   & i.back svg {
-    font-size: 50px !important;
-    color: ${sec_color};
-    cursor: pointer;
+    font-size: 40px !important;
+    color: ${prim_color};
+    color: ${props => {
+      return props.open? `${prim_color}` : `${sec_color}`
+    }};
+    transition: all 0.1s ease-out; 
+
+    &:hover {
+      color: ${sec_color};
+    }
   }
 `
