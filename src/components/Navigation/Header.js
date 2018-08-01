@@ -127,7 +127,7 @@ const StyledHeader = styled.header`
   }
   
   & svg {
-    font-size: 50px;
+    font-size: 40px;
   }
 `
 

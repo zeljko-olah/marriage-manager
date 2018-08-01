@@ -62,7 +62,7 @@ export default MessageInput
 // STYLED
 const StyledWrap = styled.div`
   position: relative;
-  top: 50px;
+  top: 25px;
 `
 
 const StyledInput = styled.div`

@@ -30,6 +30,11 @@ export default Messages
 // STYLED
 const StyledMessages = styled.div`
   height: 45vh;
+  overflow: hidden;
+  overflow-y: scroll;
+  ::-webkit-scrollbar { 
+    display: none; 
+  }
 `
 const StyledThread = styled.div`
   margin: 0 30px;

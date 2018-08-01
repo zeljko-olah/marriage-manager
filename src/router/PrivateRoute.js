@@ -74,7 +74,6 @@ const StyledMain = styled.main`
   margin: 30px auto 0;
   
   & section {
-    height: 70vh;
     background-color: ${backdrop};
     border: 3px solid ${prim_color};
     border-top-left-radius: 20px;

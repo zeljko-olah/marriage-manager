@@ -6,7 +6,7 @@ export const sec_color = 'Tomato'
 export const sec_light = '#FFC4BA'
 
 // FONTS
-export const prim_font = '#333'
+export const prim_font = '#555'
 export const sec_font = 'WhiteSmoke'
 
 // UI

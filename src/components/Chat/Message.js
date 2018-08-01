@@ -19,7 +19,6 @@ const Message = ({message, user}) => {
   return (
     <StyledMessage>
       <div className={messageClass}>
-        <div className="sender">{message.from}</div>
         <div className="message-outer">
           <div className="time">{message.createdAt}</div>
           <div className="message-inner">
@@ -36,7 +35,7 @@ export default Message
 const StyledMessage = styled.div`
 
 & div.message-wrapper {
-  padding: 5px;
+  padding: 6px 5px;
 }
 
 & div.left {
@@ -68,27 +67,44 @@ const StyledMessage = styled.div`
 }
 
 & div.message-inner {
-  border: 1px solid white;
-  border-radius: 10px;
-  padding: 5px 10px;
-  color: white;
+  position: relative;
   display:inline-block;
+  border-radius: 5px;
+  border-top-right-radius: 5px;
+  padding: 5px 15px;
+  &:after {
+    content: '';
+    position: absolute;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid ${sec_light};
+    transform: skewX(60deg);
+  }
 }
 
 & div.left .message-inner {
   order: 1;
-  border: 3px solid ${sec_color};
   background: ${sec_light};
+  &:after {
+    transform: skewX(-60deg);
+    top: -18px;
+    left: 25px;
+  }
 }
 
 & div.right .message-inner {
-  border: 3px solid ${prim_color};
   background: ${prim_light};
+  &:after {
+    border-bottom: 10px solid ${prim_light};
+    top: -18px;
+    right: 25px;
+  }
 }
 
 & div.time {
   color: ${sec_font};
-  font-size: 18px;
+  font-size: 12px;
   font-weight: bold;
   text-align: left;
   margin: 0 10px 0 10px;
@@ -98,7 +114,8 @@ const StyledMessage = styled.div`
 & div.message {
   padding: 3px 0;
   color: ${prim_font};
-  font-size: 16px;
+  font-family: PT mono, sans-serif;
+  font-size: 12px;
   font-weight: bold;
   text-align: left;
 }
