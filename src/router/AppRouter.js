@@ -4,7 +4,7 @@ import React from 'react'
 // ROUTER - SWITCH ROUTER COMPONENT
 import { Router, Switch, Redirect } from 'react-router-dom'
 
-// 3RD PARTY MODULE TO ALLOW COMPONENTS TO HAVE HISTORY PROPS
+// 3RD PARTY MODULE TO ALLOW COMPONENTS UNDER <Router> TO HAVE HISTORY PROPS
 import createHistory from 'history/createBrowserHistory'
 
 // MAIN ROUTE COMPONENTS
@@ -35,7 +35,7 @@ const AppRouter = () => (
       <PrivateRoute path="/add" component={NewPerson} />
       <PrivateRoute path="/reminder" component={Reminder} />
       <PrivateRoute path="/location" component={Location} />
-        <Redirect to="/" />
+      <Redirect to="/" />
       </Switch>
     </div>
   </Router>

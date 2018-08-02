@@ -1,4 +1,5 @@
 import React from 'react'
+
 import styled from 'styled-components'
 import {
   prim_color,
@@ -7,15 +8,15 @@ import {
 } from '../../styles/variables'
 
 import Backdrop from './Sidebar/Backdrop'
-import ChatIcon from 'react-icons/lib/md/forum'
 
-const SideDrawer = ({
-  open, close, children, width, side, toggleChat
+const SideBar = ({
+  open, close, children, width, side, toggleSidebar, sidebarIcon
 }) => {
   let toggleClass = open ? 'open' : 'close' 
   
   return (
     <div onDoubleClick={close}>
+
       { /* BACKDROP - OVERLAY */ }
       <Backdrop
         show={open}
@@ -28,14 +29,15 @@ const SideDrawer = ({
         side={side}>
         {children}
       </StyledAside>
-
+      
+      { /* SIDEBAR ICON */ }
       {side === 'right' && (
         <StyledChatIcon
           open={open}>
           <i
-            className="back"
-            onClick={toggleChat}>
-            <ChatIcon/>
+            className="toggle"
+            onClick={toggleSidebar}>
+            {sidebarIcon}
           </i>
         </StyledChatIcon>
       )}
@@ -43,22 +45,20 @@ const SideDrawer = ({
   )
 }
 
-export default SideDrawer
+export default SideBar
 
 const StyledAside = styled.aside`
   position: fixed;
   width: ${props => props.width};
-  // max-width: 70%;
   height: 100%;
-  // left: 0;
   ${props => {
     return props.side === 'right' ? 'right: 0' : 'left: 0'
   } };
   top: 0;
   z-index: 200;
-  background-color: ${backdrop};
-  border-right: 3px solid ${prim_color};
   padding: 32px 16px;
+  border-right: 3px solid ${prim_color};
+  background-color: ${backdrop};
   transition: transform 0.3s ease-out;
   
   &.open {
@@ -75,7 +75,7 @@ const StyledAside = styled.aside`
 `
 
 const StyledChatIcon = styled.div`
-  & i.back {
+  & i.toggle {
     display: block;
     text-align: center;
     position: fixed;
@@ -87,14 +87,13 @@ const StyledChatIcon = styled.div`
     border: 2px solid ${prim_color};
     border-right: none;
     cursor: pointer;
-
   }
 
-  & i.back svg {
+  & i.toggle svg {
     font-size: 40px !important;
     color: ${prim_color};
     color: ${props => {
-      return props.open? `${prim_color}` : `${sec_color}`
+      return props.open ? `${sec_color}` : `${prim_color}`
     }};
     transition: all 0.1s ease-out; 
 

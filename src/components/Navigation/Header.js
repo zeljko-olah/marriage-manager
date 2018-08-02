@@ -65,7 +65,7 @@ const StyledHeader = styled.header`
   margin: 0;
   padding: 10px 30px;
   border-bottom: 2px solid ${prim_color};
-  background-color: ${backdrop};
+  // background-color: ${backdrop};
   display: flex;
   justify-content: space-between;
   align-items: center;

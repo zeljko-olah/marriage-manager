@@ -18,7 +18,6 @@ class Messages extends Component {
   scrollDown = () => {
     const { container } = this.refs
 		container.scrollTop = container.scrollHeight
-    console.log(container.scrollHeight)
   }
   
   render() {

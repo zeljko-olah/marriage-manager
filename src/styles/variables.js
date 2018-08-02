@@ -1,8 +1,10 @@
 
 // MAIN COLORS
 export const prim_color = 'Aquamarine'
+// export const prim_color = 'CornflowerBlue'
 export const prim_light = '#CCFFEE'
 export const sec_color = 'Tomato'
+// export const sec_color = 'Violet'
 export const sec_light = '#FFC4BA'
 
 // FONTS
@@ -14,7 +16,7 @@ export const danger = 'tomato'
 export const disabled_color = '#ddd'
 export const boy_color = 'tomato'
 export const girl_color = 'Violet'
-export const backdrop = 'rgba(1,1,1, 0.3)'
+export const backdrop = 'rgba(1,1,1, 0.1)'
 
 
 // TEXT SHADOW

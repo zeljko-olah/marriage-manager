@@ -8,9 +8,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {socketInit} from '../store/actions/index'
 
-import ChatHeading from '../components/Chat/ChatHeading'
-import Messages from '../components/Chat/Messages'
-import MessageInput from '../components/Chat/MessageInput'
+import ChatHeading from './parts/ChatHeading'
+import Messages from './parts/Messages'
+import MessageInput from './parts/MessageInput'
 
 import io from 'socket.io-client'
 
@@ -24,6 +24,7 @@ import {
 import moment from 'moment';
 
 const socketUrl = "http://localhost:3231"
+console.log(process.env)
 
 class Chat extends Component {
   
@@ -48,7 +49,7 @@ class Chat extends Component {
     socket.emit('CLIENT_DISCONNECTED')
   }
   
-  // Handle socket
+  // Handle socket events
   initSocket = () => {
     const socket = io(socketUrl)
     const { user } = this.props
@@ -97,10 +98,10 @@ class Chat extends Component {
 
     return (
       <StyledSection>
-        <h1>Chat</h1>
         
         { /* CHAT HEADING */ }
         <ChatHeading
+          user={user}
           users={users}
           socket={socket} />
         
@@ -131,14 +132,14 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(Chat)
 
 const StyledSection = styled.section`
-  background-color: #fefefe;
+  background-color: #fefeee;
   border: 3px solid ${prim_color};
   border-top-left-radius: 20px;
   box-shadow: ${box_shadow};
   max-width: 600px;
-  margin: 0 auto 0;
+  margin: 100px auto 0;
   @media (max-width: 768px) {
-    margin: 70px auto 0;
+    margin: 50px auto 0;
   }
 
   & h1 {

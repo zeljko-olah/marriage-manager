@@ -4,7 +4,6 @@ import {
   prim_light,
   prim_font,
   sec_light,
-  sec_font
  } from '../../styles/variables'
 
 const Message = ({message, user}) => {
@@ -71,6 +70,7 @@ const StyledMessage = styled.div`
 }
 
 & div.message-inner {
+  max-width: 500px;
   position: relative;
   display:inline-block;
   border-radius: 5px;
@@ -83,7 +83,7 @@ const StyledMessage = styled.div`
     border-right: 10px solid transparent;
     border-top: 10px solid transparent;
     border-bottom: 10px solid ${sec_light};
-    transform: skewX(60deg);
+    transform: skewX(-60deg);
   }
 }
 
@@ -91,9 +91,9 @@ const StyledMessage = styled.div`
   order: 1;
   background: ${sec_light};
   &:after {
-    transform: skewX(-60deg);
+    transform: skewX(60deg);
     top: -18px;
-    left: 25px;
+    left: -10px;
   }
 }
 
@@ -102,7 +102,7 @@ const StyledMessage = styled.div`
   &:after {
     border-bottom: 10px solid ${prim_light};
     top: -18px;
-    right: 25px;
+    right: -10px;
   }
 }
 

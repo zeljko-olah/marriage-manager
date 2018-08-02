@@ -1,6 +1,12 @@
 // IMPORT
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import { 
+  prim_color,
+  sec_color,
+  text_shadow,
+  box_shadow
+ } from '../../styles/variables'
 
 
 // COMPONENT
@@ -21,7 +27,11 @@ class MessageInput extends Component {
   
 
   sendMessage = () => {
-    this.props.sendMessage(this.state.message)
+    const { message } = this.state
+    if (!message) {
+      return
+    }
+    this.props.sendMessage(message)
   }
   
   
@@ -66,7 +76,7 @@ const StyledWrap = styled.div`
 `
 
 const StyledInput = styled.div`
-  border: 2px solid Aquamarine;
+  border: 2px solid ${prim_color};
   margin: 10px 30px 0;
 
   & input {
