@@ -23,11 +23,12 @@ class Users {
    * @returns {object} - Return the added user object
    */
   
-  addUser(id, name, room){
+  addUser(id, user, room){
     // Create user object
-    var user = {id, name, room};
+    const { name, email, avatar } = user
+    var newUser = {id, name, email, avatar, room};
     // Add user object to users class array
-    this.users.push(user);
+    this.users.push(newUser);
     // Return the added user object
     return user;
   }
@@ -68,10 +69,11 @@ class Users {
       // Get all the users from chat room
       var users = this.users.filter((user) => user.room === room);
       // Get just their user names into an array
-      var namesArray = users.map((user) => user.name);
+      // var namesArray = users.map((user) => user.name);
       
       // Return array of user names
-      return namesArray;
+      // return namesArray;
+      return users
   }
 }
 

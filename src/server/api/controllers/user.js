@@ -11,6 +11,10 @@ const User = require("../models/user")
  */
 
 exports.user_signup = (req, res, next) => {
+  console.log(req.body.password)
+  console.log(req.body.email)
+  console.log(req.body.name)
+  console.log(req.file)
   // Find the user with email
   User.find({ email: req.body.email })
     // Return promise
@@ -30,6 +34,7 @@ exports.user_signup = (req, res, next) => {
           // If error
           if (err) {
             // Handle error
+            console.log('HERE!!!')
             return res.status(500).json({
               error: err
             })
@@ -40,7 +45,9 @@ exports.user_signup = (req, res, next) => {
               _id: new mongoose.Types.ObjectId(),
               email: req.body.email,
               name: req.body.name,
-              password: hash
+              password: hash,
+              // req.file due to upload.single middleware
+              avatar: req.file.path
             })
 
             // Save the user
@@ -116,7 +123,8 @@ exports.user_login = (req, res, next) => {
             user: {
               id: user[0]._id,
               name: user[0].name,
-              email: user[0].email
+              email: user[0].email,
+              avatar: user[0].avatar.replace('public/', '')
             }
           })
         }

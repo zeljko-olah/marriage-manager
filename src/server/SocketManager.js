@@ -26,7 +26,7 @@ module.exports = (socket) => {
     users.removeUser(socket.id)
     // users.removeUser(user.id)
     
-    users.addUser(socket.id, user.name, room )
+    users.addUser(socket.id, user, room )
     
     // io.emit('USER_CONNECTED', connectedUsers )
     io.to(room).emit('UPDATE_USER_LIST', users.getUserList(room))

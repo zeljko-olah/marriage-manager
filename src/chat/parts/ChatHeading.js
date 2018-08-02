@@ -9,10 +9,10 @@ const ChatHeading = ({users, user}) => {
   let sender;
   let receiver;
   if (users && user) {
-    sender = users.find(name => name !== user.name)
+    sender = users.find(u => u.name !== user.name)
   }
 
-  receiver = user ? user.name : null
+  receiver = user ? user : null
 
   return (
     <div>
@@ -20,20 +20,20 @@ const ChatHeading = ({users, user}) => {
       <div className="user">
         { sender ? (
           <Aux>
-            <Avatar src={"img/users/marina.jpg"}/>
-            <span className="sender">{sender + ":)"}</span> 
+            <Avatar src={sender.avatar}/>
+            <span className="sender">{sender.name + ":)"}</span> 
           </Aux>
         ) : (
           <Aux>
-            <Avatar src={"img/users/default-avatar.png"} />
+            <Avatar src={"uploads/users/default-avatar.png"} />
             <span className="sender">{ sender }</span>
           </Aux> 
         ) }
       </div>  
       <div className="user">
-        <span className="receiver">{"<3"} {receiver}</span> 
+        <span className="receiver">{"<3"} {receiver.name}</span> 
         <Avatar 
-          src={"img/users/zeljko.jpg"} />
+          src={receiver.avatar} />
       </div>
          
         </StyledChatHeading>
