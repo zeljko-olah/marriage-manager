@@ -2,10 +2,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import { 
-  prim_color,
-  sec_color,
-  text_shadow,
-  box_shadow
+  prim_color
  } from '../../styles/variables'
 
 

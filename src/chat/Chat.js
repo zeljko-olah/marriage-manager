@@ -23,8 +23,10 @@ import {
  
 import moment from 'moment';
 
-const socketUrl = "http://localhost:3231"
-console.log(process.env)
+let socketUrl = 'https://vast-falls-59724.herokuapp.com'
+if (process.env.NODE_ENV === 'development') {
+  socketUrl = 'http://localhost:3231'
+}
 
 class Chat extends Component {
   

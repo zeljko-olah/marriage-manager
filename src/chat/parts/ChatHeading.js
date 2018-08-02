@@ -9,7 +9,7 @@ const ChatHeading = ({users, user}) => {
   let sender;
   let receiver;
   if (users && user) {
-    sender = users.find(name => name != user.name)
+    sender = users.find(name => name !== user.name)
   }
 
   receiver = user ? user.name : null
