@@ -6,20 +6,17 @@
 import React, { Component } from 'react'
 
 import { connect } from 'react-redux'
-import {socketInit} from '../store/actions/index'
+import {socketInit} from '../../store/actions/index'
 
-import ChatHeading from './parts/ChatHeading'
-import Messages from './parts/Messages'
-import MessageInput from './parts/MessageInput'
+import ChatHeading from './ChatHeading'
+import Messages from './Messages'
+import MessageInput from './MessageInput'
 
 import io from 'socket.io-client'
+import * as events from '../Events'
 
 import styled from 'styled-components'
-import { 
-  prim_color,
-  text_shadow,
-  box_shadow
- } from '../styles/variables'
+ import * as colors from '../../styles/variables'
  
 import moment from 'moment';
 
@@ -34,21 +31,26 @@ class Chat extends Component {
   state = {
     socket: null,
     users: [],
-    messages: []
+    messages: [],
+    width: 0,
+    height: 0
   }
   
   // Lifecycle
   componentDidMount = () => {
     this.initSocket()
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions)
   }
 
   componentWillUnmount() {
     console.log('Component Will Unmount')
 		const { socket } = this.state
-		socket.off('USER_CONNECTED')
-    socket.off('UPDATE_USER_LIST')
-    socket.off('NEW_MESSAGE')
-    socket.emit('CLIENT_DISCONNECTED')
+		socket.off(events.USER_CONNECTED)
+    socket.off(events.UPDATE_USER_LIST)
+    socket.off(events.NEW_MESSAGE)
+    socket.emit(events.CLIENT_DISCONNECTED)
+    window.removeEventListener('resize', this.updateWindowDimensions)
   }
   
   // Handle socket events
@@ -62,15 +64,15 @@ class Chat extends Component {
     })
 
     // Events
-    socket.emit('JOIN', `${user.name} logged in`, {...user, id: socket.id} )
-    socket.on('USER_CONNECTED', (users)=>{
+    socket.emit(events.JOIN, `${user.name} logged in`, {...user, id: socket.id} )
+    socket.on(events.USER_CONNECTED, (users)=>{
 			this.setState({ users })
     })
-    socket.on('UPDATE_USER_LIST', (users) => {
+    socket.on(events.UPDATE_USER_LIST, (users) => {
       console.log("users", users)
       this.setState({users})
     })
-    socket.on('NEW_MESSAGE', (message) => {
+    socket.on(events.NEW_MESSAGE, (message) => {
       const { messages } = this.state
       const formatedTime = moment(message.createdAt).format('h:mm a')
       const newMessage = Object.assign({}, message, {createdAt: formatedTime})
@@ -84,18 +86,22 @@ class Chat extends Component {
       console.log(message)
     })
   }
+
+  updateWindowDimensions = () => {
+    this.setState({ width: window.innerWidth, height: window.innerHeight })
+  }
   
   // Send message
   handleSendMessage = (message) => {
     console.log('Sending message...', message)
     const { socket } = this.state
-    socket.emit('MESSAGE_SENT', message, () => {
+    socket.emit(events.MESSAGE_SENT, message, () => {
       console.log('AKNOWLEDGEMENT FIRED:::')
     })
   }
   
   render () {
-    const { users, socket, messages } = this.state
+    const { users, socket, messages, width, height } = this.state
     const { user } = this.props
 
     return (
@@ -114,6 +120,8 @@ class Chat extends Component {
 
         { /* MESSAGE INPUT */ }
         <MessageInput
+          width={width}
+          height={height}
           sendMessage={this.handleSendMessage} />
 
       </StyledSection>
@@ -134,14 +142,15 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(Chat)
 
 const StyledSection = styled.section`
-  background-color: #fefeee;
-  border: 3px solid ${prim_color};
+  background: ${colors.ter_grad};
+  border: 2px solid ${colors.prim_color};
   border-top-left-radius: 20px;
-  box-shadow: ${box_shadow};
+  box-shadow: ${colors.box_shadow};
   max-width: 600px;
-  margin: 100px auto 0;
+  overflow: hidden;
+  margin: 30px auto 0;
   @media (max-width: 768px) {
-    margin: 50px auto 0;
+    margin: 0px auto 0;
   }
 
   & h1 {
@@ -153,8 +162,8 @@ const StyledSection = styled.section`
     font-style: italic;
     padding-bottom: 5px;
     margin: 20px 30px 20px;
-    border-bottom: 1px solid ${prim_color}
-    text-shadow: ${text_shadow};
+    border-bottom: 1px solid ${colors.prim_color}
+    text-shadow: ${colors.text_shadow};
     color: tomato;
   }
 `

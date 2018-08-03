@@ -4,7 +4,7 @@ import 'normalize.css/normalize.css'
 import styled, { injectGlobal } from 'styled-components'
 
 import AppRouter from './router/AppRouter'
-import ChatWrapper from './chat/ChatWrapper'
+import ChatWrapper from './chat/components/ChatWrapper'
 
 const App = () => {
   return (

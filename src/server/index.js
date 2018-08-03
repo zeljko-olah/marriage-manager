@@ -7,7 +7,7 @@ const server = http.createServer(app)
 const port = process.env.PORT || 3231
 
 const io = module.exports.io = require('socket.io')(server)
-const SocketManager = require('./SocketManager')
+const SocketManager = require('./chat/SocketManager')
 
 io.on('connection', SocketManager)
 

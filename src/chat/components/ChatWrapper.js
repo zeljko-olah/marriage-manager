@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 
-import Sidebar from '../components/Navigation/Sidebar'
+import Sidebar from '../../components/Navigation/Sidebar'
 import Chat from './Chat'
 
 import ChatIcon from 'react-icons/lib/md/forum'
 
 import { connect } from 'react-redux'
-import {socketInit} from '../store/actions/index'
+import {socketInit} from '../../store/actions/index'
 
 class ChatWrapper extends Component {
 

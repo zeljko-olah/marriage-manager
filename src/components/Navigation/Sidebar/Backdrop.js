@@ -1,6 +1,7 @@
 import React from 'react';
 
 import styled from 'styled-components';
+import * as colors from '../../../styles/variables'
 
 const backdrop = ({show, clicked}) => (
     show ? 
@@ -22,6 +23,6 @@ const StyledBackdrop = styled.div`
   z-index: 100;
   left: 0;
   top: 0;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: ${colors.overlay};
 ` 
 

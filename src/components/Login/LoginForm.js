@@ -1,9 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { 
-  disabled_color,
-  primary_gradient
- } from '../../styles/variables'
+import * as colors from '../../styles/variables'
+ 
 
 const LoginFrom = ({ submit, onFocus, error }) => {
 
@@ -87,11 +85,11 @@ const StyledForm = styled.div`
     text-transform: uppercase;
     color: WhiteSmoke;
     cursor: pointer;
-    background: ${primary_gradient};
+    background: ${colors.primary_gradient};
   }
 
   & button:disabled {
-    background: ${disabled_color};
+    background: ${colors.disabled_color};
     cursor: not-allowed;
   }
 `

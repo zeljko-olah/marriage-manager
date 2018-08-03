@@ -1,11 +1,7 @@
 import React from 'react'
 
 import styled from 'styled-components'
-import {
-  prim_color,
-  sec_color,
-  backdrop,
-} from '../../styles/variables'
+import * as colors from '../../styles/variables'
 
 import Backdrop from './Sidebar/Backdrop'
 
@@ -57,8 +53,8 @@ const StyledAside = styled.aside`
   top: 0;
   z-index: 200;
   padding: 32px 16px;
-  border-right: 3px solid ${prim_color};
-  background-color: ${backdrop};
+  border-right: 3px solid ${colors.prim_color};
+  background-color: ${colors.backdrop};
   transition: transform 0.3s ease-out;
   
   &.open {
@@ -82,23 +78,23 @@ const StyledChatIcon = styled.div`
     z-index: 1000;
     top: 50%;
     right: 0;
-    background: ${backdrop};
+    background: ${colors.backdrop};
     padding: 10px;
-    border: 2px solid ${prim_color};
+    border: 2px solid ${colors.prim_color};
     border-right: none;
     cursor: pointer;
   }
 
   & i.toggle svg {
     font-size: 40px !important;
-    color: ${prim_color};
+    color: ${colors.prim_color};
     color: ${props => {
-      return props.open ? `${sec_color}` : `${prim_color}`
+      return props.open ? `${colors.sec_color}` : `${colors.prim_color}`
     }};
     transition: all 0.1s ease-out; 
 
     &:hover {
-      color: ${sec_color};
+      color: ${colors.sec_color};
     }
   }
 `

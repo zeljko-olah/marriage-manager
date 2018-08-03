@@ -4,11 +4,7 @@ import React from 'react'
 import NavItems from './Header/NavItems'
 
 import styled from 'styled-components';
-import {
-  prim_color,
-  danger,
-  backdrop
-} from '../../styles/variables'
+import * as colors from '../../styles/variables'
 
 // HISTORY
 import { history } from '../../router/AppRouter' 
@@ -64,8 +60,8 @@ export default connect(null, mapDispatchToProps)(Header);
 const StyledHeader = styled.header`
   margin: 0;
   padding: 10px 30px;
-  border-bottom: 2px solid ${prim_color};
-  // background-color: ${backdrop};
+  border-bottom: 2px solid ${colors.prim_color};
+  // background-color: ${colors.backdrop};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -108,24 +104,24 @@ const StyledHeader = styled.header`
   }
 
   & a.active i {
-    color: ${ danger };
+    color: ${colors.danger};
   }
   
   & i {
     display: block;
-    color: ${prim_color};
+    color: ${colors.prim_color};
     transition: all 0.1s ease-out;
   }
 
   & i:hover {
-    color: ${danger};
+    color: ${colors.danger};
     transform: scale(1.2);
   }
   
   & i.rotate {
     transform: rotate(180deg);
     opacity: 0;
-    color: ${danger};
+    color: ${colors.danger};
   }
   
   & svg {

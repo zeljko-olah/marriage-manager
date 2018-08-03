@@ -1,12 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
-import { 
-  prim_light,
-  prim_font,
-  sec_light,
- } from '../../styles/variables'
+import * as colors from '../../styles/variables'
+
 
 const Message = ({message, user}) => {
+  // Create message CSS class dependin on who is sendig the message
   let messageClass
   if (message.from === user.name ) {
     messageClass = "message-wrapper right"
@@ -15,13 +13,26 @@ const Message = ({message, user}) => {
   } else {
     messageClass = "message-wrapper left"
   }
+  
+  // Make linebreaks functionality posible
+  const checkLineBreaks = message.text.includes('\n')
+  let formattedMessage
+  if (checkLineBreaks) {
+    formattedMessage = message.text.split('\n')
+    .map((part, index) => {
+      return <div key={part + index} className="message dont-break-out"> {part} </div>
+    })
+  } else {
+    formattedMessage = <div className="message dont-break-out"> {message.text} </div>
+  }
+
   return (
     <StyledMessage>
       <div className={messageClass}>
         <div className="message-outer">
           <div className="time">{message.createdAt}</div>
           <div className="message-inner">
-              <div className="message dont-break-out">{message.text}</div>
+              {formattedMessage}
           </div>
         </div>
       </div>
@@ -82,14 +93,14 @@ const StyledMessage = styled.div`
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     border-top: 10px solid transparent;
-    border-bottom: 10px solid ${sec_light};
+    border-bottom: 10px solid ${colors.sec_light};
     transform: skewX(-60deg);
   }
 }
 
 & div.left .message-inner {
   order: 1;
-  background: ${sec_light};
+  background: ${colors.sec_light};
   &:after {
     transform: skewX(60deg);
     top: -18px;
@@ -98,9 +109,9 @@ const StyledMessage = styled.div`
 }
 
 & div.right .message-inner {
-  background: ${prim_light};
+  background: ${colors.prim_light};
   &:after {
-    border-bottom: 10px solid ${prim_light};
+    border-bottom: 10px solid ${colors.prim_light};
     top: -18px;
     right: -10px;
   }
@@ -118,7 +129,7 @@ const StyledMessage = styled.div`
 }
 
 & div.time {
-  color: ${prim_font};
+  color: ${colors.prim_font};
   font-size: 12px;
   font-weight: bold;
   text-align: left;
@@ -128,7 +139,7 @@ const StyledMessage = styled.div`
 
 & div.message {
   padding: 3px 0;
-  color: ${prim_font};
+  color: ${colors.prim_font};
   font-family: PT mono, sans-serif;
   font-size: 12px;
   font-weight: bold;

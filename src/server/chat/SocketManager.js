@@ -1,8 +1,9 @@
-const io = require('./index.js').io
-const {Users} = require('./chat/users')
+const io = require('./../index.js').io
+const {Users} = require('./users')
 
-const {generateMessage} = require('./chat/message.js')
+const events = require('../../chat/Events')
 
+const {generateMessage} = require('./message.js')
 // Instantiate users class
 const users = new Users();
 // @TODO - Hardcore chat room for now
@@ -17,7 +18,7 @@ module.exports = (socket) => {
    * When user enters the chat page
    */
 
-  socket.on('JOIN', (message, user) => {
+  socket.on(events.JOIN, (message, user) => {
     // Set the user on the socket
     socket.user = user
 
@@ -29,11 +30,11 @@ module.exports = (socket) => {
     users.addUser(socket.id, user, room )
     
     // io.emit('USER_CONNECTED', connectedUsers )
-    io.to(room).emit('UPDATE_USER_LIST', users.getUserList(room))
+    io.to(room).emit(events.UPDATE_USER_LIST, users.getUserList(room))
     console.log(users.getUserList(room))
 
-    socket.emit('NEW_MESSAGE', generateMessage('Admin', `Welcome ${user.name}! :)`))
-    socket.broadcast.to(room).emit('NEW_MESSAGE', generateMessage('Admin', `${user.name} has joined`));
+    socket.emit(events.NEW_MESSAGE, generateMessage('Admin', `Welcome ${user.name}! :)`))
+    socket.broadcast.to(room).emit(events.NEW_MESSAGE, generateMessage('Admin', `${user.name} has joined`));
   })
 
   /*
@@ -41,11 +42,11 @@ module.exports = (socket) => {
    * When user types a message
    */
   
-  socket.on('MESSAGE_SENT', (message, callback) => {
+  socket.on(events.MESSAGE_SENT, (message, callback) => {
     const user = users.getUser(socket.id)
 
     if (user) {
-      io.to(room).emit('NEW_MESSAGE', generateMessage(user.name, message));
+      io.to(room).emit(events.NEW_MESSAGE, generateMessage(user.name, message));
     }
     
     callback()
@@ -56,7 +57,7 @@ module.exports = (socket) => {
    *
    */
   
-  socket.on('CLIENT_DISCONNECTED', () => {
+  socket.on(events.CLIENT_DISCONNECTED, () => {
     console.log('Disconnected from client')
     socket.disconnect()
   })
@@ -70,8 +71,8 @@ module.exports = (socket) => {
     // If there is a user
     if(user) {
       // Update the room's users list
-      io.to(room).emit('UPDATE_USER_LIST', users.getUserList(room))
-      io.to(room).emit('NEW_MESSAGE', generateMessage('Admin', `${user.name} has left.`))
+      io.to(room).emit(events.UPDATE_USER_LIST, users.getUserList(room))
+      io.to(room).emit(events.NEW_MESSAGE, generateMessage('Admin', `${user.name} has left.`))
     }
     
     console.log(users.getUserList(room))
