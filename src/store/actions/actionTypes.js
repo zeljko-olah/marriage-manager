@@ -8,4 +8,7 @@ export const SET_ERRORS = 'SET_ERRORS';
 // SOCKET
 export const SOCKET_INIT = 'SOCKET_INIT';
 
+// CHAT
+export const GET_MESSAGES = 'GET_MESSAGES';
+
 

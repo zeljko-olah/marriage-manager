@@ -6,7 +6,7 @@
 import React, { Component } from 'react'
 
 import { connect } from 'react-redux'
-import {socketInit} from '../../store/actions/index'
+import {socketInit, getMessages} from '../../store/actions/index'
 
 import ChatHeading from './ChatHeading'
 import Messages from './Messages'
@@ -39,6 +39,9 @@ class Chat extends Component {
   // Lifecycle
   componentDidMount = () => {
     this.initSocket()
+    this.props.getMessages().then(() => {
+      this.setState({messages: this.props.loadedMessages})
+    })
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions)
   }
@@ -131,12 +134,14 @@ class Chat extends Component {
 
 const mapStateToProps = state => {
   return {
-    user: state.auth.user
+    user: state.auth.user,
+    loadedMessages: state.chat.messages
   }
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  socketInit: (socket) => dispatch(socketInit(socket))
+  socketInit: (socket) => dispatch(socketInit(socket)),
+  getMessages: () => dispatch(getMessages())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Chat)

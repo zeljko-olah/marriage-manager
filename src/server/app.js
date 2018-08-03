@@ -15,12 +15,13 @@ const app = express()
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 // Fallback to index.html for applications that are using the HTML 5 history API
-const history = require('connect-history-api-fallback')
+// const history = require('connect-history-api-fallback')
 const serveStatic = require('serve-static')
 const cors = require('cors')
 
 // Import routes
 const userRoutes = require('./api/routes/user')
+const chatRoutes = require('./api/routes/chat')
 
 // Define public path to serve it
 const publicPath = path.join(__dirname, '../../build')
@@ -33,7 +34,7 @@ const publicPath = path.join(__dirname, '../../build')
 app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-app.use(history());
+// app.use(history());
 // Serve publicPath directory
 app.use(serveStatic(publicPath))
 // Use
@@ -59,11 +60,12 @@ app.use(cors())
  */
 
 app.use("/api/user", userRoutes)
+app.use("/api/chat", chatRoutes)
 
 // Serve React Build
-app.get('/', (req, res) => {
-  res.sendFile(publicPath)
-});
+// app.get('/', (req, res) => {
+//   res.sendFile(publicPath)
+// });
 
 // Not found middleware
 app.use((req, res, next) => {

@@ -10,5 +10,6 @@ export {
 
 // ORDER RELATED ACTIONS
 export {
-  socketInit
-} from './socket'
+  socketInit,
+  getMessages
+} from './chat'

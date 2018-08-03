@@ -14,10 +14,18 @@ const socketInit = (state, action) => {
     })
 }
 
+// GET CHAT MESSAGES
+const getMessages = (state, action) => {
+    return updateObject( state, {
+        messages: action.messages
+    })
+}
+
 // DEFINE REDUCER
 const reducer = ( state = initialState, action ) => {
     switch ( action.type ) {
         case actionTypes.SOCKET_INIT: return socketInit(state, action)
+        case actionTypes.GET_MESSAGES: return getMessages(state, action)
         default:
             return state
     }

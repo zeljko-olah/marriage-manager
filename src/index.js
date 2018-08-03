@@ -9,7 +9,7 @@ import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
 import thunk from 'redux-thunk'
 import authReducer from './store/reducers/auth'
-import socketReducer from './store/reducers/socket'
+import chatReducer from './store/reducers/chat'
 
 // ACTION CREATORS
 // import {authCheckState, socketInit} from './store/actions/index'
@@ -21,7 +21,7 @@ const composeEnhancers = process.env.NODE_ENV === 'development' ? window.__REDUX
 // Reducers
 const rootReducer = combineReducers({
     auth: authReducer,
-    chat: socketReducer
+    chat: chatReducer
 })
 
 // Define store
