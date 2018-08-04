@@ -28,7 +28,7 @@ class Messages extends Component {
           className="scroll"
           ref="container">
           <StyledThread>
-            {messages.map((message) => {
+            {messages && messages.map((message) => {
               return (<Message
                         key={message.id}
                         message={message}

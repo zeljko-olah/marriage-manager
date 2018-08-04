@@ -106,10 +106,13 @@ const StyledInput = styled.div`
     border-top: 2px solid transparent;
     white-space: pre-line;
     white-space: pre-wrap;
+    color: ${colors.prim_font};
+
     
     &::placeholder {
       font-family: 'PT mono';
       font-size: 14px;
+      color: ${colors.prim_font};
     }
   }
 

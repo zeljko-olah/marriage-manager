@@ -20,12 +20,15 @@ const ChatHeading = ({users, user}) => {
         <div className="user">
           { sender ? (
             <Fragment>
-              <Avatar src={sender.avatar}/>
+              <Avatar
+                src={sender.avatar}
+                user={sender}/>
               <span className="sender">{sender.name + ":)"}</span> 
             </Fragment>
           ) : (
             <Fragment>
-              <Avatar src={"uploads/users/default-avatar.png"} />
+              <Avatar
+                src={"uploads/users/default-avatar.png"} />
               <span className="offline">Offline</span>
             </Fragment> 
           ) }
@@ -33,7 +36,8 @@ const ChatHeading = ({users, user}) => {
         <div className="user">
           <span className="receiver">{"<3"} {receiver.name}</span> 
           <Avatar 
-            src={receiver.avatar} />
+            src={receiver.avatar}
+            user={receiver} />
         </div>
          
       </StyledChatHeading>
