@@ -30,7 +30,33 @@ export const getMessages = () => {
         dispatch(getMessagesSuccess(response.data.messages))
       })
       .catch(err => {
-        dispatch(getMessagesFailed(err.response.data.message))
+        dispatch(getMessagesFailed(err))
+      })
+  }
+}
+
+export const saveMessageSuccess = (message) => {
+  return {
+    type: actionTypes.SAVE_MESSAGE,
+    message
+  }
+}
+
+export const saveMessageFail = (error) => {
+  return {
+    type: actionTypes.SAVE_MESSAGE,
+    error
+  }
+}
+
+export const saveMessage = (message) => {
+  return dispatch => {
+    return axios.post('api/chat/messages', { message })
+      .then(response => {
+        dispatch(getMessagesSuccess(message))
+      })
+      .catch(err => {
+        dispatch(saveMessageFail(err))
       })
   }
 }

@@ -1,5 +1,7 @@
 const io = require('./../index.js').io
 const {Users} = require('./users')
+// MODELS
+const Message = require('../api/models/message')
 
 const events = require('../../chat/Events')
 
@@ -49,7 +51,7 @@ module.exports = (socket) => {
       io.to(room).emit(events.NEW_MESSAGE, generateMessage(user.name, message));
     }
     
-    callback()
+    callback('Message sent')
   })
 
   /*

@@ -11,5 +11,6 @@ export {
 // ORDER RELATED ACTIONS
 export {
   socketInit,
-  getMessages
+  getMessages,
+  saveMessage
 } from './chat'

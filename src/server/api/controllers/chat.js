@@ -4,10 +4,13 @@ const Message = require("../models/message")
 
 exports.new_message = (req, res, next) => {
   console.log('REQ.BODY:::', req.body)
+  const { text, userId } = req.body.message
+  console.log('TEXT', text)
+  console.log('USERID', userId)
   const message = new Message({
     _id: mongoose.Types.ObjectId(),
-    text: req.body.text,
-    user: req.body.user
+    text: text,
+    user: userId
   })
 
   message

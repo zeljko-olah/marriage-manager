@@ -6,7 +6,7 @@
 import React, { Component } from 'react'
 
 import { connect } from 'react-redux'
-import {socketInit, getMessages} from '../../store/actions/index'
+import {socketInit, getMessages, saveMessage} from '../../store/actions/index'
 
 import ChatHeading from './ChatHeading'
 import Messages from './Messages'
@@ -86,7 +86,6 @@ class Chat extends Component {
     socket.on('disconnect', (message) => {
       // Log
       console.log('Disconnected from server');
-      console.log(message)
     })
   }
 
@@ -98,8 +97,15 @@ class Chat extends Component {
   handleSendMessage = (message) => {
     console.log('Sending message...', message)
     const { socket } = this.state
-    socket.emit(events.MESSAGE_SENT, message, () => {
-      console.log('AKNOWLEDGEMENT FIRED:::')
+    const { saveMessage, user } = this.props
+    if (message.from !== 'Admin') {
+      saveMessage({
+        text: message,
+        userId: user.id
+      })
+    }
+    socket.emit(events.MESSAGE_SENT, message, (info) => {
+      console.log(info)
     })
   }
   
@@ -141,7 +147,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => ({
   socketInit: (socket) => dispatch(socketInit(socket)),
-  getMessages: () => dispatch(getMessages())
+  getMessages: () => dispatch(getMessages()),
+  saveMessage: (message) => dispatch(saveMessage(message))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Chat)
