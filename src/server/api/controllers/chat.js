@@ -3,7 +3,10 @@ const mongoose = require("mongoose")
 const Message = require("../models/message")
 
 exports.new_message = (req, res, next) => {
-  const { text, userId } = req.body
+  console.log('REQ.BODY:::', req.body)
+  const { text, userId } = req.body.message
+  console.log('TEXT', text)
+  console.log('USERID', userId)
   const message = new Message({
     _id: mongoose.Types.ObjectId(),
     text: text,
