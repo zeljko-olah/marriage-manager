@@ -4,7 +4,7 @@ import * as colors from '../../styles/variables'
 
 
 const Message = ({message, user}) => {
-  // Create message CSS class dependin on who is sendig the message
+  // Create message CSS class depending on who is sending the message
   let messageClass
   if (message.from === user.name ) {
     messageClass = "message-wrapper right"

@@ -1,5 +1,5 @@
 // REACT
-import React from 'react';
+import React, {Fragment} from 'react';
 
 // REDUX
 import { connect } from 'react-redux';
@@ -7,8 +7,6 @@ import { connect } from 'react-redux';
 // ROUTER
 import { Route, Redirect } from 'react-router-dom';
 
-// AUX
-import Aux from '../hoc/Aux'
 // NAVIGATION
 import Navigation from '../components/Navigation'
 
@@ -32,7 +30,7 @@ export const PrivateRoute = ({
    */
   const cmp = (props) => (
     isAuthenticated ? (
-      <Aux>
+      <Fragment>
         { /* NAVIGATION */ }
         <Navigation />
         
@@ -43,7 +41,7 @@ export const PrivateRoute = ({
           </StyledSection>
         </StyledMain>
       
-      </Aux>
+      </Fragment>
     ) : (
       <Redirect to="/" />
     )

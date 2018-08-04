@@ -1,6 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 
-import Aux from '../hoc/Aux'
 import Header from './Navigation/Header'
 
 import NavItems from './Navigation/Header/NavItems'
@@ -32,7 +31,7 @@ class Navigation extends Component {
   render() {
     const { showMobileMenu } = this.state
     return (
-      <Aux>
+      <Fragment>
 
         { /* HEADER */ }
         <Header
@@ -56,7 +55,7 @@ class Navigation extends Component {
           </StyledAsideNav>
         </Sidebar>
         
-      </Aux>
+      </Fragment>
     )
   }
 }

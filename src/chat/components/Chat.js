@@ -72,25 +72,18 @@ class Chat extends Component {
 			this.setState({ users })
     })
     socket.on(events.UPDATE_USER_LIST, (users) => {
-      console.log("users", users)
       this.setState({users})
     })
     socket.on(events.NEW_MESSAGE, (message) => {
       const { messages } = this.state
       const formatedTime = moment(message.createdAt).format('h:mm a')
       const newMessage = Object.assign({}, message, {createdAt: formatedTime})
-      const newMessages = messages.concat(newMessage)
-      this.setState({messages: newMessages})
-
+      // const newMessages = messages.concat(newMessage)
+      this.setState({messages: [...messages, newMessage]})
     })
     socket.on('disconnect', (message) => {
-      // Log
       console.log('Disconnected from server');
     })
-  }
-
-  updateWindowDimensions = () => {
-    this.setState({ width: window.innerWidth, height: window.innerHeight })
   }
   
   // Send message
@@ -107,6 +100,11 @@ class Chat extends Component {
     socket.emit(events.MESSAGE_SENT, message, (info) => {
       console.log(info)
     })
+  }
+  
+  // Update browser dimensions
+  updateWindowDimensions = () => {
+    this.setState({ width: window.innerWidth, height: window.innerHeight })
   }
   
   render () {

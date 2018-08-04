@@ -1,9 +1,6 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import styled from 'styled-components'
 import * as colors from '../../styles/variables'
-
-
-import Aux from '../../hoc/Aux'
 
 import Avatar from '../../components/user/Avatar'
 
@@ -22,15 +19,15 @@ const ChatHeading = ({users, user}) => {
       <StyledChatHeading>
         <div className="user">
           { sender ? (
-            <Aux>
+            <Fragment>
               <Avatar src={sender.avatar}/>
               <span className="sender">{sender.name + ":)"}</span> 
-            </Aux>
+            </Fragment>
           ) : (
-            <Aux>
+            <Fragment>
               <Avatar src={"uploads/users/default-avatar.png"} />
               <span className="offline">Offline</span>
-            </Aux> 
+            </Fragment> 
           ) }
         </div>  
         <div className="user">

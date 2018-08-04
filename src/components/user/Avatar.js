@@ -4,7 +4,9 @@ import styled from 'styled-components'
 
 const Avatar = ({src}) => {
   return (
-      <StyledAvatar src={src} />   
+      <StyledAvatar
+        src={src}
+        onError={({target}) => {target.src = 'uploads/users/default-avatar.png'}} />   
   )
 }
 
