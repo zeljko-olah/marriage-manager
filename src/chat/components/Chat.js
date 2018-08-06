@@ -152,6 +152,7 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(Chat)
 
 const StyledSection = styled.section`
+
   background: ${colors.ter_grad};
   border: 2px solid ${colors.prim_color};
   border-top-left-radius: 20px;
@@ -160,7 +161,13 @@ const StyledSection = styled.section`
   overflow: hidden;
   margin: 30px auto 0;
   @media (max-width: 768px) {
-    margin: 0px auto 0;
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    margin: 0 auto;
+    border: 0;
+    border-top-left-radius: 0;
   }
 
   & h1 {

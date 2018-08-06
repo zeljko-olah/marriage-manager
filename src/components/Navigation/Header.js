@@ -1,4 +1,7 @@
-import React from 'react'
+import React, {Component} from 'react'
+
+import { connect } from 'react-redux'
+import * as actions from '../../store/actions/index'
 
 // NAV ITEMS
 import NavItems from './Header/NavItems'
@@ -6,62 +9,57 @@ import NavItems from './Header/NavItems'
 import styled from 'styled-components';
 import * as colors from '../../styles/variables'
 
-// HISTORY
-import { history } from '../../router/AppRouter' 
-
 // ICONS
 import MenuIcon from 'react-icons/lib/md/menu'
-import LogoutIcon from 'react-icons/lib/md/eject'
+import ChatIcon from 'react-icons/lib/md/forum'
 
+class Header extends Component {
+  render () {
+    const { show, menuToggleClicked, showChat, toggleChat } = this.props
+  
+    return (
+      <StyledHeader>
+      
+        { /* MENU ICON */ }
+        <span
+          className="items"
+          onClick={ menuToggleClicked }>
+          <i className={show ? 'rotate': null}><MenuIcon /></i>
+        </span>
+  
+        { /* NAV ITEMS */ }
+        <NavItems />
+  
+        { /* MENU ICON */ }
+        <span
+          className="items"
+          onClick={ () => {toggleChat(showChat)} }>
+          <i className={show ? 'rotate': null}><ChatIcon /></i>
+        </span>
+      </StyledHeader>
+    )
+  }
+} 
 
-// REDUX
-import { connect } from 'react-redux';
-import * as actions from '../../store/actions/index';
-
-const Header = ({
-  show, logout, menuToggleClicked, chatToggleClicked
-}) => {
-
-  return (
-    <StyledHeader>
-    
-      { /* MENU ICON */ }
-      <span
-        className="items"
-        onClick={ menuToggleClicked }>
-        <i className={show ? 'rotate': null}><MenuIcon /></i>
-      </span>
-
-      { /* NAV ITEMS */ }
-      <NavItems />
-
-      { /* LOGOUT */ }
-      <span
-        className="items"
-        onClick={() => {logout(); history.go('/');}}>
-        <i>
-          <LogoutIcon />
-        </i>
-      </span>
-    </StyledHeader>
-  )
-}
-
-// MAP DISPATCH TO PROPS - available on props object
-const mapDispatchToProps = dispatch => {
+const mapStateToProps = state => {
   return {
-    logout: () => dispatch( actions.logout() )
+    show: state.chat.showChat
   }
 }
 
-// EXPORT CONNECTED COMPONENT WITHOUT STATE
-export default connect(null, mapDispatchToProps)(Header);
+const mapDispatchToProps = dispatch => {
+  return {
+      toggleChat: (showChat) => dispatch( actions.toggleChat(showChat) )
+  }
+}
+
+export default connect( mapStateToProps, mapDispatchToProps )( Header )
+
 
 const StyledHeader = styled.header`
   margin: 0;
   padding: 10px 30px;
   border-bottom: 2px solid ${colors.prim_color};
-  // background-color: ${colors.backdrop};
   display: flex;
   justify-content: space-between;
   align-items: center;

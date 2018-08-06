@@ -9,6 +9,13 @@ export const socketInit = (socket) => {
   }
 }
 
+export const toggleChat = (showChat) => {
+  return {
+    type: actionTypes.TOGGLE_CHAT,
+    showChat
+  }
+}
+
 export const getMessagesSuccess = (messages) => {
   return {
     type: actionTypes.GET_MESSAGES,

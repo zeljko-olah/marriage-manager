@@ -3,16 +3,12 @@ import React, { Component } from 'react'
 import Sidebar from '../../components/Navigation/Sidebar'
 import Chat from './Chat'
 
-import ChatIcon from 'react-icons/lib/md/forum'
-
 import { connect } from 'react-redux'
+import * as actions from '../../store/actions/index'
+
 import {socketInit} from '../../store/actions/index'
 
 class ChatWrapper extends Component {
-
-  state = {
-    showChat: true
-  }
 
   componentDidMount = () => {
     document.addEventListener('keydown', this.escapeFunction, false)
@@ -22,35 +18,23 @@ class ChatWrapper extends Component {
     document.removeEventListener('keydown', this.escapeFunction, false)
   }
 
-  closeChatHandler = () => {
-    this.setState({ showChat: false })
-  }
-
-  chatToggleHandler = () => {
-    this.setState( (prevState) => {
-      return { showChat: !prevState.showChat }
-    })
-  }
-
   escapeFunction = (e) => {
+    const { show, toggleChat } = this.props
     if (e.keyCode === 27) {
-      this.chatToggleHandler()
+      toggleChat(show)
     }
   }
   
   render() {
-    const {showChat} = this.state
-    const { user } = this.props
+    const { user, show, toggleChat } = this.props
     return (
       <div>
       { user ? (
         <Sidebar
           width="100%"
           side="right"
-          open={showChat}
-          close={this.closeChatHandler}
-          toggleSidebar={this.chatToggleHandler}
-          sidebarIcon={<ChatIcon/>}
+          open={show}
+          toggleSidebar={toggleChat}
         >
           <Chat />
         </Sidebar>)
@@ -63,12 +47,14 @@ class ChatWrapper extends Component {
 
 const mapStateToProps = state => {
   return {
-    user: state.auth.user
+    user: state.auth.user,
+    show: state.chat.showChat
   }
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  socketInit: (socket) => dispatch(socketInit(socket))
+  socketInit: (socket) => dispatch(socketInit(socket)),
+  toggleChat: (showChat) => dispatch( actions.toggleChat(showChat) )
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatWrapper)

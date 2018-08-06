@@ -3,7 +3,8 @@ import React, { Component } from 'react'
 import LoginForm from '../components/Login/LoginForm'
 
 import styled from 'styled-components'
-import { prim_color, danger } from '../styles/variables'
+import * as colors from '../styles/variables'
+
 
 import MDArrowUp from 'react-icons/lib/md/keyboard-arrow-up'
 import MDArrowDown from 'react-icons/lib/md/keyboard-arrow-down'
@@ -128,13 +129,18 @@ const LoginFormWrapper = styled.div`
   bottom: 0;
   right: 20px;
   border: 1px solid WhiteSmoke;
-  border-top-left-radius: 25px;
-  background-color: WhiteSmoke;
+  background-color: transparent;
   overflow: hidden;
   box-shadow: 0 0 5px #000000;
   font-family: 'Cardo', serif;
   font-weight: 400;
   font-size: 15px;
+
+  @media (max-width: 768px) {
+    bottom: 0;
+    right: 0;
+    width: 100vw;
+  }
 
   & span.error {
     position: absolute;
@@ -150,7 +156,7 @@ const LoginFormWrapper = styled.div`
   text-align: center;
   font-weight: 900;
   color: grey;
-  background-color: ${prim_color};
+  background-color: ${colors.prim_color};
   cursor: pointer;
   
 
@@ -164,7 +170,7 @@ const LoginFormWrapper = styled.div`
   }
 
   & p.error {
-    color: ${danger};
+    color: ${colors.danger};
     font-size: 14px;
   }
 
@@ -185,4 +191,4 @@ const StyledFormFooter = styled.p`
  *
  */
 
-export default connect( mapStateToProps, mapDispatchToProps )( Login );
+export default connect( mapStateToProps, mapDispatchToProps )( Login )

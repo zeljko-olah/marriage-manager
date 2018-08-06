@@ -6,7 +6,7 @@ import * as colors from '../../styles/variables'
 import Backdrop from './Sidebar/Backdrop'
 
 const SideBar = ({
-  open, close, children, width, side, toggleSidebar, sidebarIcon
+  open, close, children, width, side
 }) => {
   let toggleClass = open ? 'open' : 'close' 
   
@@ -25,18 +25,6 @@ const SideBar = ({
         side={side}>
         {children}
       </StyledAside>
-      
-      { /* SIDEBAR ICON */ }
-      {side === 'right' && (
-        <StyledChatIcon
-          open={open}>
-          <i
-            className="toggle"
-            onClick={toggleSidebar}>
-            {sidebarIcon}
-          </i>
-        </StyledChatIcon>
-      )}
     </div>
   )
 }
@@ -56,6 +44,10 @@ const StyledAside = styled.aside`
   border-right: 3px solid ${colors.prim_color};
   background-color: ${colors.backdrop};
   transition: transform 0.3s ease-out;
+
+  @media (max-width: 768px) {
+    padding: 0;
+  }
   
   &.open {
     transform: translateX(0);
@@ -76,11 +68,9 @@ const StyledChatIcon = styled.div`
     text-align: center;
     position: fixed;
     z-index: 1000;
-    top: 50%;
+    top: 0;
     right: 0;
-    background: ${colors.backdrop};
     padding: 10px;
-    border: 2px solid ${colors.prim_color};
     border-right: none;
     cursor: pointer;
   }

@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import * as colors from '../../styles/variables'
 
+import SendIcon from 'react-icons/lib/md/send'
+
 // COMPONENT
 class MessageInput extends Component {
   
@@ -63,7 +65,7 @@ class MessageInput extends Component {
                   this.setState({ message: e.target.value })
                 }
               } />
-            { width && width < 768 ? (<button type="submit">Send</button>) : null }
+            { width && width < 768 ? (<button type="submit"><i><SendIcon /></i></button>) : null }
           </StyledInput>
         </form>
       </StyledWrap>
@@ -90,13 +92,13 @@ const StyledInput = styled.div`
     border: none;
     &:focus {
       border: none;
-      border-top: 2px solid ${colors.prim_color};
       outline: none;
     }
   }
 
   & textarea {
     width: ${props => props.width > 768 ? '100%' : '70%'};
+    width: 100%;
     padding: 15px 10px 10px;
     font-family: 'PT mono';
     font-size: 14px;
@@ -117,19 +119,27 @@ const StyledInput = styled.div`
   }
 
   & button {
-    width: 30%;
-    cursor: pointer;
-    border: 2px solid ${colors.prim_color};
-    background-color: ${colors.prim_color};
-    color: white;
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: ${colors.backdrop};
+    box-shadow: 0 3px 5px 0 rgba(0,0,0,0.3);
+    color: #555;
     font-size: 20px;
-    font-style: italic;
-    font-weight: 100;
-    text-transform: uppercase;
-    letter-spacing: 4px;
+    margin-right: 10px;
 
     &:hover {
-      background-color: ${colors.sec_color};
+      cursor: pointer;
+      background-color: #ddd;
+      box-shadow: 0 8px 15px 0 rgba(0,0,0,0.3);
+    }
+
+    & i svg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
   }
 `

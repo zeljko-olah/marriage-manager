@@ -5,6 +5,7 @@ import { updateObject } from '../../shared/utility'
 const initialState = {
     // socket
     socket: null,
+    showChat: false,
     messages: [],
     message: null
 }
@@ -13,6 +14,13 @@ const initialState = {
 const socketInit = (state, action) => {
     return updateObject( state, {
         socket: action.socket
+    })
+}
+
+// TOOGLE CHAT
+const toggleChat = (state, action) => {
+    return updateObject( state, {
+        showChat: !action.showChat
     })
 }
 
@@ -34,6 +42,7 @@ const saveMessage = (state, action) => {
 const reducer = ( state = initialState, action ) => {
     switch ( action.type ) {
         case actionTypes.SOCKET_INIT: return socketInit(state, action)
+        case actionTypes.TOGGLE_CHAT: return toggleChat(state, action)
         case actionTypes.GET_MESSAGES: return getMessages(state, action)
         case actionTypes.SAVE_MESSAGE: return saveMessage(state, action)
         default:

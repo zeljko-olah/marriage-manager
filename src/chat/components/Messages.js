@@ -47,12 +47,15 @@ export default Messages
 
 // STYLED
 const StyledMessages = styled.div`
+  @media (max-width: 768px) {
+    flex-grow: 1;
+  }
   & div.scroll {
     height: 45vh;
     overflow: hidden;
     overflow-y: scroll;
     ::-webkit-scrollbar { 
-      display: none; 
+      display: none;
     }
   }
 `
