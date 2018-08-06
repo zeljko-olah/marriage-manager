@@ -18,6 +18,7 @@ class Avatar extends Component {
        <StyledAvatar>
         <img
           src={src}
+          alt={"user avatar"}
           onError={({target}) => {
             target.src = 'uploads/users/default-avatar.png'
             this.setState({ noSource: true })

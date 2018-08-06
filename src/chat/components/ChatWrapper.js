@@ -1,3 +1,4 @@
+// IMPORTS
 import React, { Component } from 'react'
 
 import Sidebar from '../../components/Navigation/Sidebar'
@@ -8,6 +9,7 @@ import * as actions from '../../store/actions/index'
 
 import {socketInit} from '../../store/actions/index'
 
+// COMPONENT
 class ChatWrapper extends Component {
 
   componentDidMount = () => {
@@ -27,16 +29,20 @@ class ChatWrapper extends Component {
   
   render() {
     const { user, show, toggleChat } = this.props
+
     return (
-      <div>
+      <div onDoubleClick={toggleChat}>
       { user ? (
+
+        // SIDEBAR
         <Sidebar
           width="100%"
           side="right"
           open={show}
-          toggleSidebar={toggleChat}
         >
+          { /* CHAT */ }
           <Chat />
+          
         </Sidebar>)
         :
         null }
@@ -45,6 +51,7 @@ class ChatWrapper extends Component {
   }
 }
 
+// MAP REDUX STATE AND PROPS
 const mapStateToProps = state => {
   return {
     user: state.auth.user,
@@ -57,4 +64,5 @@ const mapDispatchToProps = (dispatch) => ({
   toggleChat: (showChat) => dispatch( actions.toggleChat(showChat) )
 })
 
+// EXPORT
 export default connect(mapStateToProps, mapDispatchToProps)(ChatWrapper)

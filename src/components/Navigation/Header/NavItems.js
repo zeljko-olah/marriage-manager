@@ -96,10 +96,12 @@ class NavItems extends Component {
   
           { /* LOGOUT */ }
           <li onClick={() => {logout(); history.go('/');}}>
-            <i>
-              <LogoutIcon />
-            </i>
-            { showText && <span>Logout</span> }
+            <a>
+              <i>
+                <LogoutIcon />
+              </i>
+              { showText && <span>Logout</span> }
+            </a>
           </li>
           
         </ul>

@@ -12,12 +12,7 @@ import Navigation from '../components/Navigation'
 
 // STYLED
 import styled from 'styled-components'
-import { 
-  prim_color,
-  backdrop,
-  text_shadow,
-  box_shadow
- } from '../styles/variables'
+import * as colors from '../styles/variables'
 
 export const PrivateRoute = ({
   isAuthenticated,
@@ -73,10 +68,11 @@ const StyledMain = styled.main`
   margin: 30px auto 0;
 `
 const StyledSection = styled.section`
-  background-color: ${backdrop};
-  border: 3px solid ${prim_color};
+  background-color: ${colors.backdrop};
+  background: ${colors.sec_grad};
+  border: 3px solid ${colors.prim_color};
   border-top-left-radius: 20px;
-  box-shadow: ${box_shadow};
+  box-shadow: ${colors.box_shadow};
   
   & h1 {
     text-align: center;
@@ -87,8 +83,8 @@ const StyledSection = styled.section`
     font-style: italic;
     padding-bottom: 5px;
     margin: 20px 30px 20px;
-    border-bottom: 1px solid ${prim_color}
-    text-shadow: ${text_shadow};
+    border-bottom: 1px solid ${colors.prim_color}
+    text-shadow: ${colors.text_shadow};
     color: tomato;
   }
 `

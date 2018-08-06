@@ -6,6 +6,7 @@ import styled, { injectGlobal } from 'styled-components'
 import AppRouter from './router/AppRouter'
 import ChatWrapper from './chat/components/ChatWrapper'
 
+// COMPONENT
 const App = () => {
   return (
     <PageWrapper>
@@ -19,8 +20,10 @@ const App = () => {
   )
 }
 
+// EXPORT
 export default App
 
+// STYLED
 // Define global styles
 injectGlobal`
   * {

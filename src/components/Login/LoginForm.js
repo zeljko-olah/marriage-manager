@@ -75,7 +75,7 @@ const StyledForm = styled.div`
     padding: 8px;
     color: #777;
     background-color: transparent;
-    border: 3px solid Aquamarine;
+    border: 2px solid Aquamarine;
   }
 
   & label p {
@@ -101,7 +101,7 @@ const StyledForm = styled.div`
     text-transform: uppercase;
     color: #555;
     background-color: ${colors.prim_light};
-    border: 3px solid Aquamarine;
+    border: 2px solid Aquamarine;
     cursor: pointer;
   }
 

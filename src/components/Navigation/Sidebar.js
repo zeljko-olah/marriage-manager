@@ -5,9 +5,8 @@ import * as colors from '../../styles/variables'
 
 import Backdrop from './Sidebar/Backdrop'
 
-const SideBar = ({
-  open, close, children, width, side
-}) => {
+const SideBar = ({ open, close, children, width, side }) => {
+
   let toggleClass = open ? 'open' : 'close' 
   
   return (
@@ -29,8 +28,10 @@ const SideBar = ({
   )
 }
 
+// EXPORT
 export default SideBar
 
+// STYLED
 const StyledAside = styled.aside`
   position: fixed;
   width: ${props => props.width};
@@ -59,32 +60,5 @@ const StyledAside = styled.aside`
        'transform: translateX(100%);' :
        'transform: translateX(-100%);'
     } };
-  }
-`
-
-const StyledChatIcon = styled.div`
-  & i.toggle {
-    display: block;
-    text-align: center;
-    position: fixed;
-    z-index: 1000;
-    top: 0;
-    right: 0;
-    padding: 10px;
-    border-right: none;
-    cursor: pointer;
-  }
-
-  & i.toggle svg {
-    font-size: 40px !important;
-    color: ${colors.prim_color};
-    color: ${props => {
-      return props.open ? `${colors.sec_color}` : `${colors.prim_color}`
-    }};
-    transition: all 0.1s ease-out; 
-
-    &:hover {
-      color: ${colors.sec_color};
-    }
   }
 `

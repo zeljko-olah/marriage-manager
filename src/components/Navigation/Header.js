@@ -24,7 +24,7 @@ class Header extends Component {
         <span
           className="items"
           onClick={ menuToggleClicked }>
-          <i className={show ? 'rotate': null}><MenuIcon /></i>
+          <i><MenuIcon /></i>
         </span>
   
         { /* NAV ITEMS */ }
@@ -34,7 +34,7 @@ class Header extends Component {
         <span
           className="items"
           onClick={ () => {toggleChat(showChat)} }>
-          <i className={show ? 'rotate': null}><ChatIcon /></i>
+          <i className={show ? 'open-chat': null}><ChatIcon /></i>
         </span>
       </StyledHeader>
     )
@@ -116,9 +116,7 @@ const StyledHeader = styled.header`
     transform: scale(1.2);
   }
   
-  & i.rotate {
-    transform: rotate(180deg);
-    opacity: 0;
+  & i.open-chat {
     color: ${colors.danger};
   }
   

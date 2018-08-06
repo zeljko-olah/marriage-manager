@@ -46,9 +46,12 @@ class Navigation extends Component {
           close={this.sideDrawerCloseHandler}
           width="280px"
         >
+        
+          { /* LOGO */ }
           <StyledLogo>
             MM
           </StyledLogo>
+
           { /* NAV ITEMS */ }
           <StyledAsideNav>
             <NavItems showText />
@@ -85,6 +88,7 @@ const StyledAsideNav = styled.div`
 
 & nav li a {
   color: ${prim_color};
+  cursor: pointer;
 }
 
 & nav li span {

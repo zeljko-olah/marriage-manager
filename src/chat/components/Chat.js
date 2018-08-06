@@ -88,7 +88,6 @@ class Chat extends Component {
   
   // Send message
   handleSendMessage = (message) => {
-    console.log('Sending message...', message)
     const { socket } = this.state
     const { saveMessage, user } = this.props
     if (message.from !== 'Admin') {
@@ -136,6 +135,7 @@ class Chat extends Component {
   }
 }
 
+// MAP REDUX STATE AND DISPATCH TO PROPS
 const mapStateToProps = state => {
   return {
     user: state.auth.user,
@@ -149,8 +149,12 @@ const mapDispatchToProps = (dispatch) => ({
   saveMessage: (message) => dispatch(saveMessage(message))
 })
 
+
+// EXPORT
 export default connect(mapStateToProps, mapDispatchToProps)(Chat)
 
+
+// STYLED
 const StyledSection = styled.section`
 
   background: ${colors.ter_grad};
@@ -168,19 +172,5 @@ const StyledSection = styled.section`
     margin: 0 auto;
     border: 0;
     border-top-left-radius: 0;
-  }
-
-  & h1 {
-    text-align: center;
-    font-size: 50px;
-    @media (max-width: 768px) {
-      font-size: 30px;
-    }
-    font-style: italic;
-    padding-bottom: 5px;
-    margin: 20px 30px 20px;
-    border-bottom: 1px solid ${colors.prim_color}
-    text-shadow: ${colors.text_shadow};
-    color: tomato;
   }
 `

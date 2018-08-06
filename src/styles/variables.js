@@ -12,7 +12,7 @@ export const sec_font = 'WhiteSmoke'
 // UI
 export const danger = 'tomato'
 export const disabled_color = '#ddd'
-export const prim_grey = '#fefeee'
+export const ter_yellow = '#fefeee'
 export const prim_white = '#fff'
 export const border_color = 'grey'
 export const boy_color = 'CornflowerBlue'
@@ -32,5 +32,5 @@ export const box_shadow = `0 10px 6px -6px ${backdrop};`
 
 // GRADIENTS
 export const primary_gradient = 'linear-gradient(90deg, #0700b8 0%, #00ff88 100%)'
-export const sec_grad = `linear-gradient(0deg, ${prim_grey} 10%, ${prim_color} 100%)`
-export const ter_grad = `linear-gradient(0deg, ${prim_white} 10%, ${prim_grey} 100%)`
+export const sec_grad = `linear-gradient(0deg, ${ter_yellow} 10%, ${prim_color} 100%)`
+export const ter_grad = `linear-gradient(0deg, ${prim_white} 10%, ${ter_yellow} 100%)`
