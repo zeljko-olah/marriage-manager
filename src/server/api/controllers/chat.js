@@ -1,4 +1,5 @@
 const moment = require('moment')
+const {formatMessageTime} = require('./../../helpers')
 const mongoose = require("mongoose")
 const Message = require("../models/message")
 
@@ -38,13 +39,13 @@ exports.get_messages = (req, res) => {
       res.status(200).json({
         count: docs.length,
         messages: docs.map(doc => {
-          const formatedTime = moment(doc.created_at).format('h:mm a')
+          const time = formatMessageTime(doc.created_at)
 
           return {
             id: doc._id,
             text: doc.text,
             read: doc.read,
-            createdAt: formatedTime,
+            createdAt: time,
             from: doc.user.name,
             user: doc.user
           }
