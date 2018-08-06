@@ -6,7 +6,7 @@
 import React, { Component } from 'react'
 
 import { connect } from 'react-redux'
-import {socketInit, getMessages, saveMessage} from '../../store/actions/index'
+import {socketInit, getMessages, saveMessage} from '../../store/actions'
 
 import ChatHeading from './ChatHeading'
 import Messages from './Messages'

@@ -1,20 +1,20 @@
-import React, {Component} from 'react'
+import React, {Component} from  'react'
 
-import { NavLink } from 'react-router-dom';
+import { NavLink } from  'react-router-dom';
 
 // REDUX
-import { connect } from 'react-redux';
-import * as actions from '../../../store/actions/index';
+import { connect } from  'react-redux';
+import * as actions from '../../../store/actions';
 
 // HISTORY
 import { history } from '../../../router/AppRouter' 
 
-import HomeIcon from 'react-icons/lib/md/home'
-import HeartIcon from 'react-icons/lib/md/favorite-border'
-import TodoIcon from 'react-icons/lib/md/playlist-add-check'
-import AddIcon from 'react-icons/lib/md/add'
-import LocationIcon from 'react-icons/lib/md/location-on'
-import LogoutIcon from 'react-icons/lib/md/eject'
+import HomeIcon from  'react-icons/lib/md/home'
+import HeartIcon from  'react-icons/lib/md/favorite-border'
+import TodoIcon from  'react-icons/lib/md/playlist-add-check'
+import AddIcon from  'react-icons/lib/md/add'
+import LocationIcon from  'react-icons/lib/md/location-on'
+import LogoutIcon from  'react-icons/lib/md/eject'
 
 class NavItems extends Component {
   render () {

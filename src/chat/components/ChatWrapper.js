@@ -5,9 +5,9 @@ import Sidebar from '../../components/Navigation/Sidebar'
 import Chat from './Chat'
 
 import { connect } from 'react-redux'
-import * as actions from '../../store/actions/index'
+import * as actions from '../../store/actions'
 
-import {socketInit} from '../../store/actions/index'
+import {socketInit} from '../../store/actions'
 
 // COMPONENT
 class ChatWrapper extends Component {

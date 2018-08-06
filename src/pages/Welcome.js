@@ -1,34 +1,31 @@
+// IMPORTS
 import React, {Component} from 'react'
-import styled from 'styled-components'
-import { boy_color, girl_color } from '../styles/variables'
+
+import {StyledSection, StyledMainHeading, StyledMainContent} from '../styles/section'
 
 import { connect } from 'react-redux'
 
-class Welcome extends Component {
+// COMPONENT
+const Welcome = ({ user }) => {
+  return (
+    <StyledSection>
+      <StyledMainHeading user={ user } >
+        <h1>Welcome { user.name }</h1>
+      </StyledMainHeading>
 
-  render () {
-    const { user } = this.props
-    return (
-      <div>
-      <section>
-        <WelcomeMessage user={ user } >
-          Welcome { this.props.user.name }
-        </WelcomeMessage>
-      </section>
-      </div>
-    )
-  }
+      <StyledMainContent>
+        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Obcaecati nam repellendus culpa esse nesciunt! Dignissimos, tempore enim? Perspiciatis odio suscipit qui repellendus aut, sunt aspernatur quos at cum itaque autem?</p>
+      </StyledMainContent>
+    </StyledSection>
+  )
 }
 
+// MAP REDUX STATE TO PROPS
 const mapStateToProps = state => {
   return {
     user: state.auth.user
   }
 }
 
-const WelcomeMessage = styled.h1`
-  ${ props => props.user.name === 'Zeljko' ?
-    'color:' + boy_color +'!important; ' :
-    'color:' + girl_color +'!important; '}
-`
+// EXPORT
 export default connect( mapStateToProps )( Welcome );

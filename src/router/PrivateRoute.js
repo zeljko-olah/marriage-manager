@@ -12,7 +12,6 @@ import Navigation from '../components/Navigation'
 
 // STYLED
 import styled from 'styled-components'
-import * as colors from '../styles/variables'
 
 export const PrivateRoute = ({
   isAuthenticated,
@@ -31,9 +30,7 @@ export const PrivateRoute = ({
         
         { /* MAIN CONTENT */ }
         <StyledMain>
-          <StyledSection>
-            <Component {...props} />
-          </StyledSection>
+          <Component {...props} />
         </StyledMain>
       
       </Fragment>
@@ -66,25 +63,4 @@ const StyledMain = styled.main`
   max-width: 600px;
   padding: 10px;
   margin: 30px auto 0;
-`
-const StyledSection = styled.section`
-  background-color: ${colors.backdrop};
-  background: ${colors.sec_grad};
-  border: 3px solid ${colors.prim_color};
-  border-top-left-radius: 20px;
-  box-shadow: ${colors.box_shadow};
-  
-  & h1 {
-    text-align: center;
-    font-size: 50px;
-    @media (max-width: 768px) {
-      font-size: 30px;
-    }
-    font-style: italic;
-    padding-bottom: 5px;
-    margin: 20px 30px 20px;
-    border-bottom: 1px solid ${colors.prim_color}
-    text-shadow: ${colors.text_shadow};
-    color: tomato;
-  }
 `

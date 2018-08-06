@@ -16,9 +16,9 @@ import Reminder from '../pages/Reminder.js'
 import Location from '../pages/Location.js'
 
 // PRIVATE ROUTES FOR AUTHENTICATED USERS
-import PrivateRoute from './PrivateRoute'
+import PrivateRoute from './PrivateRoute.js'
 // PUBLIC ROUTES
-import PublicRoute from './PublicRoute'
+import PublicRoute from './PublicRoute.js'
 
 // pass history to every component props
 // and export it to be consumed from other files
