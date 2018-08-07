@@ -17,14 +17,14 @@ const LoginFrom = ({ submit, onFocus, error }) => {
             <p>Email</p>
           </label>
 
-        <p>
-          <input
-            type="text"
-            id="email"
-            onFocus={onFocus}
-            ref={ input => { payload.email = input } }
-            />
-        </p>
+          <p>
+            <input
+              type="text"
+              id="email"
+              onFocus={onFocus}
+              ref={ input => { payload.email = input } }
+              />
+          </p>
         </div>
 
         { /* PASSWORD */ }

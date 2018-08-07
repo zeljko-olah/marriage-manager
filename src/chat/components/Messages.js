@@ -22,18 +22,32 @@ class Messages extends Component {
   
   render() {
     const { messages, user } = this.props
+    let sender
+    let prevSender = ''
+    let pointer = true
     return (
       <StyledMessages>
         <div
           className="scroll"
           ref="container">
           <StyledThread>
-            {messages && messages.map((message) => {
+            {messages ? messages.map((message) => {
+              // Logic for styling messages clouds
+              sender = message.from
+              if (prevSender !== sender) {
+                prevSender = sender
+                pointer = true
+              } else {
+                pointer = false
+              }            
               return (<Message
                         key={message.id}
                         message={message}
-                        user={user} />)
-              })
+                        user={user}
+                        pointer={pointer}/>)
+              }) : (
+                <p>Chat history is not available</p>
+              )
             }
           </StyledThread>
         </div>

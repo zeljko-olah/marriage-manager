@@ -1,5 +1,5 @@
 // IMPORTS
-import React, {Component} from 'react'
+import React from 'react'
 
 import {StyledSection, StyledMainHeading, StyledMainContent} from '../styles/section'
 

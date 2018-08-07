@@ -20,7 +20,6 @@ const formatMessageTime = (timestamp) => {
   }
 
   return messageTime.fromNow()
-
 }
 
 module.exports = {

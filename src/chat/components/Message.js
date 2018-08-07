@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import * as colors from '../../styles/variables'
 
 
-const Message = ({message, user}) => {
+const Message = ({message, user, pointer}) => {
   // Create message CSS class depending on who is sending the message
   let messageClass
   if (message.from === user.name ) {
@@ -27,7 +27,7 @@ const Message = ({message, user}) => {
   }
 
   return (
-    <StyledMessage>
+    <StyledMessage pointer={pointer}>
       <div className={messageClass}>
         <div className="message-outer">
           <div className="time">{message.createdAt}</div>
@@ -95,6 +95,9 @@ const StyledMessage = styled.div`
     border-top: 10px solid transparent;
     border-bottom: 10px solid ${colors.sec_light};
     transform: skewX(-60deg);
+    ${ props => {
+      return !props.pointer && 'display: none;' 
+    }}
   }
 }
 
