@@ -1,13 +1,11 @@
 const moment = require('moment')
+const nodemailer = require('nodemailer')
 const {formatMessageTime} = require('./../../helpers')
 const mongoose = require("mongoose")
 const Message = require("../models/message")
 
 exports.new_message = (req, res, next) => {
-  console.log('REQ.BODY:::', req.body)
   const { text, userId } = req.body.message
-  console.log('TEXT', text)
-  console.log('USERID', userId)
   const message = new Message({
     _id: mongoose.Types.ObjectId(),
     text: text,
@@ -17,7 +15,6 @@ exports.new_message = (req, res, next) => {
   message
     .save()
     .then(result => {
-      console.log(result)
       res.status(201).json({
         message: 'Message saved'
       })
@@ -57,4 +54,48 @@ exports.get_messages = (req, res) => {
         error: err
       })
     })
+}
+
+exports.save_and_email = (req, res) => {
+  // console.log(req.body)
+  const {user, messages} = req.body
+  
+  const createHtml = (messages) => {
+    let htmlString = ''
+
+    messages.forEach(message => {
+      htmlString += `
+      <h3>${message.from}</h3>
+      <p><em>${message.text}<em></p>
+      <span>${message.createdAt}</span>
+      `
+    })
+    
+    return htmlString
+  }
+
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'zeljko.web.developer@gmail.com',
+      pass: 'Allah397'
+    }
+  })
+
+  var mailOptions = {
+    from: 'zeljko.web.developer@gmail.com',
+    to: user.email,
+    subject: `Chat history from ${moment().format('MMM Do YYYY')}`,
+    html: createHtml(messages)
+  }
+
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error)
+    } else {
+      console.log('Email sent: ' + info.response);
+    res.status(200).json({flashMessage: 'Success'})
+    }
+  })
 }

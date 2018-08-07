@@ -2,9 +2,13 @@ import React, {Fragment} from 'react'
 import styled from 'styled-components'
 import * as colors from '../../styles/variables'
 
+import SaveIcon from  'react-icons/lib/md/save'
+import CloseIcon from  'react-icons/lib/md/close'
+
+
 import Avatar from '../../components/user/Avatar'
 
-const ChatHeading = ({users, user}) => {
+const ChatHeading = ({users, user, close, saveChatHistory }) => {
   let sender;
   let receiver;
   if (users && user) {
@@ -15,7 +19,14 @@ const ChatHeading = ({users, user}) => {
 
   return (
     <div>
-      <StyledBar className="header-bar"></StyledBar>
+      <StyledBar className="header-bar">
+        <div className="save-wrapper" onClick={saveChatHistory}>
+          <span className="save"><i><SaveIcon/></i></span>
+        </div>
+        <div className="close-wrapper" onClick={close}>
+          <span><i><CloseIcon/></i></span>
+        </div>
+      </StyledBar>
       <StyledChatHeading>
         <div className="user">
           { sender ? (
@@ -50,6 +61,30 @@ export default ChatHeading
 const StyledBar = styled.div`
   height: 50px;
   background: ${colors.sec_grad};
+  text-align: right;
+  padding: 5px 0px;
+
+  & div.save-wrapper,
+  & div.close-wrapper {
+    display: inline-block;
+    position: relative;
+    padding-right: 10px;
+  }
+
+  & div.save-wrapper {
+    padding-right: 20px;
+  }
+
+  & i svg {
+    font-size: 30px;
+    color: ${colors.prim_font};
+
+    &:hover {
+      color: ${colors.sec_color}
+      cursor: pointer;
+      
+    }
+  }
 `
 
 const StyledChatHeading = styled.div`

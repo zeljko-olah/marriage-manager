@@ -39,7 +39,8 @@ class Messages extends Component {
                 pointer = true
               } else {
                 pointer = false
-              }            
+              }     
+                     
               return (<Message
                         key={message.id}
                         message={message}

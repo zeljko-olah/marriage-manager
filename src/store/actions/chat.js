@@ -60,10 +60,38 @@ export const saveMessage = (message) => {
   return dispatch => {
     return axios.post('api/chat/messages', { message })
       .then(response => {
-        dispatch(getMessagesSuccess(message))
+        dispatch(saveMessageSuccess(message))
       })
       .catch(err => {
         dispatch(saveMessageFail(err))
       })
   }
 }
+
+export const saveHistorySuccess = (flashMessage) => {
+  return {
+    type: actionTypes.SAVE_HISTORY,
+    flashMessage
+  }
+}
+
+export const saveHistoryFail = (error) => {
+  return {
+    type: actionTypes.SAVE_HISTORY,
+    error
+  }
+}
+
+export const saveHistory = (messages, user) => {
+  return dispatch => {
+    return axios.post('api/chat/save', {messages, user})
+      .then(response => {
+        console.log(response.data.flashMessage)
+        dispatch(saveHistorySuccess(response.data.flashMessage))
+      })
+      .catch(err => {
+        dispatch(saveHistoryFail(err))
+      })
+  }
+}
+

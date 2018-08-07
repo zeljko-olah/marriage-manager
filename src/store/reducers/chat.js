@@ -5,9 +5,10 @@ import { updateObject } from '../../shared/utility'
 const initialState = {
     // socket
     socket: null,
-    showChat: false,
+    showChat: true,
     messages: [],
-    message: null
+    message: null,
+    flashMessage: ''
 }
 
 // SOCKET INIT
@@ -37,6 +38,12 @@ const saveMessage = (state, action) => {
         message: action.message
     })
 }
+// SAVE CHAT HISTORY
+const saveHistory = (state, action) => {
+    return updateObject( state, {
+        flashMessage: action.flashMessage
+    })
+}
 
 // DEFINE REDUCER
 const reducer = ( state = initialState, action ) => {
@@ -45,6 +52,7 @@ const reducer = ( state = initialState, action ) => {
         case actionTypes.TOGGLE_CHAT: return toggleChat(state, action)
         case actionTypes.GET_MESSAGES: return getMessages(state, action)
         case actionTypes.SAVE_MESSAGE: return saveMessage(state, action)
+        case actionTypes.SAVE_HISTORY: return saveHistory(state, action)
         default:
             return state
     }

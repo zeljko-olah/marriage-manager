@@ -79,11 +79,9 @@ export default MessageInput
 // STYLED
 const StyledWrap = styled.div`
   position: relative;
-  // top: 25px;
 `
 
 const StyledInput = styled.div`
-  // border: 2px solid ${colors.prim_color};
   height: 50px;
   display: flex;
 

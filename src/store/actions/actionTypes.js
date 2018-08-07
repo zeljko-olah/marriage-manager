@@ -12,5 +12,6 @@ export const SOCKET_INIT = 'SOCKET_INIT';
 export const TOGGLE_CHAT = 'TOGGLE_CHAT';
 export const GET_MESSAGES = 'GET_MESSAGES';
 export const SAVE_MESSAGE = 'SAVE_MESSAGE';
+export const SAVE_HISTORY = 'SAVE_HISTORY';
 
 

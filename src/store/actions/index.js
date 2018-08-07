@@ -13,5 +13,6 @@ export {
   socketInit,
   toggleChat,
   getMessages,
-  saveMessage
+  saveMessage,
+  saveHistory
 } from './chat'

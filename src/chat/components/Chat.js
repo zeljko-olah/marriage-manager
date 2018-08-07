@@ -6,7 +6,7 @@
 import React, { Component } from 'react'
 
 import { connect } from 'react-redux'
-import {socketInit, getMessages, saveMessage} from '../../store/actions'
+import * as actions from '../../store/actions'
 
 import ChatHeading from './ChatHeading'
 import Messages from './Messages'
@@ -105,10 +105,21 @@ class Chat extends Component {
   updateWindowDimensions = () => {
     this.setState({ width: window.innerWidth, height: window.innerHeight })
   }
+
+  closeChat = () => {
+    const { toggleChat } = this.props
+    toggleChat(true)
+  }
+
+  saveChat = () => {
+    const { saveHistory, user } = this.props
+    const { messages } = this.state
+    saveHistory(messages, user)
+  }
   
   render () {
     const { users, socket, messages, width, height } = this.state
-    const { user } = this.props
+    const { user, saveHistory } = this.props
 
     return (
       <StyledSection>
@@ -117,7 +128,9 @@ class Chat extends Component {
         <ChatHeading
           user={user}
           users={users}
-          socket={socket} />
+          socket={socket}
+          close={this.closeChat}
+          saveChatHistory={this.saveChat} />
         
         { /* MESSAGES THREAD */ }
         <Messages
@@ -144,9 +157,12 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  socketInit: (socket) => dispatch(socketInit(socket)),
-  getMessages: () => dispatch(getMessages()),
-  saveMessage: (message) => dispatch(saveMessage(message))
+  socketInit: (socket) => dispatch(actions.socketInit(socket)),
+  getMessages: () => dispatch(actions.getMessages()),
+  saveMessage: (message) => dispatch(actions.saveMessage(message)),
+  toggleChat: (showChat) => dispatch( actions.toggleChat(showChat) ),
+  saveHistory: (messages, user) => dispatch( actions.saveHistory(messages, user) )
+
 })
 
 
