@@ -55,6 +55,7 @@ const StyledNotify = styled.div`
   & div {
     margin-top: 100px;
     background: ${colors.backdrop};
+    box-shadow: 0 0 20px 0 rgba(0,0,0, 0.5);
 
     text-align: center;
   }
@@ -64,9 +65,11 @@ const StyledNotify = styled.div`
   }
 
   & p {
-    font-size: 20px;
+    font-size: 25px;
     margin: 0;
     padding: 10px 20px;
+    text-transform: uppercase;
+    font-weight: 100;
   }
 
   & p.success {

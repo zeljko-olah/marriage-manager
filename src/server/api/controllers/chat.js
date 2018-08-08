@@ -81,7 +81,7 @@ exports.email_chat_history = (req, res) => {
   }
 
   const transporter = nodemailer.createTransport({
-    service: 'mail',
+    service: 'gmail',
     auth: {
       user: 'zeljko.web.developer@gmail.com',
       pass: 'Allah397'
