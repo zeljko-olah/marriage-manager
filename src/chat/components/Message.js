@@ -33,6 +33,7 @@ const Message = ({message, user, pointer}) => {
           <div className="time">{message.createdAt}</div>
           <div className="message-inner">
               {formattedMessage}
+              {message.unread ? <span className='unread'>new</span> : null}
           </div>
         </div>
       </div>
@@ -152,6 +153,23 @@ const StyledMessage = styled.div`
 & div.sender {
   color: #FFF;
   font-style: italic;
+}
+
+& .unread {
+  display: inline-block;
+  color: red;
+  position: absolute;
+  // width: 30px;
+  // height: 30px;
+  font-size: 10px;
+  font-weight: bold;
+  text-align: center;
+  background: #efefef;
+  border-radius: 5px;
+  padding: 5px;
+  line-height: 10px;
+  top: -10px;
+  left: -10px;
 }
 
 .dont-break-out {

@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import * as colors from '../../styles/variables'
 
@@ -6,23 +6,37 @@ import * as colors from '../../styles/variables'
 import { connect } from 'react-redux'
 import * as actions from '../../store/actions'
 
-
-
 const Notification = ({info, setFlashMessage}) => {
 
+  const disappear = (delay) => {
+    setTimeout(function() {
+      setFlashMessage('')
+    }, delay)
+  }
+
+  const innerDiv = (e) => {
+    if (e && info) {
+     setTimeout(function() {
+       e.click()
+     }, 1000)
+    }
+  } 
+
   return (
-    <Fragment>
-      { info ? 
-        (<StyledNotify
-          onClick={() => {setFlashMessage('')}} >
+    //* WRAPPER
+    <StyledNotify className={info ? 'open': 'close'}>
+      
+      { /* INNER DIV */ }
+      <div 
+        className={ info ? 'notification-open' :   'notification-closed'}
+        ref={(e) => {innerDiv(e)}}
+        onClick={() => {disappear(3000)}}>
+        
+        { /* FLASH MESSAGE */ }
+        <p className={info.type}>{info.flashMessage}</p>
+      </div>
 
-          <div className={ info ? 'notification-open' : 'notification-closed'}>
-
-            <p className={info.type}>{info.flashMessage}</p>
-          </div>
-  
-      </StyledNotify>) : null}
-    </Fragment>
+    </StyledNotify>
   )
 } 
 
@@ -50,18 +64,25 @@ const StyledNotify = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: ${colors.backdrop};
+  transition: all 0.5s linear;
 
-  & div {
-    margin-top: 100px;
-    background: ${colors.backdrop};
-    box-shadow: 0 0 20px 0 rgba(0,0,0, 0.5);
-
-    text-align: center;
+  &.close {
+    opacity: 0;
+    transform: translateY(-100%);
+    pointer-events: none;
   }
 
-  & div.notification-closed {
-    transform: translateX(100%);
+  &.open {
+    opacity: 1;
+    transform: translateY(0%);
+    pointer-events: auto;
+  }
+
+  & div {
+    margin-top: 10px;
+    background: ${colors.overlay};
+    box-shadow: 0 0 20px 0 rgba(0,0,0, 0.5);
+    text-align: center;
   }
 
   & p {

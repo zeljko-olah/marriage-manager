@@ -88,12 +88,15 @@ class Chat extends Component {
   
   // Send message
   handleSendMessage = (message) => {
-    const { socket } = this.state
+    const { socket, users} = this.state
     const { saveMessage, user } = this.props
     if (message.from !== 'Admin') {
+      const unread = users && users.length === 1 && !users.includes(user.name) ? 'true' : 'false'
+      console.log(unread)
       saveMessage({
         text: message,
-        userId: user.id
+        userId: user.id,
+        unread
       })
     }
     socket.emit(events.MESSAGE_SENT, message, (info) => {
@@ -111,15 +114,17 @@ class Chat extends Component {
     toggleChat(true)
   }
 
-  saveChat = () => {
-    const { saveHistory, user } = this.props
+  HandleEmailChatHistory = () => {
+    const { emailChatHistory, user } = this.props
     const { messages } = this.state
     const usersMessages = messages.filter(msg => msg.from !== 'Admin')
-    saveHistory(usersMessages, user)
+    emailChatHistory(usersMessages, user)
   }
 
-  deleteChat = () => {
-    console.log('WE ARE HERE!!!')
+  handleDeleteChat = () => {
+    const { deleteChatHistory } = this.props
+    deleteChatHistory('love')
+      .then(this.setState({messages: []}))
   }
   
   
@@ -137,8 +142,8 @@ class Chat extends Component {
           socket={socket}
           close={this.closeChat}
           info={info}
-          saveChatHistory={this.saveChat}
-          deleteChatHistory={this.deleteChat}
+          saveChatHistory={this.HandleEmailChatHistory}
+          deleteChatHistory={this.handleDeleteChat}
            />
         
         { /* MESSAGES THREAD */ }
@@ -171,7 +176,8 @@ const mapDispatchToProps = (dispatch) => ({
   getMessages: () => dispatch(actions.getMessages()),
   saveMessage: (message) => dispatch(actions.saveMessage(message)),
   toggleChat: (showChat) => dispatch( actions.toggleChat(showChat) ),
-  saveHistory: (messages, user) => dispatch( actions.saveHistory(messages, user) )
+  emailChatHistory: (messages, user) => dispatch( actions.emailChatHistory(messages, user) ),
+  deleteChatHistory: (room) => dispatch( actions.deleteChatHistory(room) ),
 })
 
 

@@ -4,7 +4,8 @@ const messageSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     text: { type: String, required: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true  },
-    read: { type: Boolean, default: false }
+    unread: { type: Boolean, default: false },
+    room: { type: String, required: true }
 },
 { timestamps: { createdAt: 'created_at' } })
 

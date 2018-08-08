@@ -75,9 +75,26 @@ export const setFlashMessage = (flashMessage) => {
   }
 }
 
-export const saveHistory = (messages, user) => {
+export const emailChatHistory = (messages, user) => {
   return dispatch => {
     return axios.post('api/chat/save', {messages, user})
+      .then(response => {
+        console.log(response.data)
+        dispatch(setFlashMessage(response.data))
+      })
+      .catch(err => {
+        dispatch(setFlashMessage(err.response.data))
+      })
+  }
+}
+
+export const deleteChatHistory = (room) => {
+  return dispatch => {
+    return axios.delete('api/chat/messages', {
+      params: {
+        room: room
+      }
+    })
       .then(response => {
         console.log(response.data)
         dispatch(setFlashMessage(response.data))

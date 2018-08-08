@@ -6,7 +6,6 @@ import SaveIcon from  'react-icons/lib/md/save'
 import CloseIcon from  'react-icons/lib/md/close'
 import DeleteIcon from  'react-icons/lib/md/delete'
 
-
 import Avatar from '../../components/user/Avatar'
 
 const ChatHeading = ({
@@ -98,9 +97,11 @@ const StyledBar = styled.div`
   & i svg {
     font-size: 30px;
     color: ${colors.prim_font};
+    transition: all 0.2s ease-in;
 
     &:hover {
-      color: ${colors.sec_color}
+      color: ${colors.sec_color};
+      transform: scale(1.2);
       cursor: pointer;
       
     }

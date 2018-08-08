@@ -6,11 +6,14 @@ const Message = require("../models/message")
 
 // SAVE NEW MESSAGE
 exports.new_message = (req, res, next) => {
-  const { text, userId } = req.body.message
+  const { text, userId, unread } = req.body.message
   const message = new Message({
     _id: mongoose.Types.ObjectId(),
     text: text,
-    user: userId
+    user: userId,
+    room: 'love',
+    unread: unread
+
   })
 
   message
@@ -31,7 +34,7 @@ exports.new_message = (req, res, next) => {
 // GET ALL MESSAGES
 exports.get_messages = (req, res) => {
   Message.find()
-    .select('_id text read created_at ')
+    .select('_id text read created_at unread')
     .populate('user', 'name')
     .exec()
     .then(docs => {
@@ -45,6 +48,7 @@ exports.get_messages = (req, res) => {
             text: doc.text,
             read: doc.read,
             createdAt: time,
+            unread: doc.unread,
             from: doc.user.name,
             user: doc.user
           }
@@ -109,4 +113,35 @@ exports.email_chat_history = (req, res) => {
     })
     }
   })
+}
+
+// DELETE CHAT HISTORY
+exports.delete_chat_history = (req, res) => {
+  const {room} = req.query
+
+  Message.deleteMany({ room: room })
+    .exec()
+    .then(response => {
+      console.log(response.n)
+      if (response.n === 0) {
+        res.status(200).json({
+          type: 'success',
+          flashMessage: 'Nothing to delete! :)'
+        })
+        return
+      }
+      let word = response.n === 1 ? 'message' : 'messages'
+      res.status(200).json({
+        type: 'success',
+        flashMessage: `Success. Deleted ${response.n} ${word}. :)`
+      })
+    })
+    .catch(() => {
+      res.status(500).json({
+        type: 'error',
+        flashMessage: 'Unable to delete history. Try again later. :('
+      })
+    })
+
+  
 }
