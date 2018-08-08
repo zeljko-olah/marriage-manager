@@ -16,7 +16,7 @@ import io from 'socket.io-client'
 import * as events from '../Events'
 
 import styled from 'styled-components'
- import * as colors from '../../styles/variables'
+import * as colors from '../../styles/variables'
  
 import moment from 'moment';
 
@@ -78,8 +78,8 @@ class Chat extends Component {
       const { messages } = this.state
       const formatedTime = moment(message.createdAt).format('h:mm a')
       const newMessage = Object.assign({}, message, {createdAt: formatedTime})
-      // const newMessages = messages.concat(newMessage)
-      this.setState({messages: [...messages, newMessage]})
+      const newMessages = messages.concat(newMessage)
+      this.setState({messages: newMessages})
     })
     socket.on('disconnect', (message) => {
       console.log('Disconnected from server');
@@ -114,12 +114,18 @@ class Chat extends Component {
   saveChat = () => {
     const { saveHistory, user } = this.props
     const { messages } = this.state
-    saveHistory(messages, user)
+    const usersMessages = messages.filter(msg => msg.from !== 'Admin')
+    saveHistory(usersMessages, user)
   }
+
+  deleteChat = () => {
+    console.log('WE ARE HERE!!!')
+  }
+  
   
   render () {
     const { users, socket, messages, width, height } = this.state
-    const { user, saveHistory } = this.props
+    const { user, info } = this.props
 
     return (
       <StyledSection>
@@ -130,7 +136,10 @@ class Chat extends Component {
           users={users}
           socket={socket}
           close={this.closeChat}
-          saveChatHistory={this.saveChat} />
+          info={info}
+          saveChatHistory={this.saveChat}
+          deleteChatHistory={this.deleteChat}
+           />
         
         { /* MESSAGES THREAD */ }
         <Messages
@@ -152,7 +161,8 @@ class Chat extends Component {
 const mapStateToProps = state => {
   return {
     user: state.auth.user,
-    loadedMessages: state.chat.messages
+    loadedMessages: state.chat.messages,
+    info: state.chat.flashMessage
   }
 }
 
@@ -162,7 +172,6 @@ const mapDispatchToProps = (dispatch) => ({
   saveMessage: (message) => dispatch(actions.saveMessage(message)),
   toggleChat: (showChat) => dispatch( actions.toggleChat(showChat) ),
   saveHistory: (messages, user) => dispatch( actions.saveHistory(messages, user) )
-
 })
 
 

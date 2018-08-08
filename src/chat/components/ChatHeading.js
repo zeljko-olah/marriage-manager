@@ -4,11 +4,17 @@ import * as colors from '../../styles/variables'
 
 import SaveIcon from  'react-icons/lib/md/save'
 import CloseIcon from  'react-icons/lib/md/close'
+import DeleteIcon from  'react-icons/lib/md/delete'
 
 
 import Avatar from '../../components/user/Avatar'
 
-const ChatHeading = ({users, user, close, saveChatHistory }) => {
+const ChatHeading = ({
+  users,
+  user,
+  close,
+  saveChatHistory,
+  deleteChatHistory }) => {
   let sender;
   let receiver;
   if (users && user) {
@@ -20,12 +26,20 @@ const ChatHeading = ({users, user, close, saveChatHistory }) => {
   return (
     <div>
       <StyledBar className="header-bar">
-        <div className="save-wrapper" onClick={saveChatHistory}>
-          <span className="save"><i><SaveIcon/></i></span>
+        <div className="title">
         </div>
-        <div className="close-wrapper" onClick={close}>
-          <span><i><CloseIcon/></i></span>
+        <div>
+          <div className="icon-wrapper" onClick={saveChatHistory}>
+            <span className="save"><i><SaveIcon/></i></span>
+          </div>
+          <div className="icon-wrapper" onClick={deleteChatHistory}>
+            <span><i><DeleteIcon/></i></span>
+          </div>
+          <div className="close-wrapper" onClick={close}>
+            <span><i><CloseIcon/></i></span>
+          </div>
         </div>
+        
       </StyledBar>
       <StyledChatHeading>
         <div className="user">
@@ -59,19 +73,25 @@ const ChatHeading = ({users, user, close, saveChatHistory }) => {
 export default ChatHeading
 
 const StyledBar = styled.div`
+  display: flex;
+  justify-content: flex-end;
   height: 50px;
   background: ${colors.sec_grad};
-  text-align: right;
   padding: 5px 0px;
 
-  & div.save-wrapper,
+  & div.title {
+    flex-grow: 1;
+    text-align: center;
+  }
+
+  & div.icon-wrapper,
   & div.close-wrapper {
     display: inline-block;
     position: relative;
     padding-right: 10px;
   }
 
-  & div.save-wrapper {
+  & div.icon-wrapper {
     padding-right: 20px;
   }
 

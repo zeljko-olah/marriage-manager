@@ -4,6 +4,7 @@ const {formatMessageTime} = require('./../../helpers')
 const mongoose = require("mongoose")
 const Message = require("../models/message")
 
+// SAVE NEW MESSAGE
 exports.new_message = (req, res, next) => {
   const { text, userId } = req.body.message
   const message = new Message({
@@ -27,6 +28,7 @@ exports.new_message = (req, res, next) => {
     })
 }
 
+// GET ALL MESSAGES
 exports.get_messages = (req, res) => {
   Message.find()
     .select('_id text read created_at ')
@@ -56,27 +58,30 @@ exports.get_messages = (req, res) => {
     })
 }
 
-exports.save_and_email = (req, res) => {
-  // console.log(req.body)
+// EMAIL CHAT HISTORY TO USER EMAIL
+exports.email_chat_history = (req, res) => {
   const {user, messages} = req.body
   
   const createHtml = (messages) => {
-    let htmlString = ''
+    let htmlString = '<div style="text-align: center;"><h1>Chat History</h1>'
 
     messages.forEach(message => {
       htmlString += `
-      <h3>${message.from}</h3>
-      <p><em>${message.text}<em></p>
-      <span>${message.createdAt}</span>
+      <p style="color: #555;">
+        <strong>
+          ${message.from} ---
+        </strong> 
+        <span style="font-size: 10px; color: #aaa;">${message.createdAt}</span>
+      </p>
+      <p style="font-size: 12px;"><em>${message.text}<em></p>
       `
-    })
-    
+    }) 
+    htmlString += '</div>' 
     return htmlString
   }
 
-
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: 'mail',
     auth: {
       user: 'zeljko.web.developer@gmail.com',
       pass: 'Allah397'
@@ -92,10 +97,16 @@ exports.save_and_email = (req, res) => {
 
   transporter.sendMail(mailOptions, function(error, info){
     if (error) {
-      console.log(error)
+      res.status(500).json({
+        type: 'error',
+        flashMessage: 'Unable to send email. Try again later. :('
+      })
     } else {
-      console.log('Email sent: ' + info.response);
-    res.status(200).json({flashMessage: 'Success'})
+      console.log('Email sent: ' + info.response)
+    res.status(200).json({
+      type: 'success',
+      flashMessage: 'Success. Check your email. :)'
+    })
     }
   })
 }

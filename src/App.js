@@ -5,6 +5,8 @@ import styled, { injectGlobal } from 'styled-components'
 
 import AppRouter from './router/AppRouter'
 import ChatWrapper from './chat/components/ChatWrapper'
+import NotificationWrapper from './components/ui/NotificationWrapper'
+
 
 // COMPONENT
 const App = () => {
@@ -15,13 +17,17 @@ const App = () => {
       
       { /* CHAT */ }
       <ChatWrapper />
-
+      
+      { /* NOTIFICATIONS */ }
+       <NotificationWrapper />
+      
     </PageWrapper>
   )
 }
 
+
 // EXPORT
-export default App
+export default(App)
 
 // STYLED
 // Define global styles

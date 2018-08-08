@@ -39,7 +39,7 @@ const saveMessage = (state, action) => {
     })
 }
 // SAVE CHAT HISTORY
-const saveHistory = (state, action) => {
+const setFlashMessage = (state, action) => {
     return updateObject( state, {
         flashMessage: action.flashMessage
     })
@@ -52,7 +52,7 @@ const reducer = ( state = initialState, action ) => {
         case actionTypes.TOGGLE_CHAT: return toggleChat(state, action)
         case actionTypes.GET_MESSAGES: return getMessages(state, action)
         case actionTypes.SAVE_MESSAGE: return saveMessage(state, action)
-        case actionTypes.SAVE_HISTORY: return saveHistory(state, action)
+        case actionTypes.SET_FLASH_MESSAGE: return setFlashMessage(state, action)
         default:
             return state
     }

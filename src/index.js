@@ -32,7 +32,6 @@ const store = createStore(rootReducer, composeEnhancers(
 store.dispatch(authCheckState())
 // store.dispatch(socketInit())
 
-
 // Inject redux
 const appRedux = (
     <Provider store={store}>

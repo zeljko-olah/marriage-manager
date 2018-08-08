@@ -1,17 +1,18 @@
 // AUTH
-export const AUTH_START = 'AUTH_START';
-export const AUTH_SUCCESS = 'AUTH_SUCCESS';
-export const AUTH_FAIL = 'AUTH_FAIL';
-export const AUTH_LOGOUT = 'AUTH_LOGOUT';
-export const SET_ERRORS = 'SET_ERRORS';
+export const AUTH_START = 'AUTH_START'
+export const AUTH_SUCCESS = 'AUTH_SUCCESS'
+export const AUTH_FAIL = 'AUTH_FAIL'
+export const AUTH_LOGOUT = 'AUTH_LOGOUT'
+export const SET_ERRORS = 'SET_ERRORS'
 
 // SOCKET
-export const SOCKET_INIT = 'SOCKET_INIT';
+export const SOCKET_INIT = 'SOCKET_INIT'
 
 // CHAT
-export const TOGGLE_CHAT = 'TOGGLE_CHAT';
-export const GET_MESSAGES = 'GET_MESSAGES';
-export const SAVE_MESSAGE = 'SAVE_MESSAGE';
-export const SAVE_HISTORY = 'SAVE_HISTORY';
+export const TOGGLE_CHAT = 'TOGGLE_CHAT'
+export const GET_MESSAGES = 'GET_MESSAGES'
+export const SAVE_MESSAGE = 'SAVE_MESSAGE'
+export const SAVE_HISTORY = 'SAVE_HISTORY'
+export const SET_FLASH_MESSAGE = 'SET_FLASH_MESSAGE'
 
 

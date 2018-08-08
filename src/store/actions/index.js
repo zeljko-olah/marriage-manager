@@ -14,5 +14,6 @@ export {
   toggleChat,
   getMessages,
   saveMessage,
-  saveHistory
+  saveHistory,
+  setFlashMessage
 } from './chat'

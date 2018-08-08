@@ -68,17 +68,10 @@ export const saveMessage = (message) => {
   }
 }
 
-export const saveHistorySuccess = (flashMessage) => {
+export const setFlashMessage = (flashMessage) => {
   return {
-    type: actionTypes.SAVE_HISTORY,
+    type: actionTypes.SET_FLASH_MESSAGE,
     flashMessage
-  }
-}
-
-export const saveHistoryFail = (error) => {
-  return {
-    type: actionTypes.SAVE_HISTORY,
-    error
   }
 }
 
@@ -86,11 +79,11 @@ export const saveHistory = (messages, user) => {
   return dispatch => {
     return axios.post('api/chat/save', {messages, user})
       .then(response => {
-        console.log(response.data.flashMessage)
-        dispatch(saveHistorySuccess(response.data.flashMessage))
+        console.log(response.data)
+        dispatch(setFlashMessage(response.data))
       })
       .catch(err => {
-        dispatch(saveHistoryFail(err))
+        dispatch(setFlashMessage(err.response.data))
       })
   }
 }
