@@ -86,7 +86,7 @@ const StyledNotify = styled.div`
   }
 
   & p {
-    font-size: 25px;
+    font-size: 15px;
     margin: 0;
     padding: 10px 20px;
     text-transform: uppercase;

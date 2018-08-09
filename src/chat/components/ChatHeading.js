@@ -31,7 +31,7 @@ const ChatHeading = ({
           <div className="icon-wrapper" onClick={saveChatHistory}>
             <span className="save"><i><SaveIcon/></i></span>
           </div>
-          <div className="icon-wrapper" onClick={deleteChatHistory}>
+          <div className="icon-wrapper" onClick={() => {deleteChatHistory(user, users)}}>
             <span><i><DeleteIcon/></i></span>
           </div>
           <div className="close-wrapper" onClick={close}>

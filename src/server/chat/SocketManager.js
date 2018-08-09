@@ -47,13 +47,12 @@ module.exports = (socket) => {
   socket.on(events.MESSAGE_SENT, (message, callback) => {
     const user = users.getUser(socket.id)
     const allUsers = users.getUserList(room)
-    let unread = false
     if (allUsers.length === 1) {
-      unread = true
+      message.unread = true
     }
 
     if (user) {
-      io.to(room).emit(events.NEW_MESSAGE, generateMessage(user.name, message, unread));
+      io.to(room).emit(events.NEW_MESSAGE, message)
     }
     
     callback('Message sent')
@@ -70,6 +69,27 @@ module.exports = (socket) => {
 
     io.to(room).emit(events.MARK_AS_READED, message)
   })
+
+  /*
+   * ON ASK PERMISION
+   * When user types a message
+   */
+  
+  socket.on(events.ASK_PERMISION, (user) => {
+    socket.broadcast.to(room).emit(events.PERMISION_TO_DELETE, user)
+  })
+
+  /*
+   * ON ASK PERMISION
+   * When user types a message
+   */
+
+  socket.on(events.REPLY_TO_DELETE, (answer, user) => {
+    console.log('ANSWER::::', answer)
+    socket.broadcast.to(room).emit(events.CONFIRM_DELETE, answer, user)
+  })
+
+
 
   /*
    * ON DISCONNECT

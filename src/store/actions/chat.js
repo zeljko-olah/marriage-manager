@@ -84,6 +84,7 @@ export const saveMessage = (message) => {
     return axios.post('api/chat/messages', { message })
       .then(response => {
         dispatch(saveMessageSuccess(message))
+        return response.data
       })
       .catch(err => {
         dispatch(saveMessageFail(err))

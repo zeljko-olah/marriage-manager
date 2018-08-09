@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import * as colors from '../../styles/variables'
 
-import CheckIcon from 'react-icons/lib/md/check'
+import CheckIcon from 'react-icons/lib/md/visibility'
 
 
 
@@ -39,7 +39,7 @@ const Message = ({message, user, pointer, markAsRead}) => {
               {message.unread ? (
                 <span
                   className='unread'
-                  onClick={() => {markAsRead(message.id)}}><CheckIcon /></span>) : null}
+                  onClick={() => {markAsRead(message.id, message.from)}}><CheckIcon /></span>) : null}
           </div>
         </div>
       </div>
@@ -165,7 +165,7 @@ const StyledMessage = styled.div`
   display: inline-block;
   color: red;
   position: absolute;
-  font-size: 8px;
+  font-size: 15px;
   font-weight: bold;
   text-align: center;
   background: #efefef;

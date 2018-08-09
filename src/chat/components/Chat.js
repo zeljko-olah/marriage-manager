@@ -53,6 +53,8 @@ class Chat extends Component {
     socket.off(events.UPDATE_USER_LIST)
     socket.off(events.NEW_MESSAGE)
     socket.off(events.MARK_AS_READ)
+    socket.off(events.ASK_PERMISION)
+    socket.off(events.CONFIRM_DELETE)
     socket.emit(events.CLIENT_DISCONNECTED)
     window.removeEventListener('resize', this.updateWindowDimensions)
   }
@@ -60,7 +62,7 @@ class Chat extends Component {
   // Handle socket events
   initSocket = () => {
     const socket = io(socketUrl)
-    const { user } = this.props
+    const { user, deleteChatHistory, setFlashMessage } = this.props
     this.setState({socket})
     // this.props.socketInit(socket)
     socket.on('connect', ()=>{
@@ -75,15 +77,23 @@ class Chat extends Component {
     socket.on(events.UPDATE_USER_LIST, (users) => {
       this.setState({users})
     })
+    socket.on(events.CONFIRM_DELETE, (answer, user) => {
+      console.log(answer)
+      if (answer) {
+        this.setState({messages: []})
+      } else {
+        setFlashMessage({
+          type: 'error',
+          flashMessage: `${user} denied deletion!`
+        })
+      }
+      this.setState({messages: []})
+    })
     socket.on(events.MARK_AS_READED, (message) => {
       console.log('MESSAGE')
       console.log(message)
       const { messages } = this.state
       const markedMessages = messages.map(m => {
-        console.log(m.id === message.id)
-        console.log(message.id)
-        console.log(m.id)
-        
         if (m.id === message.id) {
           console.log(message)
           console.log(m)
@@ -100,6 +110,18 @@ class Chat extends Component {
       const newMessages = messages ? messages.concat(newMessage) : null
       this.setState({messages: newMessages})
     })
+    socket.on(events.PERMISION_TO_DELETE, partner => {
+      const { user } = this.props
+      console.log(partner)
+      const answer = window.confirm(`${partner.name} wants to delete chat history. Do you agree?`)
+      socket.emit(events.REPLY_TO_DELETE, answer, user.name)
+      if (answer) {
+        deleteChatHistory('love')
+        .then(() => {
+          this.setState({messages: []})
+        })
+      }
+    })
     socket.on('disconnect', (message) => {
       console.log('Disconnected from server');
     })
@@ -108,7 +130,7 @@ class Chat extends Component {
   // Send message @TODO
   handleSendMessage = (message) => {
     const { socket, users} = this.state
-    const { saveMessage, savedMessage, user } = this.props
+    const { saveMessage, user } = this.props
     if (message.from !== 'Admin') {
       const unread = users && users.length === 1 ? 'true' : 'false'
       console.log(unread)
@@ -116,11 +138,13 @@ class Chat extends Component {
         text: message,
         userId: user.id,
         unread
+      }).then(savedMessage => {
+        console.log(savedMessage)
+        socket.emit(events.MESSAGE_SENT, savedMessage, (info) => {
+          console.log(info)
+        })
       })
     }
-    socket.emit(events.MESSAGE_SENT, message, (info) => {
-      console.log(info)
-    })
   }
   
   // Update browser dimensions
@@ -140,22 +164,20 @@ class Chat extends Component {
     emailChatHistory(usersMessages, user)
   }
 
-  handleDeleteChat = () => {
-    const { deleteChatHistory } = this.props
-    deleteChatHistory('love')
-      .then(() => {
-        this.setState({messages: []})
-      })
+  handleDeleteChat = (user) => {
+    const { socket } = this.state
+    socket.emit('ASK_PERMISION', user)
   }
   
-  handleMarkAsRead = (id) => {
+  handleMarkAsRead = (id, from) => {
     const { socket, messages } = this.state
-    const { markMessageAsRead } = this.props
-    console.log('TRIGGERED', id)
+    const { markMessageAsRead, user } = this.props
+    if (user && user.name === from) {
+      return
+    }
     markMessageAsRead(id).then(() => {
       const markedMessages = messages.map(m => {
         if (m.id === id) {
-          console.log('WE ARE HERE!!!')
           m.unread = false
           socket.emit(events.MARK_AS_READ, m)
         }
@@ -204,7 +226,6 @@ class Chat extends Component {
 const mapStateToProps = state => {
   return {
     user: state.auth.user,
-    savedMessage: state.chat.message,
     loadedMessages: state.chat.messages,
     info: state.chat.flashMessage
   }
@@ -218,6 +239,7 @@ const mapDispatchToProps = (dispatch) => ({
   emailChatHistory: (messages, user) => dispatch( actions.emailChatHistory(messages, user) ),
   deleteChatHistory: (room) => dispatch( actions.deleteChatHistory(room) ),
   markMessageAsRead: (id) => dispatch( actions.markMessageAsRead(id) ),
+  setFlashMessage: (flash) => dispatch( actions.setFlashMessage(flash) ),
 })
 
 

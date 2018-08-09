@@ -3,6 +3,7 @@ const nodemailer = require('nodemailer')
 const {formatMessageTime} = require('./../../helpers')
 const mongoose = require("mongoose")
 const Message = require("../models/message")
+const User = require("../models/user")
 
 // SAVE NEW MESSAGE
 exports.new_message = (req, res, next) => {
@@ -19,8 +20,20 @@ exports.new_message = (req, res, next) => {
   message
     .save()
     .then(doc => {
-      console.log('SAVED MESSAGE', doc)
-      res.status(201).json(doc)
+      const id = doc.user
+      User.findById( id, 'name')
+        .exec()
+        .then(user => {
+          console.log('USER', user)
+          res.status(201).json({
+            id: doc._id,
+            text: doc.text,
+            room: 'love',
+            createdAt: doc.created_at,
+            unread: doc.unread,
+            from: user.name
+          })
+        })
     })
     .catch(err => {
       console.log(err)
@@ -159,6 +172,4 @@ exports.delete_chat_history = (req, res) => {
         flashMessage: 'Unable to delete history. Try again later. :('
       })
     })
-
-  
 }
