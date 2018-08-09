@@ -2,8 +2,11 @@ import React from 'react'
 import styled from 'styled-components'
 import * as colors from '../../styles/variables'
 
+import CheckIcon from 'react-icons/lib/md/check'
 
-const Message = ({message, user, pointer}) => {
+
+
+const Message = ({message, user, pointer, markAsRead}) => {
   // Create message CSS class depending on who is sending the message
   let messageClass
   if (message.from === user.name ) {
@@ -33,7 +36,10 @@ const Message = ({message, user, pointer}) => {
           <div className="time">{message.createdAt}</div>
           <div className="message-inner">
               {formattedMessage}
-              {message.unread ? <span className='unread'>new</span> : null}
+              {message.unread ? (
+                <span
+                  className='unread'
+                  onClick={() => {markAsRead(message.id)}}><CheckIcon /></span>) : null}
           </div>
         </div>
       </div>
@@ -159,17 +165,15 @@ const StyledMessage = styled.div`
   display: inline-block;
   color: red;
   position: absolute;
-  // width: 30px;
-  // height: 30px;
-  font-size: 10px;
+  font-size: 8px;
   font-weight: bold;
   text-align: center;
   background: #efefef;
   border-radius: 5px;
   padding: 5px;
   line-height: 10px;
-  top: -10px;
-  left: -10px;
+  bottom: -5px;
+  right: -15px;
 }
 
 .dont-break-out {

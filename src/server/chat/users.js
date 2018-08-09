@@ -30,7 +30,7 @@ class Users {
     // Add user object to users class array
     this.users.push(newUser);
     // Return the added user object
-    return user;
+    return user
   }
   
   /*

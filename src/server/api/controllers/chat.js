@@ -18,10 +18,9 @@ exports.new_message = (req, res, next) => {
 
   message
     .save()
-    .then(result => {
-      res.status(201).json({
-        message: 'Message saved'
-      })
+    .then(doc => {
+      console.log('SAVED MESSAGE', doc)
+      res.status(201).json(doc)
     })
     .catch(err => {
       console.log(err)
@@ -33,6 +32,24 @@ exports.new_message = (req, res, next) => {
 
 // GET ALL MESSAGES
 exports.get_messages = (req, res) => {
+  const param = req.query
+
+  if (Object.keys(param).length > 0 && param.constructor === Object) {
+    if ('id'in param) {
+      const { id } = param
+
+      Message.update({ _id: id }, { $set: { unread: false }})
+        .exec()
+        .then(() => {
+          res.status(200).json({
+            type: 'success',
+            flashMessage: `Success. Marked as read :)`
+          })
+        })
+      return
+    }
+  }
+
   Message.find()
     .select('_id text read created_at unread')
     .populate('user', 'name')

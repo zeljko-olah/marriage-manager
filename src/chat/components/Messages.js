@@ -21,7 +21,7 @@ class Messages extends Component {
   }
   
   render() {
-    const { messages, user } = this.props
+    const { messages, user, markAsRead } = this.props
     let sender
     let prevSender = ''
     let pointer = true
@@ -45,7 +45,8 @@ class Messages extends Component {
                         key={message.id}
                         message={message}
                         user={user}
-                        pointer={pointer}/>)
+                        pointer={pointer}
+                        markAsRead={markAsRead}/>)
               }) : (
                 <p>Chat history is not available</p>
               )

@@ -16,5 +16,6 @@ export {
   saveMessage,
   emailChatHistory,
   deleteChatHistory,
-  setFlashMessage
+  setFlashMessage,
+  markMessageAsRead
 } from './chat'

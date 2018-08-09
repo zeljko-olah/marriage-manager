@@ -52,6 +52,7 @@ class Chat extends Component {
 		socket.off(events.USER_CONNECTED)
     socket.off(events.UPDATE_USER_LIST)
     socket.off(events.NEW_MESSAGE)
+    socket.off(events.MARK_AS_READ)
     socket.emit(events.CLIENT_DISCONNECTED)
     window.removeEventListener('resize', this.updateWindowDimensions)
   }
@@ -74,11 +75,29 @@ class Chat extends Component {
     socket.on(events.UPDATE_USER_LIST, (users) => {
       this.setState({users})
     })
+    socket.on(events.MARK_AS_READED, (message) => {
+      console.log('MESSAGE')
+      console.log(message)
+      const { messages } = this.state
+      const markedMessages = messages.map(m => {
+        console.log(m.id === message.id)
+        console.log(message.id)
+        console.log(m.id)
+        
+        if (m.id === message.id) {
+          console.log(message)
+          console.log(m)
+          m.unread = false
+        }
+        return m
+      })
+      this.setState({ messages: markedMessages })
+    })
     socket.on(events.NEW_MESSAGE, (message) => {
       const { messages } = this.state
       const formatedTime = moment(message.createdAt).format('h:mm a')
       const newMessage = Object.assign({}, message, {createdAt: formatedTime})
-      const newMessages = messages.concat(newMessage)
+      const newMessages = messages ? messages.concat(newMessage) : null
       this.setState({messages: newMessages})
     })
     socket.on('disconnect', (message) => {
@@ -86,12 +105,12 @@ class Chat extends Component {
     })
   }
   
-  // Send message
+  // Send message @TODO
   handleSendMessage = (message) => {
     const { socket, users} = this.state
-    const { saveMessage, user } = this.props
+    const { saveMessage, savedMessage, user } = this.props
     if (message.from !== 'Admin') {
-      const unread = users && users.length === 1 && !users.includes(user.name) ? 'true' : 'false'
+      const unread = users && users.length === 1 ? 'true' : 'false'
       console.log(unread)
       saveMessage({
         text: message,
@@ -114,7 +133,7 @@ class Chat extends Component {
     toggleChat(true)
   }
 
-  HandleEmailChatHistory = () => {
+  handleEmailChatHistory = () => {
     const { emailChatHistory, user } = this.props
     const { messages } = this.state
     const usersMessages = messages.filter(msg => msg.from !== 'Admin')
@@ -124,9 +143,27 @@ class Chat extends Component {
   handleDeleteChat = () => {
     const { deleteChatHistory } = this.props
     deleteChatHistory('love')
-      .then(this.setState({messages: []}))
+      .then(() => {
+        this.setState({messages: []})
+      })
   }
   
+  handleMarkAsRead = (id) => {
+    const { socket, messages } = this.state
+    const { markMessageAsRead } = this.props
+    console.log('TRIGGERED', id)
+    markMessageAsRead(id).then(() => {
+      const markedMessages = messages.map(m => {
+        if (m.id === id) {
+          console.log('WE ARE HERE!!!')
+          m.unread = false
+          socket.emit(events.MARK_AS_READ, m)
+        }
+        return m
+      })
+      this.setState({ messages: markedMessages })
+    })
+  }
   
   render () {
     const { users, socket, messages, width, height } = this.state
@@ -142,14 +179,15 @@ class Chat extends Component {
           socket={socket}
           close={this.closeChat}
           info={info}
-          saveChatHistory={this.HandleEmailChatHistory}
+          saveChatHistory={this.handleEmailChatHistory}
           deleteChatHistory={this.handleDeleteChat}
            />
         
         { /* MESSAGES THREAD */ }
         <Messages
           messages={messages}
-          user={user} />
+          user={user}
+          markAsRead={this.handleMarkAsRead} />
 
         { /* MESSAGE INPUT */ }
         <MessageInput
@@ -166,6 +204,7 @@ class Chat extends Component {
 const mapStateToProps = state => {
   return {
     user: state.auth.user,
+    savedMessage: state.chat.message,
     loadedMessages: state.chat.messages,
     info: state.chat.flashMessage
   }
@@ -178,6 +217,7 @@ const mapDispatchToProps = (dispatch) => ({
   toggleChat: (showChat) => dispatch( actions.toggleChat(showChat) ),
   emailChatHistory: (messages, user) => dispatch( actions.emailChatHistory(messages, user) ),
   deleteChatHistory: (room) => dispatch( actions.deleteChatHistory(room) ),
+  markMessageAsRead: (id) => dispatch( actions.markMessageAsRead(id) ),
 })
 
 

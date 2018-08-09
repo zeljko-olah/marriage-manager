@@ -46,12 +46,29 @@ module.exports = (socket) => {
   
   socket.on(events.MESSAGE_SENT, (message, callback) => {
     const user = users.getUser(socket.id)
+    const allUsers = users.getUserList(room)
+    let unread = false
+    if (allUsers.length === 1) {
+      unread = true
+    }
 
     if (user) {
-      io.to(room).emit(events.NEW_MESSAGE, generateMessage(user.name, message));
+      io.to(room).emit(events.NEW_MESSAGE, generateMessage(user.name, message, unread));
     }
     
     callback('Message sent')
+  })
+
+  /*
+   * ON MARK AS READ
+   * When user types a message
+   */
+  
+  socket.on(events.MARK_AS_READ, message => {
+    console.log('we are here')
+    console.log('MESSAGE', message)
+
+    io.to(room).emit(events.MARK_AS_READED, message)
   })
 
   /*

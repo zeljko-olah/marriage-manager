@@ -37,7 +37,30 @@ export const getMessages = () => {
         dispatch(getMessagesSuccess(response.data.messages))
       })
       .catch(err => {
-        dispatch(getMessagesFailed(err))
+        dispatch(setFlashMessage({
+          type: 'error',
+          flashMessage: err.response.data.error.message
+        }))
+      })
+  }
+}
+
+export const markMessageAsRead = (id) => {
+  return dispatch => {
+    return axios.get('api/chat/messages', {
+      params: {
+        id: id
+      }
+    })
+      .then((response) => {
+        dispatch(setFlashMessage(response.data))
+        dispatch(getMessages())
+      })
+      .catch(err => {
+        dispatch(setFlashMessage({
+          type: 'error',
+          flashMessage: 'Something went wrong'
+        }))
       })
   }
 }
