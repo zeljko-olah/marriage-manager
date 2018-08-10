@@ -7,13 +7,15 @@ const User = require("../models/user")
 
 // SAVE NEW MESSAGE
 exports.new_message = (req, res, next) => {
-  const { text, userId, unread } = req.body.message
+  console.log('REQ.BODY:::', req.body)
+  const { text, userId, unread, important } = req.body.message
   const message = new Message({
     _id: mongoose.Types.ObjectId(),
     text: text,
     user: userId,
     room: 'love',
-    unread: unread
+    unread: unread,
+    important: important
 
   })
 
@@ -27,11 +29,12 @@ exports.new_message = (req, res, next) => {
           console.log('USER', user)
           res.status(201).json({
             id: doc._id,
+            from: user.name,
             text: doc.text,
             room: 'love',
-            createdAt: doc.created_at,
             unread: doc.unread,
-            from: user.name
+            important: doc.important,
+            createdAt: doc.created_at
           })
         })
     })
@@ -45,26 +48,9 @@ exports.new_message = (req, res, next) => {
 
 // GET ALL MESSAGES
 exports.get_messages = (req, res) => {
-  const param = req.query
-
-  if (Object.keys(param).length > 0 && param.constructor === Object) {
-    if ('id'in param) {
-      const { id } = param
-
-      Message.update({ _id: id }, { $set: { unread: false }})
-        .exec()
-        .then(() => {
-          res.status(200).json({
-            type: 'success',
-            flashMessage: `Success. Marked as read :)`
-          })
-        })
-      return
-    }
-  }
 
   Message.find()
-    .select('_id text read created_at unread')
+    .select('_id text read created_at unread important')
     .populate('user', 'name')
     .exec()
     .then(docs => {
@@ -72,13 +58,14 @@ exports.get_messages = (req, res) => {
         count: docs.length,
         messages: docs.map(doc => {
           const time = formatMessageTime(doc.created_at)
+          console.log('DOC', doc)
 
           return {
             id: doc._id,
             text: doc.text,
-            read: doc.read,
             createdAt: time,
             unread: doc.unread,
+            important: doc.important,
             from: doc.user.name,
             user: doc.user
           }
@@ -173,3 +160,26 @@ exports.delete_chat_history = (req, res) => {
       })
     })
 }
+
+exports.mark_as_read = (req, res) => {
+  console.log(req.body)
+  const ids = req.body
+
+  ids.forEach((id) => {
+    Message.update({ _id: id }, { $set: { unread: false }})
+    .exec()
+    .then(() => {
+      res.status(200).json({
+        type: 'success',
+        flashMessage: `Marked as read :)`
+      })
+    })
+    .catch(err => {
+      res.status(200).json({
+        type: 'error',
+        flashMessage: `Something went wrong :)`
+      })
+    })
+  })
+}
+

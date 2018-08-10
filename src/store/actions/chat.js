@@ -45,13 +45,9 @@ export const getMessages = () => {
   }
 }
 
-export const markMessageAsRead = (id) => {
+export const markMessageAsRead = (ids) => {
   return dispatch => {
-    return axios.get('api/chat/messages', {
-      params: {
-        id: id
-      }
-    })
+    return axios.put('api/chat/messages', ids)
       .then((response) => {
         dispatch(setFlashMessage(response.data))
         dispatch(getMessages())

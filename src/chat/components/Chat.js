@@ -32,9 +32,13 @@ class Chat extends Component {
     socket: null,
     users: [],
     messages: [],
+    selectedMessages: [],
     width: 0,
     height: 0
   }
+
+  ids = []
+
   
   // Lifecycle
   componentDidMount = () => {
@@ -126,13 +130,12 @@ class Chat extends Component {
     const { saveMessage, user } = this.props
     if (message.from !== 'Admin') {
       const unread = users && users.length === 1 ? 'true' : 'false'
-      console.log(unread)
       saveMessage({
         text: message,
         userId: user.id,
-        unread
+        unread,
+        important: false
       }).then(savedMessage => {
-        console.log(savedMessage)
         socket.emit(events.MESSAGE_SENT, savedMessage, (info) => {
           console.log(info)
         })
@@ -165,30 +168,45 @@ class Chat extends Component {
     socket.emit('ASK_PERMISION', user)
   }
   
-  handleMarkAsRead = (id, from) => {
-    const { socket, messages } = this.state
-    const { markMessageAsRead, user } = this.props
-    if (user && user.name === from) {
+  handleSelectMessages = (id, from) => {
+    const { user } = this.props
+    if (from === user.name ) {
       return
     }
-    markMessageAsRead(id).then(() => {
-      const markedMessages = messages.map(m => {
-        if (m.id === id) {
-          m.unread = false
-          socket.emit(events.MARK_AS_READ, m)
-        }
-        return m
-      })
-      this.setState({ messages: markedMessages })
-    })
+    if (this.ids.includes(id)) {
+      console.log(this.ids.includes(id))
+      this.ids = this.ids.filter(_id => id !== _id)      
+    } else {
+      this.ids.push(id)
+    }
+
+    this.setState({ selectedMessages: this.ids })
   }
 
+  handleMarkAllRead = () => {
+    const { markMessagesAsRead } = this.props
+    const { socket, messages, selectedMessages} = this.state
+
+      markMessagesAsRead(selectedMessages).then(() => {
+        const markedMessages = messages.map(m => {
+
+          if (selectedMessages.includes(m.id)) {
+            m.unread = false
+            socket.emit(events.MARK_AS_READ, m)
+          }
+          return m
+        })
+        this.setState({ messages: markedMessages })
+      })
+  }
+  
   // Update browser dimensions
   updateWindowDimensions = () => {
     this.setState({ width: window.innerWidth, height: window.innerHeight })
   }
   
   render () {
+    console.log(this.ids)
     const { users, socket, messages, width, height } = this.state
     const { user, info } = this.props
 
@@ -204,13 +222,14 @@ class Chat extends Component {
           info={info}
           saveChatHistory={this.handleEmailChatHistory}
           deleteChatHistory={this.handleDeleteChat}
+          markAllRead={this.handleMarkAllRead}
            />
         
         { /* MESSAGES THREAD */ }
         <Messages
           messages={messages}
           user={user}
-          markAsRead={this.handleMarkAsRead} />
+          markAsRead={this.handleSelectMessages} />
 
         { /* MESSAGE INPUT */ }
         <MessageInput
@@ -239,7 +258,7 @@ const mapDispatchToProps = (dispatch) => ({
   toggleChat: (showChat) => dispatch( actions.toggleChat(showChat) ),
   emailChatHistory: (messages, user) => dispatch( actions.emailChatHistory(messages, user) ),
   deleteChatHistory: (room) => dispatch( actions.deleteChatHistory(room) ),
-  markMessageAsRead: (id) => dispatch( actions.markMessageAsRead(id) ),
+  markMessagesAsRead: (id) => dispatch( actions.markMessageAsRead(id) ),
   setFlashMessage: (flash) => dispatch( actions.setFlashMessage(flash) ),
 })
 

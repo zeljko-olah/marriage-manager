@@ -5,6 +5,7 @@ import * as colors from '../../styles/variables'
 import SaveIcon from  'react-icons/lib/md/save'
 import CloseIcon from  'react-icons/lib/md/close'
 import DeleteIcon from  'react-icons/lib/md/delete'
+import DoneIcon from  'react-icons/lib/md/done'
 
 import Avatar from '../../components/user/Avatar'
 
@@ -13,7 +14,9 @@ const ChatHeading = ({
   user,
   close,
   saveChatHistory,
-  deleteChatHistory }) => {
+  deleteChatHistory,
+  markAllRead
+ }) => {
   let sender;
   let receiver;
   if (users && user) {
@@ -25,7 +28,10 @@ const ChatHeading = ({
   return (
     <div>
       <StyledBar className="header-bar">
-        <div className="title">
+        <div className="mark-as">
+          <div className="icon-wrapper">
+            <i><DoneIcon onClick={markAllRead} /></i>
+          </div>
         </div>
         <div>
           <div className="icon-wrapper" onClick={saveChatHistory}>
@@ -78,9 +84,9 @@ const StyledBar = styled.div`
   background: ${colors.sec_grad};
   padding: 5px 0px;
 
-  & div.title {
+  & div.mark-as {
     flex-grow: 1;
-    text-align: center;
+    margin-left: 60px;
   }
 
   & div.icon-wrapper,
@@ -103,7 +109,6 @@ const StyledBar = styled.div`
       color: ${colors.sec_color};
       transform: scale(1.2);
       cursor: pointer;
-      
     }
   }
 `

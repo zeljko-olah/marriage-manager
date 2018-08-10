@@ -31,7 +31,7 @@ class ChatWrapper extends Component {
     const { user, show, toggleChat } = this.props
 
     return (
-      <div onDoubleClick={toggleChat}>
+      <div>
       { user ? (
 
         // SIDEBAR

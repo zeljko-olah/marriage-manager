@@ -1,50 +1,79 @@
-import React from 'react'
+import React, {Component} from 'react'
 import styled from 'styled-components'
 import * as colors from '../../styles/variables'
 
 import CheckIcon from 'react-icons/lib/md/visibility'
+import ImportantIcon from 'react-icons/lib/md/warning'
 
 
 
-const Message = ({message, user, pointer, markAsRead}) => {
-  // Create message CSS class depending on who is sending the message
-  let messageClass
-  if (message.from === user.name ) {
-    messageClass = "message-wrapper right"
-  } else if(message.from === 'Admin') {
-    messageClass = "message-wrapper admin"
-  } else {
-    messageClass = "message-wrapper left"
+class Message extends Component {
+  state = {
+    selected: false
+  }
+
+  handleSelected = (id, from) => {
+    const { user, markAsRead } = this.props
+    if (user.name !== from) {
+      markAsRead(id, from)
+      this.setState((prevState) => {
+        return {
+          selected: !prevState.selected
+        }
+      })
+    }
   }
   
-  // Make linebreaks functionality posible
-  const checkLineBreaks = message.text.includes('\n')
-  let formattedMessage
-  if (checkLineBreaks) {
-    formattedMessage = message.text.split('\n')
-    .map((part, index) => {
-      return <div key={part + index} className="message dont-break-out"> {part} </div>
-    })
-  } else {
-    formattedMessage = <div className="message dont-break-out"> {message.text} </div>
-  }
-
-  return (
-    <StyledMessage pointer={pointer}>
-      <div className={messageClass}>
-        <div className="message-outer">
-          <div className="time">{message.createdAt}</div>
-          <div className="message-inner">
-              {formattedMessage}
-              {message.unread ? (
-                <span
-                  className='unread'
-                  onClick={() => {markAsRead(message.id, message.from)}}><CheckIcon /></span>) : null}
+  render () {
+    const { selected } = this.state
+    const { message, user, pointer } = this.props
+    // Create message CSS class depending on who is sending the message
+    let messageClass
+    if (message.from === user.name ) {
+      messageClass = "message-wrapper right"
+    } else if(message.from === 'Admin') {
+      messageClass = "message-wrapper admin"
+    } else {
+      messageClass = "message-wrapper left"
+    }
+    
+    // Make linebreaks functionality posible
+    const checkLineBreaks = message.text.includes('\n')
+    let formattedMessage
+    if (checkLineBreaks) {
+      formattedMessage = message.text.split('\n')
+      .map((part, index) => {
+        return <div key={part + index} className="message dont-break-out"> {part} </div>
+      })
+    } else {
+      formattedMessage = <div className="message dont-break-out"> {message.text} </div>
+    }
+  
+    return (
+      <StyledMessage pointer={pointer}>
+        <div className={messageClass}>
+          <div className="message-outer">
+            <div className="time">{message.createdAt}</div>
+            <div className="message-inner">
+                {formattedMessage}
+                {message.unread ? (
+                  <span
+                    className={selected ? 'marked': 'unread'}
+                    onClick={() => {this.handleSelected(message.id, message.from)}}>
+                    <CheckIcon />
+                  </span>) : null}
+                {message.important ? (
+                  <span
+                    className="important"
+                    onClick={() => {this.handleSelected(message.id, message.from)}}>
+                    <ImportantIcon />
+                  </span>) : null}
+            </div>
           </div>
         </div>
-      </div>
-    </StyledMessage>
-  )
+      </StyledMessage>
+    )
+  }
 }
 
 export default Message
@@ -161,9 +190,10 @@ const StyledMessage = styled.div`
   font-style: italic;
 }
 
-& .unread {
+& .unread,
+& .marked,
+& .important {
   display: inline-block;
-  color: red;
   position: absolute;
   font-size: 15px;
   font-weight: bold;
@@ -172,8 +202,28 @@ const StyledMessage = styled.div`
   border-radius: 5px;
   padding: 5px;
   line-height: 10px;
+}
+
+& .left .important {
   bottom: -5px;
   right: -15px;
+}
+& .right .important {
+  bottom: -5px;
+  left: -15px;
+}
+
+& .unread {
+  color: tomato;  
+  background-color: ${colors.backdrop}; 
+}
+& .marked {
+  color: aquamarine;  
+}
+& .important {
+  color: violet; 
+  background-color: ${colors.overlay}; 
+  font-size: 20px;
 }
 
 .dont-break-out {
