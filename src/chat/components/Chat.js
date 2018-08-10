@@ -47,7 +47,6 @@ class Chat extends Component {
   }
 
   componentWillUnmount() {
-    console.log('Component Will Unmount')
 		const { socket } = this.state
 		socket.off(events.USER_CONNECTED)
     socket.off(events.UPDATE_USER_LIST)
@@ -64,7 +63,6 @@ class Chat extends Component {
     const socket = io(socketUrl)
     const { user, deleteChatHistory, setFlashMessage } = this.props
     this.setState({socket})
-    // this.props.socketInit(socket)
     socket.on('connect', ()=>{
       console.log("Connected")
     })
@@ -87,22 +85,18 @@ class Chat extends Component {
           flashMessage: `${user} denied deletion!`
         })
       }
-      this.setState({messages: []})
     })
     socket.on(events.MARK_AS_READED, (message) => {
-      console.log('MESSAGE')
-      console.log(message)
       const { messages } = this.state
       const markedMessages = messages.map(m => {
         if (m.id === message.id) {
-          console.log(message)
-          console.log(m)
           m.unread = false
         }
         return m
       })
       this.setState({ messages: markedMessages })
     })
+
     socket.on(events.NEW_MESSAGE, (message) => {
       const { messages } = this.state
       const formatedTime = moment(message.createdAt).format('h:mm a')
@@ -112,7 +106,6 @@ class Chat extends Component {
     })
     socket.on(events.PERMISION_TO_DELETE, partner => {
       const { user } = this.props
-      console.log(partner)
       const answer = window.confirm(`${partner.name} wants to delete chat history. Do you agree?`)
       socket.emit(events.REPLY_TO_DELETE, answer, user.name)
       if (answer) {
@@ -146,13 +139,8 @@ class Chat extends Component {
       })
     }
   }
-  
-  // Update browser dimensions
-  updateWindowDimensions = () => {
-    this.setState({ width: window.innerWidth, height: window.innerHeight })
-  }
 
-  closeChat = () => {
+  handleCloseChat = () => {
     const { toggleChat } = this.props
     toggleChat(true)
   }
@@ -165,7 +153,15 @@ class Chat extends Component {
   }
 
   handleDeleteChat = (user) => {
-    const { socket } = this.state
+    const { socket, users } = this.state
+    const { setFlashMessage } = this.props
+    if (users.length < 2) {
+      setFlashMessage({
+        type: 'error',
+        flashMessage: `Not possible if your partner is offline`
+      })
+      return
+    } 
     socket.emit('ASK_PERMISION', user)
   }
   
@@ -186,6 +182,11 @@ class Chat extends Component {
       this.setState({ messages: markedMessages })
     })
   }
+
+  // Update browser dimensions
+  updateWindowDimensions = () => {
+    this.setState({ width: window.innerWidth, height: window.innerHeight })
+  }
   
   render () {
     const { users, socket, messages, width, height } = this.state
@@ -199,7 +200,7 @@ class Chat extends Component {
           user={user}
           users={users}
           socket={socket}
-          close={this.closeChat}
+          close={this.handleCloseChat}
           info={info}
           saveChatHistory={this.handleEmailChatHistory}
           deleteChatHistory={this.handleDeleteChat}
