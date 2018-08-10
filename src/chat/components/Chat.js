@@ -58,6 +58,7 @@ class Chat extends Component {
     socket.off(events.MARK_AS_READ)
     socket.off(events.ASK_PERMISION)
     socket.off(events.CONFIRM_DELETE)
+    socket.off(events.REMOVED_IMPORTANT)
     socket.emit(events.CLIENT_DISCONNECTED)
     window.removeEventListener('resize', this.updateWindowDimensions)
   }
@@ -101,6 +102,22 @@ class Chat extends Component {
       this.setState({ messages: markedMessages })
     })
 
+    socket.on(events.REMOVED_IMPORTANT, (message) => {
+      const { messages } = this.state
+      const { setFlashMessage } = this.props
+      const markedMessages = messages.map(m => {
+        if (m.id === message.id) {
+          m.important = false
+        }
+        return m
+      })
+      this.setState({ messages: markedMessages })
+      setFlashMessage({
+        type: 'success',
+        flashMessage: `Removed important flag`
+      })
+    })
+
     socket.on(events.NEW_MESSAGE, (message) => {
       const { messages } = this.state
       const formatedTime = moment(message.createdAt).format('h:mm a')
@@ -130,11 +147,13 @@ class Chat extends Component {
     const { saveMessage, user } = this.props
     if (message.from !== 'Admin') {
       const unread = users && users.length === 1 ? 'true' : 'false'
+      const pattern = /^[!!!]/
+      const important = pattern.test(message)
       saveMessage({
-        text: message,
+        text: message.replace('!!!', ''),
         userId: user.id,
         unread,
-        important: false
+        important
       }).then(savedMessage => {
         socket.emit(events.MESSAGE_SENT, savedMessage, (info) => {
           console.log(info)
@@ -199,6 +218,22 @@ class Chat extends Component {
         this.setState({ messages: markedMessages })
       })
   }
+
+  handleRemoveImportant = (id) => {
+    const { messages, socket } = this.state
+    console.log('triggered', id)
+    const { removeImportantMessage } = this.props
+    removeImportantMessage(id).then(() => {
+      const markedMessages = messages.map(m => {
+        if (m.id === id) {
+          m.important = false
+          socket.emit(events.REMOVE_IMPORTANT, m)
+        }
+        return m
+      })
+      this.setState({ messages: markedMessages })
+    })
+  }
   
   // Update browser dimensions
   updateWindowDimensions = () => {
@@ -229,7 +264,9 @@ class Chat extends Component {
         <Messages
           messages={messages}
           user={user}
-          markAsRead={this.handleSelectMessages} />
+          markAsRead={this.handleSelectMessages}
+          removeImportant={this.handleRemoveImportant}
+          />
 
         { /* MESSAGE INPUT */ }
         <MessageInput
@@ -259,6 +296,7 @@ const mapDispatchToProps = (dispatch) => ({
   emailChatHistory: (messages, user) => dispatch( actions.emailChatHistory(messages, user) ),
   deleteChatHistory: (room) => dispatch( actions.deleteChatHistory(room) ),
   markMessagesAsRead: (id) => dispatch( actions.markMessageAsRead(id) ),
+  removeImportantMessage: (id) => dispatch( actions.removeImportantMessage(id) ),
   setFlashMessage: (flash) => dispatch( actions.setFlashMessage(flash) ),
 })
 

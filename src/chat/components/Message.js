@@ -5,8 +5,6 @@ import * as colors from '../../styles/variables'
 import CheckIcon from 'react-icons/lib/md/visibility'
 import ImportantIcon from 'react-icons/lib/md/warning'
 
-
-
 class Message extends Component {
   state = {
     selected: false
@@ -21,6 +19,13 @@ class Message extends Component {
           selected: !prevState.selected
         }
       })
+    }
+  }
+
+  handleImportant = (id, from) => {
+    const { user, removeImportant } = this.props
+    if (user.name !== from) {
+      removeImportant(id, from)
     }
   }
   
@@ -65,7 +70,7 @@ class Message extends Component {
                 {message.important ? (
                   <span
                     className="important"
-                    onClick={() => {this.handleSelected(message.id, message.from)}}>
+                    onClick={() => {this.handleImportant(message.id, message.from)}}>
                     <ImportantIcon />
                   </span>) : null}
             </div>
@@ -206,11 +211,11 @@ const StyledMessage = styled.div`
 
 & .left .important {
   bottom: -5px;
-  right: -15px;
+  right: -20px;
 }
 & .right .important {
   bottom: -5px;
-  left: -15px;
+  left: -20px;
 }
 
 & .unread {
@@ -221,8 +226,7 @@ const StyledMessage = styled.div`
   color: aquamarine;  
 }
 & .important {
-  color: violet; 
-  background-color: ${colors.overlay}; 
+  color: ${colors.sec_color}; 
   font-size: 20px;
 }
 

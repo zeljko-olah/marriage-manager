@@ -26,7 +26,6 @@ exports.new_message = (req, res, next) => {
       User.findById( id, 'name')
         .exec()
         .then(user => {
-          console.log('USER', user)
           res.status(201).json({
             id: doc._id,
             from: user.name,
@@ -58,8 +57,6 @@ exports.get_messages = (req, res) => {
         count: docs.length,
         messages: docs.map(doc => {
           const time = formatMessageTime(doc.created_at)
-          console.log('DOC', doc)
-
           return {
             id: doc._id,
             text: doc.text,
@@ -139,7 +136,6 @@ exports.delete_chat_history = (req, res) => {
   Message.deleteMany({ room: room })
     .exec()
     .then(response => {
-      console.log(response.n)
       if (response.n === 0) {
         res.status(200).json({
           type: 'success',
@@ -161,8 +157,28 @@ exports.delete_chat_history = (req, res) => {
     })
 }
 
+exports.remove_important_message = (req, res) => {
+  console.log('REQBODY', req.body)
+  const {id} = req.body
+  console.log(id)
+  Message.findOneAndUpdate({ _id: id }, { $set: { important: false }})
+  .exec()
+  .then((resp) => {
+    console.log(resp)
+    res.status(200).json({
+      type: 'success',
+      flashMessage: `Removed important flag :)`
+    })
+  })
+  .catch(err => {
+    res.status(200).json({
+      type: 'error',
+      flashMessage: `Something went wrong :)`
+    })
+  })
+}
+
 exports.mark_as_read = (req, res) => {
-  console.log(req.body)
   const ids = req.body
 
   ids.forEach((id) => {

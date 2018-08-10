@@ -71,6 +71,16 @@ module.exports = (socket) => {
   })
 
   /*
+   * ON REMOVE IMPORTANT
+   * When user types a message
+   */
+  
+  socket.on(events.REMOVE_IMPORTANT, message => {
+
+    io.to(room).emit(events.REMOVED_IMPORTANT, message)
+  })
+
+  /*
    * ON ASK PERMISION
    * When user types a message
    */
@@ -80,7 +90,7 @@ module.exports = (socket) => {
   })
 
   /*
-   * ON ASK PERMISION
+   * ON REPLY TO DELETE
    * When user types a message
    */
 

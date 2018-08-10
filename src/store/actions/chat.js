@@ -47,7 +47,24 @@ export const getMessages = () => {
 
 export const markMessageAsRead = (ids) => {
   return dispatch => {
-    return axios.put('api/chat/messages', ids)
+    return axios.put('api/chat/messages/unread', ids)
+      .then((response) => {
+        dispatch(setFlashMessage(response.data))
+        dispatch(getMessages())
+      })
+      .catch(err => {
+        dispatch(setFlashMessage({
+          type: 'error',
+          flashMessage: 'Something went wrong'
+        }))
+      })
+  }
+}
+
+export const removeImportantMessage = (id) => {
+  console.log('ID:::',id)
+  return dispatch => {
+    return axios.put('api/chat/messages/important', {id})
       .then((response) => {
         dispatch(setFlashMessage(response.data))
         dispatch(getMessages())
