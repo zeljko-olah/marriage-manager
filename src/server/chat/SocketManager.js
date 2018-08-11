@@ -59,6 +59,20 @@ module.exports = (socket) => {
   })
 
   /*
+   * ON CHAT STATUS
+   * Determine if the partner's chat is open
+   */
+  
+  socket.on(events.CHAT_STATUS, open => {
+    const allUsers = users.getUserList(room)
+    if (allUsers.length === 1) {
+      open = false
+    }
+
+    socket.broadcast.to(room).emit(events.CHAT_STAT, open)
+  })
+
+  /*
    * ON MARK AS READ
    * When user types a message
    */
@@ -66,6 +80,15 @@ module.exports = (socket) => {
   socket.on(events.MARK_AS_READ, (message, user) => {
 
     socket.broadcast.to(room).emit(events.MARK_AS_READED, message, user)
+  })
+
+  /*
+   * ON UPDATE_UNREAD_COUNT
+   * 
+   */
+  
+  socket.on(events.UPDATE_UNREAD_COUNT, () => {
+    socket.broadcast.to(room).emit(events.UNREAD_COUNT_UPDATED)
   })
 
   /*

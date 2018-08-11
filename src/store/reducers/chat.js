@@ -5,7 +5,7 @@ import { updateObject } from '../../shared/utility'
 const initialState = {
     // socket
     socket: null,
-    showChat: true,
+    showChat: false,
     messages: [],
     message: null,
     flashMessage: ''

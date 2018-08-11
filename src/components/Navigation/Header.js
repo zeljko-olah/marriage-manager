@@ -15,7 +15,7 @@ import ChatIcon from 'react-icons/lib/md/forum'
 
 class Header extends Component {
   render () {
-    const { show, menuToggleClicked, showChat, toggleChat } = this.props
+    const { show, menuToggleClicked, showChat, toggleChat, count } = this.props
   
     return (
       <StyledHeader>
@@ -30,11 +30,12 @@ class Header extends Component {
         { /* NAV ITEMS */ }
         <NavItems />
   
-        { /* MENU ICON */ }
+        { /* CHAT ICON */ }
         <span
           className="items"
           onClick={ () => {toggleChat(showChat)} }>
           <i className={show ? 'open-chat': null}><ChatIcon /></i>
+          { count ? (<span className="unread-count">{count}</span>) : null }
         </span>
       </StyledHeader>
     )
@@ -42,8 +43,13 @@ class Header extends Component {
 } 
 
 const mapStateToProps = state => {
+  const user = state.auth.user
+  const unreadMessagesCount = state.chat.messages
+    .filter(m => m.unread === true && m.from !== user.name).length
+  
   return {
-    show: state.chat.showChat
+    show: state.chat.showChat,
+    count: unreadMessagesCount
   }
 }
 
@@ -93,6 +99,7 @@ const StyledHeader = styled.header`
   }
 
   & span.items {
+    position: relative;
     width: 100px;
     padding: 0px 20px;
   }
@@ -122,6 +129,21 @@ const StyledHeader = styled.header`
   
   & svg {
     font-size: 40px;
+  }
+
+  & .unread-count {
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    line-height: 20px;
+    display: inline-block;
+    font-size: 15px;
+    font-weight: bold;
+    color: ${colors.prim_color};
+    background-color: ${colors.sec_color};
+    position: absolute;
+    top: 20px;
+    left: 20px;
   }
 `
 

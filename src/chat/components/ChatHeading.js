@@ -30,7 +30,7 @@ const ChatHeading = ({
       <StyledBar className="header-bar">
         <div className="mark-as">
           <div className="icon-wrapper">
-            <i><DoneIcon onClick={markAllRead} /></i>
+            <i className="done-icon"><DoneIcon onClick={markAllRead} /></i>
           </div>
         </div>
         <div>
@@ -98,6 +98,16 @@ const StyledBar = styled.div`
 
   & div.icon-wrapper {
     padding-right: 20px;
+  }
+
+  & div.icon-wrapper .done-icon:hover::after {
+    content: 'Mark all messages as read';
+    color: ${colors.prim_font};
+    font-style: normal;
+    background-color: #ddd;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-left: 10px;
   }
 
   & i svg {

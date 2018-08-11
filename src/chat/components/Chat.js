@@ -19,6 +19,8 @@ import styled from 'styled-components'
 import * as colors from '../../styles/variables'
  
 import moment from 'moment'
+import default_sound from '../Cuckoo.ogg'
+import important_sound from '../Whistle.ogg'
 
 let socketUrl = 'https://vast-falls-59724.herokuapp.com'
 if (process.env.NODE_ENV === 'development') {
@@ -38,6 +40,10 @@ class Chat extends Component {
   
   // List of selected message ids
   ids = []
+  chatOpened = true
+
+  audioDefault = new Audio(default_sound)
+  audioImportant = new Audio(important_sound)
 
   // LIFECYCLE HOOKS
   componentDidMount = () => {
@@ -49,8 +55,16 @@ class Chat extends Component {
     window.addEventListener('resize', this.updateWindowDimensions)
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const { socket } = this.state
+    const { showChat } = this.props
+    if (showChat !== prevProps.showChat) {
+      socket.emit(events.CHAT_STATUS, showChat)
+    }
+  }
+
   componentWillUnmount() {
-		const { socket } = this.state
+    const { socket } = this.state
 		socket.off(events.USER_CONNECTED)
     socket.off(events.UPDATE_USER_LIST)
     socket.off(events.NEW_MESSAGE)
@@ -58,6 +72,7 @@ class Chat extends Component {
     socket.off(events.ASK_PERMISION)
     socket.off(events.CONFIRM_DELETE)
     socket.off(events.REMOVED_IMPORTANT)
+    socket.off(events.CHAT_STAT)
     socket.emit(events.CLIENT_DISCONNECTED)
     window.removeEventListener('resize', this.updateWindowDimensions)
   }
@@ -79,16 +94,33 @@ class Chat extends Component {
 			this.setState({ users })
     })
 
+    socket.on(events.CHAT_STAT, (open)=>{
+			this.chatOpened = open
+    })
+
+    socket.on(events.UNREAD_COUNT_UPDATED, () => {
+      const { getMessages } = this.props
+      getMessages()
+    })
+
     socket.on(events.UPDATE_USER_LIST, (users) => {
       this.setState({users})
     })
 
     socket.on(events.NEW_MESSAGE, (message) => {
       const { messages } = this.state
+      const { user } = this.props
       const formatedTime = moment(message.createdAt).format('h:mm a')
       const newMessage = Object.assign({}, message, {createdAt: formatedTime})
       const newMessages = messages ? messages.concat(newMessage) : null
       this.setState({messages: newMessages})
+      if (user && user.name !== message.from && message.from !== 'Admin') {
+        if (message.important === true) {
+          this.audioImportant.play()
+          return
+        }
+        this.audioDefault.play()
+      }
     })
 
     socket.on(events.CONFIRM_DELETE, (answer, user) => {
@@ -130,7 +162,7 @@ class Chat extends Component {
       this.setState({ messages: markedMessages })
       setFlashMessage({
         type: 'success',
-        flashMessage: `${user.name} acknowledged important message`
+        flashMessage: `${user.name} is aware of important message`
       })
     })
 
@@ -156,7 +188,7 @@ class Chat extends Component {
     const { socket, users} = this.state
     const { saveMessage, setFlashMessage, user } = this.props
     if (message.from !== 'Admin') {
-      const unread = users && users.length === 1 ? 'true' : 'false'
+      const unread = (users && users.length === 1) || !this.chatOpened ?  'true' : 'false'
       const pattern = /^!!!/
       const important = pattern.test(message)
       if (message.replace('!!!', '') === '') {
@@ -175,6 +207,9 @@ class Chat extends Component {
         socket.emit(events.MESSAGE_SENT, savedMessage, (info) => {
           console.log(info)
         })
+        if (savedMessage.unread) {
+          socket.emit(events.UPDATE_UNREAD_COUNT)
+        }
       })
     }
   }
@@ -223,27 +258,41 @@ class Chat extends Component {
   
   // Mark messages as read
   handleMarkAllRead = () => {
-    const { markMessagesAsRead, user } = this.props
-    const { socket, messages,} = this.state
+    const { markMessagesAsRead, user, setFlashMessage } = this.props
+    const { socket, messages} = this.state
 
-      markMessagesAsRead(this.ids).then(() => {
-        const markedMessages = messages.map(m => {
+    if (!this.ids.length) {
+      setFlashMessage({
+        type: 'error',
+        flashMessage: `There are no marked messages!`
+      }) 
+    }
 
-          if (this.ids.includes(m.id)) {
-            m.unread = false
-            socket.emit(events.MARK_AS_READ, m, user)
-          }
-          return m
-        })
-        this.setState({ messages: markedMessages })
+    if (!messages.find(m => m.unread === true  && m.from !== user.name)) {
+      setFlashMessage({
+        type: 'error',
+        flashMessage: `There are no messages to mark!`
+      }) 
+    }
+
+    markMessagesAsRead(this.ids).then(() => {
+      const markedMessages = messages.map(m => {
+
+        if (this.ids.includes(m.id)) {
+          m.unread = false
+          socket.emit(events.MARK_AS_READ, m, user)
+        }
+        return m
       })
+      this.setState({ messages: markedMessages })
+    })
   }
   
   // Remove important flag from message
   handleRemoveImportant = (id) => {
     const { messages, socket } = this.state
     console.log('triggered', id)
-    const { removeImportantMessage, user, setFlashMessage } = this.props
+    const { removeImportantMessage, user } = this.props
     removeImportantMessage(id).then(() => {
       const markedMessages = messages.map(m => {
         if (m.id === id) {
@@ -253,10 +302,6 @@ class Chat extends Component {
         return m
       })
       this.setState({ messages: markedMessages })
-      setFlashMessage({
-        type: 'success',
-        flashMessage: `You acknowledged important message!`
-      })
     })
   }
   
@@ -267,7 +312,6 @@ class Chat extends Component {
 
   // RENDER  
   render () {
-    console.log(this.ids)
     const { users, socket, messages, width, height } = this.state
     const { user, info } = this.props
 
@@ -310,7 +354,8 @@ const mapStateToProps = state => {
   return {
     user: state.auth.user,
     loadedMessages: state.chat.messages,
-    info: state.chat.flashMessage
+    info: state.chat.flashMessage,
+    showChat: state.chat.showChat
   }
 }
 

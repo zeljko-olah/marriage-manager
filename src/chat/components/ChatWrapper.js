@@ -28,7 +28,7 @@ class ChatWrapper extends Component {
   }
   
   render() {
-    const { user, show, toggleChat } = this.props
+    const { user, show } = this.props
 
     return (
       <div>
