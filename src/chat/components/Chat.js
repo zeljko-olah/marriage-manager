@@ -18,7 +18,7 @@ import * as events from '../Events'
 import styled from 'styled-components'
 import * as colors from '../../styles/variables'
  
-import moment from 'moment';
+import moment from 'moment'
 
 let socketUrl = 'https://vast-falls-59724.herokuapp.com'
 if (process.env.NODE_ENV === 'development') {
@@ -27,20 +27,19 @@ if (process.env.NODE_ENV === 'development') {
 
 class Chat extends Component {
   
-  // State
+  // STATE
   state = {
     socket: null,
     users: [],
     messages: [],
-    selectedMessages: [],
     width: 0,
     height: 0
   }
-
+  
+  // List of selected message ids
   ids = []
 
-  
-  // Lifecycle
+  // LIFECYCLE HOOKS
   componentDidMount = () => {
     this.initSocket()
     this.props.getMessages().then(() => {
@@ -63,6 +62,7 @@ class Chat extends Component {
     window.removeEventListener('resize', this.updateWindowDimensions)
   }
   
+  // SOCKET
   // Handle socket events
   initSocket = () => {
     const socket = io(socketUrl)
@@ -74,12 +74,23 @@ class Chat extends Component {
 
     // Events
     socket.emit(events.JOIN, `${user.name} logged in`, {...user, id: socket.id} )
+
     socket.on(events.USER_CONNECTED, (users)=>{
 			this.setState({ users })
     })
+
     socket.on(events.UPDATE_USER_LIST, (users) => {
       this.setState({users})
     })
+
+    socket.on(events.NEW_MESSAGE, (message) => {
+      const { messages } = this.state
+      const formatedTime = moment(message.createdAt).format('h:mm a')
+      const newMessage = Object.assign({}, message, {createdAt: formatedTime})
+      const newMessages = messages ? messages.concat(newMessage) : null
+      this.setState({messages: newMessages})
+    })
+
     socket.on(events.CONFIRM_DELETE, (answer, user) => {
       console.log(answer)
       if (answer) {
@@ -91,7 +102,8 @@ class Chat extends Component {
         })
       }
     })
-    socket.on(events.MARK_AS_READED, (message) => {
+
+    socket.on(events.MARK_AS_READED, (message, user) => {
       const { messages } = this.state
       const markedMessages = messages.map(m => {
         if (m.id === message.id) {
@@ -100,9 +112,13 @@ class Chat extends Component {
         return m
       })
       this.setState({ messages: markedMessages })
+      setFlashMessage({
+        type: 'success',
+        flashMessage: `${user.name} have read your messages!`
+      })
     })
 
-    socket.on(events.REMOVED_IMPORTANT, (message) => {
+    socket.on(events.REMOVED_IMPORTANT, (message, user) => {
       const { messages } = this.state
       const { setFlashMessage } = this.props
       const markedMessages = messages.map(m => {
@@ -114,17 +130,10 @@ class Chat extends Component {
       this.setState({ messages: markedMessages })
       setFlashMessage({
         type: 'success',
-        flashMessage: `Removed important flag`
+        flashMessage: `${user.name} acknowledged important message`
       })
     })
 
-    socket.on(events.NEW_MESSAGE, (message) => {
-      const { messages } = this.state
-      const formatedTime = moment(message.createdAt).format('h:mm a')
-      const newMessage = Object.assign({}, message, {createdAt: formatedTime})
-      const newMessages = messages ? messages.concat(newMessage) : null
-      this.setState({messages: newMessages})
-    })
     socket.on(events.PERMISION_TO_DELETE, partner => {
       const { user } = this.props
       const answer = window.confirm(`${partner.name} wants to delete chat history. Do you agree?`)
@@ -141,14 +150,22 @@ class Chat extends Component {
     })
   }
   
+  // HANDLERS
   // Send message @TODO
   handleSendMessage = (message) => {
     const { socket, users} = this.state
-    const { saveMessage, user } = this.props
+    const { saveMessage, setFlashMessage, user } = this.props
     if (message.from !== 'Admin') {
       const unread = users && users.length === 1 ? 'true' : 'false'
-      const pattern = /^[!!!]/
+      const pattern = /^!!!/
       const important = pattern.test(message)
+      if (message.replace('!!!', '') === '') {
+        setFlashMessage({
+          type: 'error',
+          flashMessage: `Empty messages not allowed!`
+        })
+        return
+      }
       saveMessage({
         text: message.replace('!!!', ''),
         userId: user.id,
@@ -161,19 +178,22 @@ class Chat extends Component {
       })
     }
   }
-
+  
+  // Close chat window
   handleCloseChat = () => {
     const { toggleChat } = this.props
     toggleChat(true)
   }
-
+  
+  // Email chat history to user's email
   handleEmailChatHistory = () => {
     const { emailChatHistory, user } = this.props
     const { messages } = this.state
     const usersMessages = messages.filter(msg => msg.from !== 'Admin')
     emailChatHistory(usersMessages, user)
   }
-
+  
+  // Delete all chat messages
   handleDeleteChat = (user) => {
     const { socket, users } = this.state
     const { setFlashMessage } = this.props
@@ -187,6 +207,7 @@ class Chat extends Component {
     socket.emit('ASK_PERMISION', user)
   }
   
+  // Select multiple messages
   handleSelectMessages = (id, from) => {
     const { user } = this.props
     if (from === user.name ) {
@@ -198,40 +219,44 @@ class Chat extends Component {
     } else {
       this.ids.push(id)
     }
-
-    this.setState({ selectedMessages: this.ids })
   }
-
+  
+  // Mark messages as read
   handleMarkAllRead = () => {
-    const { markMessagesAsRead } = this.props
-    const { socket, messages, selectedMessages} = this.state
+    const { markMessagesAsRead, user } = this.props
+    const { socket, messages,} = this.state
 
-      markMessagesAsRead(selectedMessages).then(() => {
+      markMessagesAsRead(this.ids).then(() => {
         const markedMessages = messages.map(m => {
 
-          if (selectedMessages.includes(m.id)) {
+          if (this.ids.includes(m.id)) {
             m.unread = false
-            socket.emit(events.MARK_AS_READ, m)
+            socket.emit(events.MARK_AS_READ, m, user)
           }
           return m
         })
         this.setState({ messages: markedMessages })
       })
   }
-
+  
+  // Remove important flag from message
   handleRemoveImportant = (id) => {
     const { messages, socket } = this.state
     console.log('triggered', id)
-    const { removeImportantMessage } = this.props
+    const { removeImportantMessage, user, setFlashMessage } = this.props
     removeImportantMessage(id).then(() => {
       const markedMessages = messages.map(m => {
         if (m.id === id) {
           m.important = false
-          socket.emit(events.REMOVE_IMPORTANT, m)
+          socket.emit(events.REMOVE_IMPORTANT, m, user)
         }
         return m
       })
       this.setState({ messages: markedMessages })
+      setFlashMessage({
+        type: 'success',
+        flashMessage: `You acknowledged important message!`
+      })
     })
   }
   
@@ -239,7 +264,8 @@ class Chat extends Component {
   updateWindowDimensions = () => {
     this.setState({ width: window.innerWidth, height: window.innerHeight })
   }
-  
+
+  // RENDER  
   render () {
     console.log(this.ids)
     const { users, socket, messages, width, height } = this.state
@@ -295,11 +321,10 @@ const mapDispatchToProps = (dispatch) => ({
   toggleChat: (showChat) => dispatch( actions.toggleChat(showChat) ),
   emailChatHistory: (messages, user) => dispatch( actions.emailChatHistory(messages, user) ),
   deleteChatHistory: (room) => dispatch( actions.deleteChatHistory(room) ),
-  markMessagesAsRead: (id) => dispatch( actions.markMessageAsRead(id) ),
+  markMessagesAsRead: (id) => dispatch( actions.markMessagesAsRead(id) ),
   removeImportantMessage: (id) => dispatch( actions.removeImportantMessage(id) ),
   setFlashMessage: (flash) => dispatch( actions.setFlashMessage(flash) ),
 })
-
 
 // EXPORT
 export default connect(mapStateToProps, mapDispatchToProps)(Chat)
@@ -307,7 +332,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(Chat)
 
 // STYLED
 const StyledSection = styled.section`
-
   background: ${colors.ter_grad};
   border: 2px solid ${colors.prim_color};
   border-top-left-radius: 20px;

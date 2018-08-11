@@ -37,15 +37,16 @@ export const getMessages = () => {
         dispatch(getMessagesSuccess(response.data.messages))
       })
       .catch(err => {
+        console.log(err)
         dispatch(setFlashMessage({
           type: 'error',
-          flashMessage: err.response.data.error.message
+          flashMessage: 'Something went wrong'
         }))
       })
   }
 }
 
-export const markMessageAsRead = (ids) => {
+export const markMessagesAsRead = (ids) => {
   return dispatch => {
     return axios.put('api/chat/messages/unread', ids)
       .then((response) => {
@@ -65,8 +66,7 @@ export const removeImportantMessage = (id) => {
   console.log('ID:::',id)
   return dispatch => {
     return axios.put('api/chat/messages/important', {id})
-      .then((response) => {
-        dispatch(setFlashMessage(response.data))
+      .then(() => {
         dispatch(getMessages())
       })
       .catch(err => {

@@ -63,11 +63,9 @@ module.exports = (socket) => {
    * When user types a message
    */
   
-  socket.on(events.MARK_AS_READ, message => {
-    console.log('we are here')
-    console.log('MESSAGE', message)
+  socket.on(events.MARK_AS_READ, (message, user) => {
 
-    io.to(room).emit(events.MARK_AS_READED, message)
+    socket.broadcast.to(room).emit(events.MARK_AS_READED, message, user)
   })
 
   /*
@@ -75,9 +73,9 @@ module.exports = (socket) => {
    * When user types a message
    */
   
-  socket.on(events.REMOVE_IMPORTANT, message => {
+  socket.on(events.REMOVE_IMPORTANT, (message, user) => {
 
-    io.to(room).emit(events.REMOVED_IMPORTANT, message)
+    socket.broadcast.to(room).emit(events.REMOVED_IMPORTANT, message, user)
   })
 
   /*
