@@ -6,6 +6,8 @@ import * as actions from '../../store/actions'
 // NAV ITEMS
 import NavItems from './Header/NavItems'
 
+import events from '../../chat/Events'
+
 import styled from 'styled-components';
 import * as colors from '../../styles/variables'
 
@@ -14,9 +16,55 @@ import MenuIcon from 'react-icons/lib/md/menu'
 import ChatIcon from 'react-icons/lib/md/forum'
 
 class Header extends Component {
+
+  state = {
+    countUnreadMessages: null,
+    countImportantMessages: null
+  }
+
+  componentDidMount() {
+    const { countUnread } = this.props
+    this.setState({ countUnreadMessages: countUnread  })
+  }
+
+  componentDidUpdate(prevProps) {
+    const { socket } = this.props
+    if (socket && prevProps.socket !== socket) {
+      socket.on(events.UNREAD_COUNT_UPDATED, (change) => {
+        console.log(change)
+        this.setState((prevState) => {
+          return {
+            countUnreadMessages: prevState.countUnreadMessages + change
+          }
+        })
+      })
+      socket.on(events.IMPORTANT_COUNT_UPDATED, (change) => {
+        this.setState((prevState) => {
+          return {
+            countImportantMessages: prevState.countImportantMessages + change
+          }
+        })
+      })
+    }
+  }
+
+  componentWillUnmount() {
+    const { socket } = this.props
+    socket.off(events.UNREAD_COUNT_UPDATED)
+    socket.off(events.IMPORTANT_COUNT_UPDATED)
+  }
+
   render () {
-    const { show, menuToggleClicked, showChat, toggleChat, count } = this.props
-  
+    const { 
+      show,
+      menuToggleClicked,
+      showChat,
+      toggleChat,
+      countUnread,
+      countImportant
+    } = this.props
+    const { countUnreadMessages, countImportantMessages } = this.state
+
     return (
       <StyledHeader>
       
@@ -35,7 +83,9 @@ class Header extends Component {
           className="items"
           onClick={ () => {toggleChat(showChat)} }>
           <i className={show ? 'open-chat': null}><ChatIcon /></i>
-          { count ? (<span className="unread-count">{count}</span>) : null }
+          { countUnread || countUnreadMessages ? (<span className="unread-count">{countUnread + countUnreadMessages}</span>) : null }
+          { countImportant || countImportantMessages ? (<span className="important-count">{countImportant + countImportantMessages}!</span>) : null }
+          
         </span>
       </StyledHeader>
     )
@@ -46,10 +96,14 @@ const mapStateToProps = state => {
   const user = state.auth.user
   const unreadMessagesCount = state.chat.messages
     .filter(m => m.unread === true && m.from !== user.name).length
+  const importantMessagesCount = state.chat.messages
+    .filter(m => m.important === true && m.from !== user.name).length
   
   return {
+    socket: state.chat.socket,
     show: state.chat.showChat,
-    count: unreadMessagesCount
+    countUnread: unreadMessagesCount,
+    countImportant: importantMessagesCount
   }
 }
 
@@ -131,19 +185,34 @@ const StyledHeader = styled.header`
     font-size: 40px;
   }
 
+  & .unread-count,
+  & .important-count {
+    display: inline-block;
+    font-size: 15px;
+    font-weight: bold;
+    position: absolute;
+  }
+
   & .unread-count {
+    color: ${colors.sec_color};
+    background-color: ${colors.prim_color};
+    top: 20px;
+    left: 20px;
     width: 20px;
     height: 20px;
     border-radius: 20px;
     line-height: 20px;
-    display: inline-block;
-    font-size: 15px;
-    font-weight: bold;
+  }
+  & .important-count {
     color: ${colors.prim_color};
     background-color: ${colors.sec_color};
-    position: absolute;
-    top: 20px;
-    left: 20px;
+    font-size: 20px;
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    line-height: 30px;
+    top: -10px;
+    right: 10px;
   }
 `
 

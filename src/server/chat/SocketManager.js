@@ -47,6 +47,7 @@ module.exports = (socket) => {
   socket.on(events.MESSAGE_SENT, (message, callback) => {
     const user = users.getUser(socket.id)
     const allUsers = users.getUserList(room)
+
     if (allUsers.length === 1) {
       message.unread = true
     }
@@ -78,7 +79,6 @@ module.exports = (socket) => {
    */
   
   socket.on(events.MARK_AS_READ, (message, user) => {
-
     socket.broadcast.to(room).emit(events.MARK_AS_READED, message, user)
   })
 
@@ -87,8 +87,29 @@ module.exports = (socket) => {
    * 
    */
   
-  socket.on(events.UPDATE_UNREAD_COUNT, () => {
-    socket.broadcast.to(room).emit(events.UNREAD_COUNT_UPDATED)
+  socket.on(events.UPDATE_PARTNER_UNREAD_COUNT, (changeBy) => {
+    socket.broadcast.to(room).emit(events.UNREAD_COUNT_UPDATED, changeBy)
+  })
+
+  socket.on(events.UPDATE_OWN_UNREAD_COUNT, (changeBy) => {
+    socket.emit(events.UNREAD_COUNT_UPDATED, changeBy)
+  })
+
+  /*
+   * ON UPDATE_OWN_IMPORTANT_COUNT
+   * 
+   */
+  
+  socket.on(events.UPDATE_OWN_IMPORTANT_COUNT, (changeBy) => {
+    socket.emit(events.IMPORTANT_COUNT_UPDATED, changeBy)
+  })
+  /*
+   * ON UPDATE_PARTNER_IMPORTANT_COUNT
+   * 
+   */
+  
+  socket.on(events.UPDATE_PARTNER_IMPORTANT_COUNT, (changeBy) => {
+    socket.broadcast.to(room).emit(events.IMPORTANT_COUNT_UPDATED, changeBy)
   })
 
   /*

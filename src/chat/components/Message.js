@@ -228,6 +228,7 @@ const StyledMessage = styled.div`
 & .important {
   color: ${colors.sec_color}; 
   font-size: 20px;
+  cursor: pointer;
 }
 
 .dont-break-out {

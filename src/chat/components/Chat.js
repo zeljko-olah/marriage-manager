@@ -40,7 +40,7 @@ class Chat extends Component {
   
   // List of selected message ids
   ids = []
-  chatOpened = true
+  chatOpened = false
 
   audioDefault = new Audio(default_sound)
   audioImportant = new Audio(important_sound)
@@ -80,7 +80,9 @@ class Chat extends Component {
   // SOCKET
   // Handle socket events
   initSocket = () => {
+    const { socketInit } = this.props
     const socket = io(socketUrl)
+    socketInit(socket)
     const { user, deleteChatHistory, setFlashMessage } = this.props
     this.setState({socket})
     socket.on('connect', ()=>{
@@ -96,11 +98,6 @@ class Chat extends Component {
 
     socket.on(events.CHAT_STAT, (open)=>{
 			this.chatOpened = open
-    })
-
-    socket.on(events.UNREAD_COUNT_UPDATED, () => {
-      const { getMessages } = this.props
-      getMessages()
     })
 
     socket.on(events.UPDATE_USER_LIST, (users) => {
@@ -125,7 +122,9 @@ class Chat extends Component {
 
     socket.on(events.CONFIRM_DELETE, (answer, user) => {
       console.log(answer)
+      const { loadedMessages } = this.props
       if (answer) {
+        socket.emit(events.UPDATE_UNREAD_COUNT, )
         this.setState({messages: []})
       } else {
         setFlashMessage({
@@ -159,7 +158,9 @@ class Chat extends Component {
         }
         return m
       })
-      this.setState({ messages: markedMessages })
+      this.setState({ messages: markedMessages }, () => {
+        socket.emit(events.UPDATE_PARTNER_IMPORTANT_COUNT, -1)
+      })
       setFlashMessage({
         type: 'success',
         flashMessage: `${user.name} is aware of important message`
@@ -188,7 +189,6 @@ class Chat extends Component {
     const { socket, users} = this.state
     const { saveMessage, setFlashMessage, user } = this.props
     if (message.from !== 'Admin') {
-      const unread = (users && users.length === 1) || !this.chatOpened ?  'true' : 'false'
       const pattern = /^!!!/
       const important = pattern.test(message)
       if (message.replace('!!!', '') === '') {
@@ -198,6 +198,7 @@ class Chat extends Component {
         })
         return
       }
+      const unread = !important ? ((users && users.length === 1) || !this.chatOpened ? 'true' : 'false') : 'false'
       saveMessage({
         text: message.replace('!!!', ''),
         userId: user.id,
@@ -207,8 +208,11 @@ class Chat extends Component {
         socket.emit(events.MESSAGE_SENT, savedMessage, (info) => {
           console.log(info)
         })
+        if (savedMessage.important) {
+          socket.emit(events.UPDATE_PARTNER_IMPORTANT_COUNT, 1)
+        }
         if (savedMessage.unread) {
-          socket.emit(events.UPDATE_UNREAD_COUNT)
+          socket.emit(events.UPDATE_PARTNER_UNREAD_COUNT, 1)
         }
       })
     }
@@ -275,6 +279,8 @@ class Chat extends Component {
       }) 
     }
 
+    const selected = this.ids
+    console.log("SELECTED:::", selected)
     markMessagesAsRead(this.ids).then(() => {
       const markedMessages = messages.map(m => {
 
@@ -284,20 +290,22 @@ class Chat extends Component {
         }
         return m
       })
-      this.setState({ messages: markedMessages })
+      socket.emit(events.UPDATE_OWN_UNREAD_COUNT, -selected.length)  
+      this.ids = []    
     })
+    
+
   }
   
   // Remove important flag from message
   handleRemoveImportant = (id) => {
     const { messages, socket } = this.state
-    console.log('triggered', id)
     const { removeImportantMessage, user } = this.props
     removeImportantMessage(id).then(() => {
       const markedMessages = messages.map(m => {
         if (m.id === id) {
-          m.important = false
           socket.emit(events.REMOVE_IMPORTANT, m, user)
+          m.important = false
         }
         return m
       })
@@ -312,6 +320,7 @@ class Chat extends Component {
 
   // RENDER  
   render () {
+    console.log('chat.JS')
     const { users, socket, messages, width, height } = this.state
     const { user, info } = this.props
 
