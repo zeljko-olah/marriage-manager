@@ -63,7 +63,6 @@ export const markMessagesAsRead = (ids) => {
 }
 
 export const removeImportantMessage = (id) => {
-  console.log('ID:::',id)
   return dispatch => {
     return axios.put('api/chat/messages/important', {id})
       .then(() => {

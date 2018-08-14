@@ -1,7 +1,5 @@
 const io = require('./../index.js').io
 const {Users} = require('./users')
-// MODELS
-const Message = require('../api/models/message')
 
 const events = require('../../chat/Events')
 
@@ -44,7 +42,7 @@ module.exports = (socket) => {
    * When user types a message
    */
   
-  socket.on(events.MESSAGE_SENT, (message, callback) => {
+  socket.on(events.MESSAGE_SENT, (message) => {
     const user = users.getUser(socket.id)
     const allUsers = users.getUserList(room)
 
@@ -55,8 +53,6 @@ module.exports = (socket) => {
     if (user) {
       io.to(room).emit(events.NEW_MESSAGE, message)
     }
-    
-    callback('Message sent')
   })
 
   /*
@@ -87,12 +83,12 @@ module.exports = (socket) => {
    * 
    */
   
-  socket.on(events.UPDATE_PARTNER_UNREAD_COUNT, (changeBy) => {
-    socket.broadcast.to(room).emit(events.UNREAD_COUNT_UPDATED, changeBy)
+  socket.on(events.UPDATE_PARTNER_UNREAD_COUNT, () => {
+    socket.broadcast.to(room).emit(events.UNREAD_COUNT_UPDATED)
   })
 
-  socket.on(events.UPDATE_OWN_UNREAD_COUNT, (changeBy) => {
-    socket.emit(events.UNREAD_COUNT_UPDATED, changeBy)
+  socket.on(events.UPDATE_OWN_UNREAD_COUNT, () => {
+    socket.emit(events.UNREAD_COUNT_UPDATED)
   })
 
   /*
@@ -100,16 +96,16 @@ module.exports = (socket) => {
    * 
    */
   
-  socket.on(events.UPDATE_OWN_IMPORTANT_COUNT, (changeBy) => {
-    socket.emit(events.IMPORTANT_COUNT_UPDATED, changeBy)
+  socket.on(events.UPDATE_OWN_IMPORTANT_COUNT, () => {
+    socket.emit(events.IMPORTANT_COUNT_UPDATED)
   })
   /*
    * ON UPDATE_PARTNER_IMPORTANT_COUNT
    * 
    */
   
-  socket.on(events.UPDATE_PARTNER_IMPORTANT_COUNT, (changeBy) => {
-    socket.broadcast.to(room).emit(events.IMPORTANT_COUNT_UPDATED, changeBy)
+  socket.on(events.UPDATE_PARTNER_IMPORTANT_COUNT, () => {
+    socket.broadcast.to(room).emit(events.IMPORTANT_COUNT_UPDATED)
   })
 
   /*
@@ -137,7 +133,6 @@ module.exports = (socket) => {
    */
 
   socket.on(events.REPLY_TO_DELETE, (answer, user) => {
-    console.log('ANSWER::::', answer)
     socket.broadcast.to(room).emit(events.CONFIRM_DELETE, answer, user)
   })
 

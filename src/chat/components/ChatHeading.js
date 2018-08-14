@@ -5,7 +5,9 @@ import * as colors from '../../styles/variables'
 import SaveIcon from  'react-icons/lib/md/save'
 import CloseIcon from  'react-icons/lib/md/close'
 import DeleteIcon from  'react-icons/lib/md/delete'
-import DoneIcon from  'react-icons/lib/md/done'
+// import DoneIcon from  'react-icons/lib/md/done'
+import CheckIcon from 'react-icons/lib/md/visibility'
+
 
 import Avatar from '../../components/user/Avatar'
 
@@ -30,7 +32,7 @@ const ChatHeading = ({
       <StyledBar className="header-bar">
         <div className="mark-as">
           <div className="icon-wrapper">
-            <i className="done-icon"><DoneIcon onClick={markAllRead} /></i>
+            <i className="done-icon"><CheckIcon onClick={markAllRead} /></i>
           </div>
         </div>
         <div>

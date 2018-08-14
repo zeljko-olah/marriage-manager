@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 
 import { connect } from 'react-redux'
 import * as actions from '../../store/actions'
+import {selectUnreadCount, selectImportantCount} from '../../store/selectors/count'
+
 
 // NAV ITEMS
 import NavItems from './Header/NavItems'
@@ -17,33 +19,14 @@ import ChatIcon from 'react-icons/lib/md/forum'
 
 class Header extends Component {
 
-  state = {
-    countUnreadMessages: null,
-    countImportantMessages: null
-  }
-
-  componentDidMount() {
-    const { countUnread } = this.props
-    this.setState({ countUnreadMessages: countUnread  })
-  }
-
   componentDidUpdate(prevProps) {
-    const { socket } = this.props
+    const { socket, getMessages } = this.props
     if (socket && prevProps.socket !== socket) {
-      socket.on(events.UNREAD_COUNT_UPDATED, (change) => {
-        console.log(change)
-        this.setState((prevState) => {
-          return {
-            countUnreadMessages: prevState.countUnreadMessages + change
-          }
-        })
+      socket.on(events.UNREAD_COUNT_UPDATED, () => {
+        getMessages()
       })
-      socket.on(events.IMPORTANT_COUNT_UPDATED, (change) => {
-        this.setState((prevState) => {
-          return {
-            countImportantMessages: prevState.countImportantMessages + change
-          }
-        })
+      socket.on(events.IMPORTANT_COUNT_UPDATED, () => {
+        getMessages()        
       })
     }
   }
@@ -63,7 +46,6 @@ class Header extends Component {
       countUnread,
       countImportant
     } = this.props
-    const { countUnreadMessages, countImportantMessages } = this.state
 
     return (
       <StyledHeader>
@@ -83,8 +65,8 @@ class Header extends Component {
           className="items"
           onClick={ () => {toggleChat(showChat)} }>
           <i className={show ? 'open-chat': null}><ChatIcon /></i>
-          { countUnread || countUnreadMessages ? (<span className="unread-count">{countUnread + countUnreadMessages}</span>) : null }
-          { countImportant || countImportantMessages ? (<span className="important-count">{countImportant + countImportantMessages}!</span>) : null }
+          { countUnread ? (<span className="unread-count">{countUnread}</span>) : null }
+          { countImportant ? (<span className="important-count">{countImportant}!</span>) : null }
           
         </span>
       </StyledHeader>
@@ -92,24 +74,19 @@ class Header extends Component {
   }
 } 
 
-const mapStateToProps = state => {
-  const user = state.auth.user
-  const unreadMessagesCount = state.chat.messages
-    .filter(m => m.unread === true && m.from !== user.name).length
-  const importantMessagesCount = state.chat.messages
-    .filter(m => m.important === true && m.from !== user.name).length
-  
+const mapStateToProps = state => {  
   return {
     socket: state.chat.socket,
     show: state.chat.showChat,
-    countUnread: unreadMessagesCount,
-    countImportant: importantMessagesCount
+    countUnread: selectUnreadCount(state),
+    countImportant: selectImportantCount(state)
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-      toggleChat: (showChat) => dispatch( actions.toggleChat(showChat) )
+      toggleChat: (showChat) => dispatch( actions.toggleChat(showChat) ),
+      getMessages: () => dispatch(actions.getMessages())
   }
 }
 
@@ -187,32 +164,32 @@ const StyledHeader = styled.header`
 
   & .unread-count,
   & .important-count {
+    position: absolute;
     display: inline-block;
     font-size: 15px;
     font-weight: bold;
-    position: absolute;
   }
 
   & .unread-count {
-    color: ${colors.sec_color};
-    background-color: ${colors.prim_color};
-    top: 20px;
-    left: 20px;
     width: 20px;
     height: 20px;
-    border-radius: 20px;
+    top: 20px;
+    left: 20px;
     line-height: 20px;
-  }
-  & .important-count {
+    border-radius: 20px;
     color: ${colors.prim_color};
     background-color: ${colors.sec_color};
-    font-size: 20px;
+  }
+  & .important-count {
     width: 30px;
     height: 30px;
-    border-radius: 30px;
-    line-height: 30px;
     top: -10px;
     right: 10px;
+    font-size: 20px;
+    line-height: 30px;
+    border-radius: 30px;
+    background-color: black;
+    color: ${colors.sec_color};
   }
 `
 

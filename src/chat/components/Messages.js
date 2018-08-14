@@ -70,6 +70,9 @@ const StyledMessages = styled.div`
   }
   & div.scroll {
     height: 45vh;
+    @media (max-width: 768px) {
+      height: 70vh;
+    }
     overflow: hidden;
     overflow-y: scroll;
     ::-webkit-scrollbar { 

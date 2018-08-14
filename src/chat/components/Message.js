@@ -207,6 +207,7 @@ const StyledMessage = styled.div`
   border-radius: 5px;
   padding: 5px;
   line-height: 10px;
+  cursor: pointer;
 }
 
 & .left .important {
@@ -217,18 +218,27 @@ const StyledMessage = styled.div`
   bottom: -5px;
   left: -20px;
 }
+& .important {
+  color: ${colors.sec_color}; 
+  background-color: black; 
+  font-size: 20px;
+  cursor: pointer;
+}
+& .left .unread,
+& .left .marked {
+  bottom: -5px;
+  right: -20px;
+}
 
 & .unread {
   color: tomato;  
-  background-color: ${colors.backdrop}; 
+  background-color: ${colors.overlay}; 
+  z-index: 500;
 }
 & .marked {
-  color: aquamarine;  
-}
-& .important {
-  color: ${colors.sec_color}; 
-  font-size: 20px;
-  cursor: pointer;
+  color: ${colors.prim_color};  
+  background-color ${colors.overlay}; 
+
 }
 
 .dont-break-out {
