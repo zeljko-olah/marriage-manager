@@ -129,12 +129,20 @@ module.exports = (socket) => {
 
   /*
    * ON REPLY TO DELETE
-   * When user types a message
+   * 
    */
 
   socket.on(events.REPLY_TO_DELETE, (answer, user) => {
     socket.broadcast.to(room).emit(events.CONFIRM_DELETE, answer, user)
   })
+  /*
+   * ON TYPING
+   * When user types a message
+   */
+
+  socket.on(events.TYPING, (isTyping, userName)=>{
+		socket.broadcast.to(room).emit(events.TYPING_USER, isTyping, userName)
+	})
 
 
   /*

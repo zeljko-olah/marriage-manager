@@ -1,6 +1,7 @@
 // IMPORTS
-import React, { Component } from 'react';
-import styled from 'styled-components';
+import React, { Component } from 'react'
+import styled from 'styled-components'
+import * as colors from '../../styles/variables'
 
 import Message from './Message'
 
@@ -21,7 +22,7 @@ class Messages extends Component {
   }
   
   render() {
-    const { messages, user, markAsRead, removeImportant } = this.props
+    const { messages, user, markAsRead, removeImportant, typingUser, isTyping } = this.props
     let sender
     let prevSender = ''
     let pointer = true
@@ -47,12 +48,19 @@ class Messages extends Component {
                         user={user}
                         pointer={pointer}
                         markAsRead={markAsRead}
-                        removeImportant={removeImportant}
-                        />)
+                        removeImportant={removeImportant} />)
               }) : (
                 <p>Chat history is not available</p>
               )
             }
+            {isTyping ? (
+              <Message
+                stylingClass={"typing"}
+                message={{text: `${typingUser} is typing...`}}
+                user={{name: typingUser}}
+                pointer={true} />
+            ) : null}
+
           </StyledThread>
         </div>
       </StyledMessages>  
@@ -65,13 +73,15 @@ export default Messages
 
 // STYLED
 const StyledMessages = styled.div`
+  position: relative;
+  // border: 2px dashed red;
   @media (max-width: 768px) {
     flex-grow: 1;
   }
   & div.scroll {
     height: 45vh;
     @media (max-width: 768px) {
-      height: 70vh;
+      height: 60vh;
     }
     overflow: hidden;
     overflow-y: scroll;

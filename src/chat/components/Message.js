@@ -31,7 +31,7 @@ class Message extends Component {
   
   render () {
     const { selected } = this.state
-    const { message, user, pointer } = this.props
+    const { message, user, pointer, stylingClass } = this.props
     // Create message CSS class depending on who is sending the message
     let messageClass
     if (message.from === user.name ) {
@@ -55,7 +55,7 @@ class Message extends Component {
     }
   
     return (
-      <StyledMessage pointer={pointer}>
+      <StyledMessage pointer={pointer} typingClass={stylingClass}>
         <div className={messageClass}>
           <div className="message-outer">
             <div className="time">{message.createdAt}</div>
@@ -238,8 +238,19 @@ const StyledMessage = styled.div`
 & .marked {
   color: ${colors.prim_color};  
   background-color ${colors.overlay}; 
-
 }
+
+${props => {
+  return props.typingClass ? `
+  & div.left .message-inner:last-child {
+    position: absolute;
+    bottom: 0;
+    left: 50px;
+    background: ${colors.sec_light};
+  }
+  `
+  : null
+}}
 
 .dont-break-out {
   /* These are technically the same, but use both */

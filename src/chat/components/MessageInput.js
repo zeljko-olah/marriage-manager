@@ -27,7 +27,35 @@ class MessageInput extends Component {
       this.setState({ message: '' })
       this.handleSubmit()
     }
-  }  
+  }
+
+  sendTyping = () => {
+    const { isTyping } = this.state
+    const { typingStatus } = this.props
+		this.lastUpdateTime = Date.now()
+		if(!isTyping){
+			this.setState({ isTyping : true })
+			typingStatus(true)
+      this.startCheckingTyping()
+		}
+  }
+  
+  startCheckingTyping = () =>{
+		this.typingInterval = setInterval(()=>{
+			if((Date.now() - this.lastUpdateTime) > 300){
+				this.setState({isTyping:false})
+				this.stopCheckingTyping()
+			}
+		}, 300)
+  }
+  
+  stopCheckingTyping = () => {
+    const { typingStatus } = this.props
+		if(this.typingInterval){
+			clearInterval(this.typingInterval)
+			typingStatus(false)
+		}
+	}
 
   sendMessage = () => {
     const { message } = this.state
@@ -57,6 +85,7 @@ class MessageInput extends Component {
               placeholder = "Type ..."
               autoComplete = {'off'}
               value = {message}
+              onKeyUp={ e => { e.keyCode !== 13 && this.sendTyping() } }
               onKeyDown = {(e) => {
                 this.onEnterPress(e)
               }}

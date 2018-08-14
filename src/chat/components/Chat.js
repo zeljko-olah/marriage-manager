@@ -35,7 +35,9 @@ class Chat extends Component {
     users: [],
     messages: [],
     width: 0,
-    height: 0
+    height: 0,
+    typingUser: null,
+    isTyping: false
   }
   
   // List of selected message ids
@@ -180,6 +182,15 @@ class Chat extends Component {
         })
       }
     })
+
+    socket.on(events.TYPING_USER, (isTyping, userName) => {
+      console.log('isTyping from partner', isTyping, userName)
+      this.setState({
+        isTyping,
+        typingUser: userName
+      })
+    })
+
     socket.on('disconnect', (message) => {
       console.log('Disconnected from server');
     })
@@ -309,6 +320,14 @@ class Chat extends Component {
       this.setState({ messages: markedMessages })
     })
   }
+
+  // User is typing message
+  handleTypingStatus = (isTyping) => {
+    const { socket } = this.state
+    const { user } = this.props
+    socket.emit(events.TYPING, isTyping, user.name)
+  }
+  
   
   // Update browser dimensions
   updateWindowDimensions = () => {
@@ -317,7 +336,7 @@ class Chat extends Component {
 
   // RENDER  
   render () {
-    const { users, socket, messages, width, height } = this.state
+    const { users, socket, messages, width, height, typingUser, isTyping } = this.state
     const { user, info } = this.props
 
     return (
@@ -332,22 +351,23 @@ class Chat extends Component {
           info={info}
           saveChatHistory={this.handleEmailChatHistory}
           deleteChatHistory={this.handleDeleteChat}
-          markAllRead={this.handleMarkAllRead}
-           />
+          markAllRead={this.handleMarkAllRead} />
         
         { /* MESSAGES THREAD */ }
         <Messages
           messages={messages}
           user={user}
+          isTyping={isTyping}
+          typingUser={typingUser}
           markAsRead={this.handleSelectMessages}
-          removeImportant={this.handleRemoveImportant}
-          />
+          removeImportant={this.handleRemoveImportant} />
 
         { /* MESSAGE INPUT */ }
         <MessageInput
           width={width}
           height={height}
-          sendMessage={this.handleSendMessage} />
+          sendMessage={this.handleSendMessage}
+          typingStatus={this.handleTypingStatus} />
 
       </StyledSection>
     )
