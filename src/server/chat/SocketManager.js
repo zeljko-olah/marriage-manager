@@ -155,9 +155,10 @@ module.exports = (socket) => {
    * 
    */
 
-  socket.on(events.SHARE_LOCATION, (coords, userId)=>{
-    console.log('COORDS:::', coords, userId)
-		socket.broadcast.to(room).emit(events.LOCATION_SHARED, coords, userId)
+  socket.on(events.SHARE_LOCATION, (coords, partner)=>{
+    // console.log('COORDS:::', coords, user)
+    socket.broadcast.to(room).emit(events.LOCATION_SHARED, coords, partner)
+    socket.broadcast.to(room).emit(events.NEW_MESSAGE, generateMessage(partner.name, `${partner.name} shared location.`))
 	})
 
 

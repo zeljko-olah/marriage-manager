@@ -1,4 +1,7 @@
 import React, {Component} from 'react'
+
+import { history }  from '../../router/AppRouter'
+
 import styled from 'styled-components'
 import * as colors from '../../styles/variables'
 
@@ -28,10 +31,18 @@ class Message extends Component {
       removeImportant(id, from)
     }
   }
+
+  goToLocationPage = (e) => {
+    const { close } = this.props
+    e.preventDefault()
+    history.push('/location')
+    close()
+  }
+  
   
   render () {
     const { selected } = this.state
-    const { message, user, pointer, stylingClass } = this.props
+    const { message, user, pointer, stylingClass, close } = this.props
     // Create message CSS class depending on who is sending the message
     let messageClass
     if (message.from === user.name ) {
@@ -60,7 +71,9 @@ class Message extends Component {
           <div className="message-outer">
             <div className="time">{message.createdAt}</div>
             <div className="message-inner">
-                {formattedMessage}
+                {message.location ? (
+                  <a onClick={this.goToLocationPage}>{formattedMessage}</a>
+                ) : formattedMessage}
                 {message.unread ? (
                   <span
                     className={selected ? 'marked': 'unread'}

@@ -20,3 +20,8 @@ export {
   markMessagesAsRead,
   removeImportantMessage
 } from './chat'
+
+// LOCATION RELATED ACTIONS
+export {
+  setLocation
+} from './location'

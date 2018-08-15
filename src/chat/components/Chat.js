@@ -109,6 +109,9 @@ class Chat extends Component {
     socket.on(events.NEW_MESSAGE, (message) => {
       const { messages } = this.state
       const { user } = this.props
+      if (message.text.includes('shared location')) {
+        message.location = true
+      }
       const formatedTime = moment(message.createdAt).format('h:mm a')
       const newMessage = Object.assign({}, message, {createdAt: formatedTime})
       const newMessages = messages ? messages.concat(newMessage) : null
@@ -364,7 +367,8 @@ class Chat extends Component {
           isTyping={isTyping}
           typingUser={typingUser}
           markAsRead={this.handleSelectMessages}
-          removeImportant={this.handleRemoveImportant} />
+          removeImportant={this.handleRemoveImportant}
+          close={this.handleCloseChat} />
 
         { /* MESSAGE INPUT */ }
         <MessageInput

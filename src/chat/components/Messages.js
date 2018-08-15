@@ -21,7 +21,7 @@ class Messages extends Component {
   }
   
   render() {
-    const { messages, user, markAsRead, removeImportant, typingUser, isTyping } = this.props
+    const { messages, user, markAsRead, removeImportant, typingUser, isTyping, close } = this.props
     let sender
     let prevSender = ''
     let pointer = true
@@ -47,7 +47,8 @@ class Messages extends Component {
                         user={user}
                         pointer={pointer}
                         markAsRead={markAsRead}
-                        removeImportant={removeImportant} />)
+                        removeImportant={removeImportant}
+                        close={close} />)
               }) : (
                 <p>Chat history is not available</p>
               )

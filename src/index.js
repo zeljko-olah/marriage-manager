@@ -10,6 +10,7 @@ import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
 import thunk from 'redux-thunk'
 import authReducer from './store/reducers/auth'
 import chatReducer from './store/reducers/chat'
+import locationReducer from './store/reducers/location'
 
 // ACTION CREATORS
 // import {authCheckState, socketInit} from './store/actions/index'
@@ -21,7 +22,8 @@ const composeEnhancers = process.env.NODE_ENV === 'development' ? window.__REDUX
 // Reducers
 const rootReducer = combineReducers({
     auth: authReducer,
-    chat: chatReducer
+    chat: chatReducer,
+    location: locationReducer
 })
 
 // Define store

@@ -4,6 +4,7 @@ import React, {Component} from 'react'
 import {StyledSection, StyledMainHeading, StyledMainContent} from '../styles/section'
 
 import { connect } from 'react-redux'
+import * as actions from '../store/actions'
 
 import * as events from '../events'
 
@@ -13,22 +14,36 @@ import Map from '../components/Maps/Map.js'
 class Location extends Component {
 
   state = {
-    lat: 45.8482181,
-    lng: 20.3548942
+    lat: 44.8482181,
+    lng: 19.3548942
   }
 
+  componentDidMount = () => {
+    const { location } = this.props
+    console.log('MOUNTED')
+    try {
+      this.setState({
+        lat: location.lat,
+        lng: location.lng
+      })
+    } catch (error) {
+      alert(error)
+    }
+  }
+  
+
   componentDidUpdate = (prevProps) => {
-    console.log(prevProps)
-    console.log(this.props)
-    const { socket } = this.props
+    const { socket, setLocation } = this.props
     let started = false
     if (!started && socket !== null) {
-      socket.on(events.LOCATION_SHARED, (coords, userId) => {
-        console.log(coords, userId)
-        this.setState({
+      socket.on(events.LOCATION_SHARED, (coords, user) => {
+        const location = {
           lat: coords.latitude,
           lng: coords.longitude
-        })
+        }
+        this.setState(location)   
+        setLocation(location)
+
       })
       started = true
     }
@@ -53,7 +68,7 @@ class Location extends Component {
       socket.emit(events.SHARE_LOCATION, {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude
-      }, user.id )
+      }, user )
     }, function () {
       alert('Unable to fetch location.')
     })
@@ -85,9 +100,14 @@ class Location extends Component {
 const mapStateToProps = state => {
   return {
     user: state.auth.user,
-    socket: state.chat.socket
+    socket: state.chat.socket,
+    location: state.location
   }
 }
 
+const mapDispatchToProps = (dispatch) => ({
+  setLocation: (location) => dispatch(actions.setLocation(location))
+})
+
 // EXPORT
-export default connect( mapStateToProps )( Location );
+export default connect( mapStateToProps, mapDispatchToProps )( Location );
