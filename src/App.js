@@ -5,7 +5,7 @@ import styled, { injectGlobal } from 'styled-components'
 
 import AppRouter from './router/AppRouter'
 import ChatWrapper from './chat/components/ChatWrapper'
-import NotificationWrapper from './components/ui/NotificationWrapper'
+import NotificationWrapper from './components/UI/NotificationWrapper'
 
 
 // COMPONENT

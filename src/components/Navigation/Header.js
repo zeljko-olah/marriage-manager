@@ -8,7 +8,7 @@ import {selectUnreadCount, selectImportantCount} from '../../store/selectors/cou
 // NAV ITEMS
 import NavItems from './Header/NavItems'
 
-import events from '../../chat/Events'
+import events from '../../events'
 
 import styled from 'styled-components';
 import * as colors from '../../styles/variables'

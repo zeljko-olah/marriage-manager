@@ -13,7 +13,7 @@ import Messages from './Messages'
 import MessageInput from './MessageInput'
 
 import io from 'socket.io-client'
-import * as events from '../Events'
+import * as events from '../../events'
 
 import styled from 'styled-components'
 import * as colors from '../../styles/variables'

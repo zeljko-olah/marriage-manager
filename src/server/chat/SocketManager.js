@@ -1,7 +1,7 @@
 const io = require('./../index.js').io
 const {Users} = require('./users')
 
-const events = require('../../chat/Events')
+const events = require('../../events')
 
 const {generateMessage} = require('./message.js')
 // Instantiate users class
@@ -142,6 +142,22 @@ module.exports = (socket) => {
 
   socket.on(events.TYPING, (isTyping, userName)=>{
 		socket.broadcast.to(room).emit(events.TYPING_USER, isTyping, userName)
+  })
+
+  /**
+  |--------------------------------------------------
+  | LOCATION
+  |--------------------------------------------------
+  */
+  
+  /*
+   * ON SHARE_LOCATION
+   * 
+   */
+
+  socket.on(events.SHARE_LOCATION, (coords, userId)=>{
+    console.log('COORDS:::', coords, userId)
+		socket.broadcast.to(room).emit(events.LOCATION_SHARED, coords, userId)
 	})
 
 

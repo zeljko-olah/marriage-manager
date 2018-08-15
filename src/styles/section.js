@@ -11,7 +11,7 @@ export const StyledSection = styled.section`
 
 // MAIN PAGE HEADINGS
 export const StyledMainHeading = styled.div`
-  background: ${colors.sec_grad};
+  // background: ${colors.sec_grad};
 
   & h1 {
     text-align: center;
@@ -29,7 +29,6 @@ export const StyledMainHeading = styled.div`
 
 // MAIN PAGE CONTENT
 export const StyledMainContent = styled.div`
-  background: ${colors.ter_grad};
-  padding: 20px;
-  
+  // background: ${colors.ter_grad};
+  // padding: 20px;
 `
