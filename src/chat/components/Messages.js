@@ -1,7 +1,6 @@
 // IMPORTS
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import * as colors from '../../styles/variables'
 
 import Message from './Message'
 

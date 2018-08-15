@@ -341,7 +341,7 @@ class Chat extends Component {
   // RENDER  
   render () {
     const { users, socket, messages, width, height, typingUser, isTyping } = this.state
-    const { user, info } = this.props
+    const { user, info, showChat } = this.props
 
     return (
       <StyledSection>
@@ -370,6 +370,7 @@ class Chat extends Component {
         <MessageInput
           width={width}
           height={height}
+          showChat={showChat}
           sendMessage={this.handleSendMessage}
           typingStatus={this.handleTypingStatus} />
 
