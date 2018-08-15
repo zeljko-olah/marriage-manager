@@ -1,21 +1,35 @@
-import React, { Component } from 'react';
+import React from 'react'
 
-import 'normalize.css/normalize.css';
-import styled, { injectGlobal } from 'styled-components';
+import 'normalize.css/normalize.css'
+import styled, { injectGlobal } from 'styled-components'
 
-import AppRouter from './router/AppRouter';
+import AppRouter from './router/AppRouter'
+import ChatWrapper from './chat/components/ChatWrapper'
+import NotificationWrapper from './components/ui/NotificationWrapper'
 
-class App extends Component {
-  render() {
-    return (
-      <PageWrapper>
-        { /* APP ROUTER */ }
-        <AppRouter />
-      </PageWrapper>
-    );
-  }
+
+// COMPONENT
+const App = () => {
+  return (
+    <PageWrapper>
+      { /* APP ROUTER */ }
+      <AppRouter />
+      
+      { /* CHAT */ }
+      <ChatWrapper />
+      
+      { /* NOTIFICATIONS */ }
+       <NotificationWrapper />
+      
+    </PageWrapper>
+  )
 }
 
+
+// EXPORT
+export default(App)
+
+// STYLED
 // Define global styles
 injectGlobal`
   * {
@@ -30,7 +44,6 @@ injectGlobal`
 const PageWrapper = styled.div`
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(#12ddff, transparent 40%), linear-gradient(0deg, Azure, transparent), url("img/hero.jpg") no-repeat center;
+  background: linear-gradient(#12ddff, transparent 40%), linear-gradient(0deg, Azure, transparent), url("uploads/hero.jpg") no-repeat center;
   background-size: cover;
 `
-export default App;

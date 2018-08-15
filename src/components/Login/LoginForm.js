@@ -1,9 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { 
-  disabled_color,
-  primary_gradient
- } from '../../styles/variables'
+import * as colors from '../../styles/variables'
+ 
 
 const LoginFrom = ({ submit, onFocus, error }) => {
 
@@ -19,14 +17,14 @@ const LoginFrom = ({ submit, onFocus, error }) => {
             <p>Email</p>
           </label>
 
-        <p>
-          <input
-            type="text"
-            id="email"
-            onFocus={onFocus}
-            ref={ input => { payload.email = input } }
-            />
-        </p>
+          <p>
+            <input
+              type="text"
+              id="email"
+              onFocus={onFocus}
+              ref={ input => { payload.email = input } }
+              />
+          </p>
         </div>
 
         { /* PASSWORD */ }
@@ -59,18 +57,34 @@ const LoginFrom = ({ submit, onFocus, error }) => {
 const StyledForm = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
   padding: 20px;
+  background-color: ${colors.backdrop};
+
+  @media (max-width: 768px) {
+    height:calc(100vh - 110px);
+     
+    > * {
+      margin: 30px 0;
+    }
+  }
 
   & input {
     width: 100%;
     margin: 0 auto;
-    padding: 5px;
+    padding: 8px;
+    color: #777;
+    background-color: transparent;
+    border: 2px solid Aquamarine;
   }
 
   & label p {
     margin: 0;
-    font-weight: 700;
-    font-size: 15px;
+    font-weight: 100;
+    font-size: 20px;
+    color: #555;
+    text-transform: uppercase;
+
   }
 
   & p {
@@ -81,17 +95,18 @@ const StyledForm = styled.div`
     margin-top: 20px;
     outline: none;
     border: none;
-    padding: 8px;
-    font-weight: 400;
-    font-size: 20px;
+    padding: 10px;
+    font-weight: 100;
+    font-size: 25px;
     text-transform: uppercase;
-    color: WhiteSmoke;
+    color: #555;
+    background-color: ${colors.prim_light};
+    border: 2px solid Aquamarine;
     cursor: pointer;
-    background: ${primary_gradient};
   }
 
   & button:disabled {
-    background: ${disabled_color};
+    background: ${colors.disabled_color};
     cursor: not-allowed;
   }
 `

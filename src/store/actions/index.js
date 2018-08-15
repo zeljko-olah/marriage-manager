@@ -7,3 +7,16 @@ export {
   setErrors,
   logout
 } from './auth'
+
+// ORDER RELATED ACTIONS
+export {
+  socketInit,
+  toggleChat,
+  getMessages,
+  saveMessage,
+  emailChatHistory,
+  deleteChatHistory,
+  setFlashMessage,
+  markMessagesAsRead,
+  removeImportantMessage
+} from './chat'

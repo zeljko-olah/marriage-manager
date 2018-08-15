@@ -1,104 +1,64 @@
 import React from 'react'
-import styled from 'styled-components'
-import {
-  primary_color,
-  danger,
-  backdrop,
-  text_shadow
-} from '../../styles/variables'
 
-import NavItems from './Header/NavItems'
+import styled from 'styled-components'
+import * as colors from '../../styles/variables'
+
 import Backdrop from './Sidebar/Backdrop'
 
-const SideDrawer = ( {open, close} ) => {
+const SideBar = ({ open, close, children, width, side }) => {
+
   let toggleClass = open ? 'open' : 'close' 
   
   return (
-    <div onClick={close}>
+    <div onDoubleClick={close}>
 
       { /* BACKDROP - OVERLAY */ }
       <Backdrop
-      show={open}
+        show={open}
       />
      
       { /* ASIDE */ }
-      <StyledAside className={toggleClass}>
-      <h1>MM</h1>
-
-      { /* NAV ITEMS */ }
-      <NavItems showText />
-     
+      <StyledAside
+        className={toggleClass}
+        width={width}
+        side={side}>
+        {children}
       </StyledAside>
     </div>
   )
 }
 
-export default SideDrawer
+// EXPORT
+export default SideBar
 
+// STYLED
 const StyledAside = styled.aside`
   position: fixed;
-  width: 280px;
-  max-width: 70%;
+  width: ${props => props.width};
   height: 100%;
-  left: 0;
+  ${props => {
+    return props.side === 'right' ? 'right: 0' : 'left: 0'
+  } };
   top: 0;
   z-index: 200;
-  background-color: ${backdrop};
-  border-right: 3px solid ${primary_color};
   padding: 32px 16px;
+  border-right: 3px solid ${colors.prim_color};
+  background-color: ${colors.backdrop};
   transition: transform 0.3s ease-out;
+
+  @media (max-width: 768px) {
+    padding: 0;
+  }
   
   &.open {
     transform: translateX(0);
   }
   
   &.close {
-    transform: translateX(-100%);
-  }
-  
-  & h1 {
-    font-size: 50px;
-    text-align: center;
-    padding-bottom: 13px;
-    margin-top: 0px;
-    text-shadow: ${text_shadow};
-    color: ${danger};
-    border-bottom: 1px solid ${primary_color};
-  }
-
-  & nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  & nav li {
-    padding: 10px;
-  }
-  
-  & nav li a {
-    color: ${primary_color};
-  }
-
-  & nav li span {
-    display: inline-block;
-    text-transform: uppercase;
-    font-style: italic;
-    font-weight: bold;
-    margin-left: 10px;
-  }
-
-  & nav li i {
-    font-size: 30px;
-  }
-  
-  & nav li a:hover {
-    transform: scale(1.1);
-    color: ${danger};
-  }
-
-  & nav li a.active i,
-  & nav li a.active span {
-    color: ${ danger };
+    ${props => {
+      return props.side === 'right' ?
+       'transform: translateX(100%);' :
+       'transform: translateX(-100%);'
+    } };
   }
 `
