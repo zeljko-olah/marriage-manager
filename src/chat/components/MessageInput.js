@@ -1,17 +1,21 @@
 // IMPORT
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import styled from 'styled-components'
 import * as colors from '../../styles/variables'
 
 import SendIcon from 'react-icons/lib/md/send'
 
 // COMPONENT
-class MessageInput extends Component {
+class MessageInput extends PureComponent {
   
   // State
   state = {
     message: '',
     isTyping : false
+  }
+
+  componentDidUpdate(){
+    this.messageInput.focus()
   }
   
   // Methods
@@ -84,6 +88,7 @@ class MessageInput extends Component {
               type = "text"
               placeholder = "Type ..."
               autoComplete = {'off'}
+              ref={(input) => { this.messageInput = input }} 
               value = {message}
               onKeyUp={ e => { e.keyCode !== 13 && this.sendTyping() } }
               onKeyDown = {(e) => {

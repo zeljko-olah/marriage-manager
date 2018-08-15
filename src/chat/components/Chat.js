@@ -128,6 +128,10 @@ class Chat extends Component {
       if (answer) {
         socket.emit(events.UPDATE_UNREAD_COUNT )
         this.setState({messages: []})
+        setFlashMessage({
+          type: 'success',
+          flashMessage: `Deleted!`
+        })
         getMessages()
       } else {
         setFlashMessage({
@@ -148,7 +152,7 @@ class Chat extends Component {
       this.setState({ messages: markedMessages })
       setFlashMessage({
         type: 'success',
-        flashMessage: `${user.name} have read your messages!`
+        flashMessage: `${user.name} is reading your messages!`
       })
     })
 

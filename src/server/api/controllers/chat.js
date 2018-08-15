@@ -146,7 +146,7 @@ exports.delete_chat_history = (req, res) => {
       let word = response.n === 1 ? 'message' : 'messages'
       res.status(200).json({
         type: 'success',
-        flashMessage: `Success. Deleted ${response.n} ${word}. :)`
+        flashMessage: `Deleted all ${response.n} ${word}. :)`
       })
     })
     .catch(() => {
