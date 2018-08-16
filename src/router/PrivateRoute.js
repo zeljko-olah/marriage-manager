@@ -63,4 +63,7 @@ const StyledMain = styled.main`
   max-width: 600px;
   padding: 10px;
   margin: 30px auto 0;
+  @media (max-width: 768px) {
+    margin: 0 auto;
+  }
 `

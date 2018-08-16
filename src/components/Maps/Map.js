@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { withGoogleMap, GoogleMap, withScriptjs, Marker } from 'react-google-maps'
 
 import mapStyles from './styles.json'
 
-class Map extends Component {
+class Map extends PureComponent {
     
    maps = React.createRef()
 

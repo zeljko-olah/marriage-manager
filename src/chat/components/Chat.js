@@ -191,7 +191,6 @@ class Chat extends Component {
     })
 
     socket.on(events.TYPING_USER, (isTyping, userName) => {
-      console.log('isTyping from partner', isTyping, userName)
       this.setState({
         isTyping,
         typingUser: userName

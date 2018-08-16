@@ -155,6 +155,10 @@ padding: 10px;
     align-items: center;
   }
 
+  & div.user img {
+    width: 60px;
+  }
+
   & span.on {
     color: LightGreen;
   }

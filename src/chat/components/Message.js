@@ -7,6 +7,7 @@ import * as colors from '../../styles/variables'
 
 import CheckIcon from 'react-icons/lib/md/visibility'
 import ImportantIcon from 'react-icons/lib/md/warning'
+import LocationIcon from 'react-icons/lib/md/location-on'
 
 class Message extends Component {
   state = {
@@ -42,7 +43,7 @@ class Message extends Component {
   
   render () {
     const { selected } = this.state
-    const { message, user, pointer, stylingClass, close } = this.props
+    const { message, user, pointer, stylingClass } = this.props
     // Create message CSS class depending on who is sending the message
     let messageClass
     if (message.from === user.name ) {
@@ -85,6 +86,11 @@ class Message extends Component {
                     className="important"
                     onClick={() => {this.handleImportant(message.id, message.from)}}>
                     <ImportantIcon />
+                  </span>) : null}
+                {message.location ? (
+                  <span
+                    className="location" >
+                    <LocationIcon />
                   </span>) : null}
             </div>
           </div>
@@ -210,7 +216,8 @@ const StyledMessage = styled.div`
 
 & .unread,
 & .marked,
-& .important {
+& .important,
+& .location {
   display: inline-block;
   position: absolute;
   font-size: 15px;
@@ -223,7 +230,8 @@ const StyledMessage = styled.div`
   cursor: pointer;
 }
 
-& .left .important {
+& .left .important,
+& .left .location {
   bottom: -5px;
   right: -20px;
 }
@@ -234,6 +242,12 @@ const StyledMessage = styled.div`
 & .important {
   color: ${colors.sec_color}; 
   background-color: black; 
+  font-size: 20px;
+}
+
+& .location {
+  color: ${colors.sec_color}; 
+  background-color: ${colors.overlay}; 
   font-size: 20px;
   cursor: pointer;
 }

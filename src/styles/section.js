@@ -7,6 +7,12 @@ export const StyledSection = styled.section`
   border: 3px solid ${colors.prim_color};
   border-top-left-radius: 20px;
   overflow: hidden;
+  @media (max-width: 768px) {
+    overflow: auto;
+    border: none;
+    border-top-left-radius: 0;
+  }
+  
 `
 
 // MAIN PAGE HEADINGS

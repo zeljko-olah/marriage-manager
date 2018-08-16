@@ -5,7 +5,6 @@ const User = require("../models/user")
 
 // SAVE CURRENT LOCATION
 exports.saveCurrentLocation = (req, res, next) => {
-  console.log('REQ.BODY:::', req.body.lat)
   const {lat, lng, userId} = req.body
 
   const location = new Location({
@@ -40,15 +39,17 @@ exports.saveCurrentLocation = (req, res, next) => {
     })
 }
 
+// Get 10 recent
 exports.getLocations = (req, res, next) => {
   Location.find()
+    .limit(30)
     .select('_id lat lng user created_at')
     .populate({path: 'user', select: 'name avatar'})
     .exec()
     .then(docs => {
       res.status(200).json({
         locations: docs.map(doc => {
-          const time = moment(doc.created_at).format('h:mm a, MMM Do')
+          const time = moment(doc.created_at)
           return {
             id: doc._id,
             lat: doc.lat,
@@ -58,6 +59,7 @@ exports.getLocations = (req, res, next) => {
             avatar: doc.user.avatar.replace('public/', '')
           }
         })
+        .sort()
       })
     })
     .catch(err => {

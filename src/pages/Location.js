@@ -7,6 +7,7 @@ import * as colors from '../styles/variables'
 
 import { connect } from 'react-redux'
 import * as actions from '../store/actions'
+import {selectSortedLocations} from '../store/selectors/location'
 
 import * as events from '../events'
 
@@ -19,15 +20,15 @@ class Location extends Component {
   state = {
     lat: 44.8482181,
     lng: 20.3548942,
-    from: 'Zeljko',
+    from: '',
     id: '',
-    createdAt: null
+    createdAt: null,
+    recentLocationsOpen: false
   }
 
   componentDidMount = () => {
     const { location, getLocations } = this.props
     getLocations()
-    console.log('MOUNTED')
     try {
       this.setState({
         lat: location.lat,
@@ -55,7 +56,6 @@ class Location extends Component {
             type: 'success',
             flashMessage: `${result.from} shared location!`
           })
-
         })
 
       })
@@ -68,8 +68,15 @@ class Location extends Component {
     socket.off(events.LOCATION_SHARED)
   }
 
+  toggleLocations = () => {
+    this.setState((prevState) => {
+      return {recentLocationsOpen: !prevState.recentLocationsOpen}
+    })
+  }
+
   loadLocation = (location, index) => {
     this.setState(location)
+    this.toggleLocations()
   }
   
   sendLocation = () => {
@@ -92,40 +99,43 @@ class Location extends Component {
   }
   
   render () {
-    const { lat, lng, from } = this.state
+    const { lat, lng, recentLocationsOpen } = this.state
     const { user, locations } = this.props
     return (
       <StyledSection>
         <StyledMainHeading user={ user } >
-          <h1>Location</h1>
           <StyledLocationHeading>
-            <h3>{ `${from} is homed!` }</h3>
-            
             <button onClick={this.sendLocation}>Share Your Location</button>
+            <button
+              className={recentLocationsOpen ? 'active': ''}
+              onClick={this.toggleLocations}>Recent Places</button>
           </StyledLocationHeading>
         </StyledMainHeading>
   
         <StyledMainContent>
           <StyledContainer>
-            <StyledLocations>
+            { recentLocationsOpen ? (
+              <StyledLocations>
               <ul>
                 { locations ? locations.map((location, index) => {
                   const timeParts = location.createdAt.split(',')
                   const time = timeParts[0]
                   const date = timeParts[1]
-                  
                   return (
                     <li
                       key={location.id}
                       onClick={() => {this.loadLocation(location, index)}} >
+                      <div>
+                        <h4>{index + 1}. {location.user}</h4>                      
+                      </div>
                       <div className="avatar">
                         <Avatar
                           src={location.avatar}
                           name={location.user}/>
                       </div>
                       <div className="location-time">
-                        <span><em>{ time }</em></span>
-                        <span><strong>{ date }</strong></span>
+                        <span><strong>{ time }</strong></span>
+                        <span><em>{ date }</em></span>
                       </div>
                     </li>
                   )
@@ -133,6 +143,7 @@ class Location extends Component {
               </ul>            
             
             </StyledLocations>
+            ) : null }
             <StyledMap>
               <Map
                 lat={lat}
@@ -152,7 +163,7 @@ const mapStateToProps = state => {
     user: state.auth.user,
     socket: state.chat.socket,
     location: state.location,
-    locations: state.location.locations
+    locations: selectSortedLocations(state)
   }
 }
 
@@ -167,16 +178,15 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect( mapStateToProps, mapDispatchToProps )( Location )
 
 const StyledLocationHeading= styled.div`
-  // border: 2px solid black;
   color: ${colors.prim_font};
   text-align: center;
 
 
   & button {
-    // width: 100%;
+    width: 80%;
     padding: 10px;
-    margin: 20px;
-    font-size: 20px;
+    margin: 10px 10px 0px 10px;
+    font-size: 15px;
     font-weight: bold;
     text-transform: uppercase;
     border: 2px solid ${colors.prim_color};
@@ -184,32 +194,52 @@ const StyledLocationHeading= styled.div`
     color: grey;
     cursor: pointer;
   }
+
+  & button.active {
+    border: 2px solid ${colors.sec_color};
+    background-color: ${colors.sec_light};
+  }
+
+  & button:last-child {
+    margin-bottom: 10px;
+  }
 `
 const StyledContainer= styled.div`
+  position: relative;
   display: flex;
   height: 50vh;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    height: auto;
+  }
 `
 const StyledMap = styled.div`
-  flex-basis: 70%;
-  // border: 2px solid aquamarine;
+  flex-basis: 100%;
 `
 
 const StyledLocations = styled.div`
   flex-basis: 30%;
 
   & ul {
+    background-color:${colors.backdrop};
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    max-height: 70vh;
+    z-index: 100;
+    width: 80%;
     padding: 0;
     margin: 0;
-    height: 52vh;
     overflow: auto;
     ::-webkit-scrollbar { 
       display: none;
     }
+
   }
   & li {
     display: flex;
     justify-content: space-around;
-    padding: 5px;
+    align-items: center;
     margin: 5px;
     border: 1px solid ${colors.prim_color};
     background-color: ${colors.prim_light};

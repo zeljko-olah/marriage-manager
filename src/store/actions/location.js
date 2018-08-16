@@ -47,7 +47,6 @@ export const getLocations = () => {
   return dispatch => {
     return axios.get('api/location/all')
       .then(response => {
-        console.log(response.data)
         dispatch(getLocationsSuccess(response.data.locations))
         return response.data
       })
