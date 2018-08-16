@@ -4,16 +4,27 @@ import { updateObject } from '../../shared/utility'
 
 const initialState = {
     lat: 44.8482181,
-    lng: 19.3548942
+    lng: 20.3548942,
+    from: '',
+    createdAt: null,
+    locations: []
 }
 
-// SOCKET INIT
+// SET LOCATION
 const setLocation = (state, action) => {
-  console.log('ACTION', action)
-  const {lat, lng} = action.location
+  const {lat, lng, from, createdAt } = action.location
     return updateObject( state, {
         lat: lat,
-        lng: lng
+        lng: lng,
+        from: from,
+        createdAt: createdAt
+    })
+}
+
+// GET LOCATIONS
+const getLocations = (state, action) => {
+    return updateObject( state, {
+      locations: action.locations
     })
 }
 
@@ -21,6 +32,7 @@ const setLocation = (state, action) => {
 const reducer = ( state = initialState, action ) => {
     switch ( action.type ) {
         case actionTypes.SET_LOCATION: return setLocation(state, action)
+        case actionTypes.GET_LOCATIONS: return getLocations(state, action)
         default:
             return state
     }

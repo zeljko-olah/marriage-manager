@@ -23,5 +23,6 @@ export {
 
 // LOCATION RELATED ACTIONS
 export {
-  setLocation
+  setLocation,
+  getLocations
 } from './location'

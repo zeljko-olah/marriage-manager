@@ -22,6 +22,7 @@ const cors = require('cors')
 // Import routes
 const userRoutes = require('./api/routes/user')
 const chatRoutes = require('./api/routes/chat')
+const locationRoutes = require('./api/routes/location')
 
 // Define public path to serve it
 const publicPath = path.join(__dirname, '../../build')
@@ -61,6 +62,7 @@ app.use(cors())
 
 app.use("/api/user", userRoutes)
 app.use("/api/chat", chatRoutes)
+app.use("/api/location", locationRoutes)
 
 // Serve React Build
 // app.get('/', (req, res) => {

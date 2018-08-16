@@ -54,7 +54,7 @@ const ChatHeading = ({
             <Fragment>
               <Avatar
                 src={sender.avatar}
-                user={sender}/>
+                name={sender.name}/>
               <span className="sender">{sender.name + ":)"}</span> 
             </Fragment>
           ) : (
@@ -69,7 +69,7 @@ const ChatHeading = ({
           <span className="receiver">{"<3"} {receiver.name}</span> 
           <Avatar 
             src={receiver.avatar}
-            user={receiver} />
+            user={receiver.name} />
         </div>
          
       </StyledChatHeading>
