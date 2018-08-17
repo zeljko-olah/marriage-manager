@@ -264,52 +264,37 @@ class Chat extends Component {
     socket.emit('ASK_PERMISION', user)
   }
   
-  // Select multiple messages
-  handleSelectMessages = (id, from) => {
-    const { user } = this.props
-    if (from === user.name ) {
-      return
-    }
-    if (this.ids.includes(id)) {
-      console.log(this.ids.includes(id))
-      this.ids = this.ids.filter(_id => id !== _id)      
-    } else {
-      this.ids.push(id)
-    }
-  }
-  
   // Mark messages as read
   handleMarkAllRead = () => {
     const { markMessagesAsRead, user, setFlashMessage } = this.props
     const { socket, messages} = this.state
 
-    if (!messages.find(m => m.unread === true  && m.from !== user.name)) {
+    const senderIds = messages
+    .filter(m => m.from !== user.name && m.unread) 
+    .map(m => m.id)  
+
+    if (!senderIds.length) {
       setFlashMessage({
         type: 'error',
-        flashMessage: `There are no messages to mark!`
+        flashMessage: `There are no unread messages!`
       }) 
       return
     }
 
-    if (!this.ids.length) {
-      setFlashMessage({
-        type: 'error',
-        flashMessage: `There are no marked messages!`
-      }) 
-      return
-    }
+    console.log('SENDER IDS', senderIds)
 
-    markMessagesAsRead(this.ids).then(() => {
+    markMessagesAsRead(senderIds).then(() => {
      messages.forEach(m => {
-        if (this.ids.includes(m.id)) {
+        if (senderIds.includes(m.id)) {
           m.unread = false
           socket.emit(events.MARK_AS_READ, m, user)
         }
       })
       socket.emit(events.UPDATE_OWN_UNREAD_COUNT)  
-      this.ids = []    
+      // senderIds = []    
     })
   }
+  
   
   // Remove important flag from message
   handleRemoveImportant = (id) => {

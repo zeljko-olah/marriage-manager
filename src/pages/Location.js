@@ -39,11 +39,9 @@ class Location extends Component {
     }
   }
   
-
   componentDidUpdate = (prevProps) => {
     const { socket, setLocation, setFlashMessage } = this.props
-    let started = false
-    if (!started && socket !== null) {
+    if (socket !== null && prevProps.socket !== socket) {
       socket.on(events.LOCATION_SHARED, (coords, user) => {
         setLocation({
           lat: coords.latitude,
@@ -59,7 +57,6 @@ class Location extends Component {
         })
 
       })
-      started = true
     }
   }
 
@@ -80,8 +77,7 @@ class Location extends Component {
   }
   
   sendLocation = () => {
-    const { socket, user } = this.props
-    console.log('send!!!', socket)
+    const { socket, user, setFlashMessage } = this.props
 
     if (!navigator.geolocation){
       // If not then alert notification
@@ -92,7 +88,12 @@ class Location extends Component {
       socket.emit(events.SHARE_LOCATION, {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude
-      }, user )
+      }, user, (doc) => {
+        setFlashMessage({
+          type: 'success',
+          flashMessage: `You shared location!`
+        })
+      } )
     }, function () {
       alert('Unable to fetch location.')
     })
@@ -105,7 +106,7 @@ class Location extends Component {
       <StyledSection>
         <StyledMainHeading user={ user } >
           <StyledLocationHeading>
-            <button onClick={this.sendLocation}>Share Your Location</button>
+            <button onClick={this.sendLocation}>Share Location</button>
             <button
               className={recentLocationsOpen ? 'active': ''}
               onClick={this.toggleLocations}>Recent Places</button>

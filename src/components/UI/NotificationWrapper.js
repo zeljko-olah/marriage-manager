@@ -59,12 +59,15 @@ const StyledNotify = styled.div`
   justify-content: center;
   align-items: flex-start;
   position: absolute;
-  z-index: 1000;
+  z-index: 10000;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   transition: all 0.5s linear;
+  @media (max-width: 768px) {
+    top: 0%;
+  }
 
   &.close {
     opacity: 0;
@@ -80,7 +83,6 @@ const StyledNotify = styled.div`
 
   & div {
     margin-top: 10px;
-    background: ${colors.overlay};
     box-shadow: 0 0 20px 0 rgba(0,0,0, 0.5);
     text-align: center;
   }
@@ -94,12 +96,14 @@ const StyledNotify = styled.div`
   }
 
   & p.success {
-    color: ${colors.prim_color};
+    background: ${colors.prim_light};
+    color: ${colors.prim_font};
     border: 2px solid ${colors.prim_color}; 
   }
 
   & p.error {
-    color: ${colors.sec_color};
+    color: ${colors.prim_font};
     border: 2px solid ${colors.sec_color}; 
+    background: ${colors.sec_light};
   }
 `

@@ -10,21 +10,6 @@ import ImportantIcon from 'react-icons/lib/md/warning'
 import LocationIcon from 'react-icons/lib/md/location-on'
 
 class Message extends Component {
-  state = {
-    selected: false
-  }
-
-  handleSelected = (id, from) => {
-    const { user, markAsRead } = this.props
-    if (user.name !== from) {
-      markAsRead(id, from)
-      this.setState((prevState) => {
-        return {
-          selected: !prevState.selected
-        }
-      })
-    }
-  }
 
   handleImportant = (id, from) => {
     const { user, removeImportant } = this.props
@@ -42,7 +27,6 @@ class Message extends Component {
   
   
   render () {
-    const { selected } = this.state
     const { message, user, pointer, stylingClass } = this.props
     // Create message CSS class depending on who is sending the message
     let messageClass
@@ -76,9 +60,7 @@ class Message extends Component {
                   <a onClick={this.goToLocationPage}>{formattedMessage}</a>
                 ) : formattedMessage}
                 {message.unread ? (
-                  <span
-                    className={selected ? 'marked': 'unread'}
-                    onClick={() => {this.handleSelected(message.id, message.from)}}>
+                  <span className='unread' >
                     <CheckIcon />
                   </span>) : null}
                 {message.important ? (
@@ -230,15 +212,28 @@ const StyledMessage = styled.div`
   cursor: pointer;
 }
 
+& .unread,
+& .marked,
+& .important,
+& .location {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+& .left .unread,
+& .left .marked,
 & .left .important,
 & .left .location {
-  bottom: -5px;
-  right: -20px;
+  left: -40px;
 }
-& .right .important {
-  bottom: -5px;
-  left: -20px;
+
+& .right .unread,
+& .right .marked,
+& .right .important,
+& .right .location {
+  right: -40px;
 }
+
 & .important {
   color: ${colors.sec_color}; 
   background-color: black; 
@@ -247,24 +242,19 @@ const StyledMessage = styled.div`
 
 & .location {
   color: ${colors.sec_color}; 
-  background-color: ${colors.overlay}; 
+  background-color: ${colors.backdrop}; 
   font-size: 20px;
   cursor: pointer;
-}
-& .left .unread,
-& .left .marked {
-  bottom: -5px;
-  right: -20px;
 }
 
 & .unread {
   color: tomato;  
-  background-color: ${colors.overlay}; 
+  background-color: ${colors.backdrop}; 
   z-index: 500;
 }
 & .marked {
   color: ${colors.prim_color};  
-  background-color ${colors.overlay}; 
+  background-color ${colors.backdrop}; 
 }
 
 ${props => {

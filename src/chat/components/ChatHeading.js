@@ -5,9 +5,7 @@ import * as colors from '../../styles/variables'
 import SaveIcon from  'react-icons/lib/md/save'
 import CloseIcon from  'react-icons/lib/md/close'
 import DeleteIcon from  'react-icons/lib/md/delete'
-// import DoneIcon from  'react-icons/lib/md/done'
 import CheckIcon from 'react-icons/lib/md/visibility'
-
 
 import Avatar from '../../components/user/Avatar'
 
@@ -17,7 +15,7 @@ const ChatHeading = ({
   close,
   saveChatHistory,
   deleteChatHistory,
-  markAllRead
+  markAllRead,
  }) => {
   let sender;
   let receiver;
@@ -55,7 +53,7 @@ const ChatHeading = ({
               <Avatar
                 src={sender.avatar}
                 name={sender.name}/>
-              <span className="sender">{sender.name + ":)"}</span> 
+              <span className="sender">{sender.name}</span> 
             </Fragment>
           ) : (
             <Fragment>
@@ -66,7 +64,7 @@ const ChatHeading = ({
           ) }
         </div>  
         <div className="user">
-          <span className="receiver">{"<3"} {receiver.name}</span> 
+          <span className="receiver">{receiver.name}</span> 
           <Avatar 
             src={receiver.avatar}
             user={receiver.name} />
@@ -88,7 +86,7 @@ const StyledBar = styled.div`
 
   & div.mark-as {
     flex-grow: 1;
-    margin-left: 60px;
+    margin-left: 10px;
   }
 
   & div.icon-wrapper,
@@ -110,6 +108,11 @@ const StyledBar = styled.div`
     padding: 5px 10px;
     border-radius: 5px;
     margin-left: 10px;
+  }
+  @media (max-width: 768px) {
+    & div.icon-wrapper .done-icon:hover::after {
+      display: none;
+    }
   }
 
   & i svg {
@@ -138,8 +141,9 @@ padding: 10px;
     margin: 0 10px;
   }
 
-  span.receiver {
-    color: CornflowerBlue;
+  span.receiver  {
+    color: ${colors.prim_font};
+    font-size: 18px;
   }
   span.sender {
     color: Violet;

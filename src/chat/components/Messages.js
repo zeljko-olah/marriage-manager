@@ -17,16 +17,17 @@ class Messages extends Component {
 
   scrollDown = () => {
     const { container } = this.refs
-		container.scrollTop = container.scrollHeight
+    container.scrollTop = container.scrollHeight
+    this.wrapper.scrollTop = this.wrapper.scrollHeight
   }
   
   render() {
-    const { messages, user, markAsRead, removeImportant, typingUser, isTyping, close } = this.props
+    const { messages, user, markAsRead, removeImportant, typingUser, isTyping, close, flash } = this.props
     let sender
     let prevSender = ''
     let pointer = true
     return (
-      <StyledMessages>
+      <StyledMessages innerRef={wrapper => this.wrapper = wrapper}>
         <div
           className="scroll"
           ref="container">
@@ -74,19 +75,20 @@ export default Messages
 // STYLED
 const StyledMessages = styled.div`
   position: relative;
-  // border: 2px dashed red;
+  padding: 10px 0;
+  ::-webkit-scrollbar { 
+    display: none;
+  }
   @media (max-width: 768px) {
     flex-grow: 1;
+    overflow-y: scroll;
+
   }
   & div.scroll {
+    overflow-y: scroll;
     height: 45vh;
     @media (max-width: 768px) {
-      height: 60vh;
-    }
-    overflow: hidden;
-    overflow-y: scroll;
-    ::-webkit-scrollbar { 
-      display: none;
+      height: auto;
     }
   }
 `

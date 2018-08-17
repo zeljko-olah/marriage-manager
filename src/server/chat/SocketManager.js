@@ -1,5 +1,8 @@
 const io = require('./../index.js').io
 const {Users} = require('./users')
+const mongoose = require('mongoose')
+const Message = require("../api/models/message")
+
 
 const events = require('../../events')
 
@@ -155,10 +158,32 @@ module.exports = (socket) => {
    * 
    */
 
-  socket.on(events.SHARE_LOCATION, (coords, partner)=>{
-    // console.log('COORDS:::', coords, user)
+  socket.on(events.SHARE_LOCATION, (coords, partner, callback)=>{
+
+    const text = `${partner.name} shared location.`
+    const userId = partner.id
+
     socket.broadcast.to(room).emit(events.LOCATION_SHARED, coords, partner)
-    socket.broadcast.to(room).emit(events.NEW_MESSAGE, generateMessage(partner.name, `${partner.name} shared location.`))
+    socket.broadcast.to(room).emit(events.NEW_MESSAGE, generateMessage(partner.name, text))
+
+    const message = new Message({
+      _id: mongoose.Types.ObjectId(),
+      text: text,
+      user: userId,
+      room: room,
+      unread: false,
+      important: false,
+      location: true
+    })
+
+    message
+    .save()
+    .then(doc => {
+      callback(doc)
+    })
+    .catch(err => {
+      console.log(err)
+    })
 	})
 
 
