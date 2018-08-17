@@ -2,11 +2,12 @@ const io = require('./../index.js').io
 const {Users} = require('./users')
 const mongoose = require('mongoose')
 const Message = require("../api/models/message")
-
+const request = require('request')
 
 const events = require('../../events')
 
 const {generateMessage} = require('./message.js')
+const {getAddressFromCoords} = require('../helpers')
 // Instantiate users class
 const users = new Users();
 // @TODO - Hardcore chat room for now
@@ -159,31 +160,43 @@ module.exports = (socket) => {
    */
 
   socket.on(events.SHARE_LOCATION, (coords, partner, callback)=>{
-
-    const text = `${partner.name} shared location.`
     const userId = partner.id
+    const lat = coords.latitude
+    const lng = coords.longitude
+    let address = ''
 
-    socket.broadcast.to(room).emit(events.LOCATION_SHARED, coords, partner)
-    socket.broadcast.to(room).emit(events.NEW_MESSAGE, generateMessage(partner.name, text))
-
-    const message = new Message({
-      _id: mongoose.Types.ObjectId(),
-      text: text,
-      user: userId,
-      room: room,
-      unread: false,
-      important: false,
-      location: true
-    })
-
-    message
-    .save()
-    .then(doc => {
-      callback(doc)
-    })
-    .catch(err => {
-      console.log(err)
-    })
+    getAddressFromCoords(lat, lng)
+      .then((address) => {
+        socket.broadcast.to(room).emit(events.LOCATION_SHARED, coords, partner, address)
+        const message = new Message({
+          _id: mongoose.Types.ObjectId(),
+          text: address,
+          user: userId,
+          room: room,
+          unread: true,
+          important: false,
+          location: true
+        })
+    
+        message
+        .save()
+        .then(doc => {
+          socket.broadcast.to(room).emit(events.NEW_MESSAGE, doc)
+          callback(doc)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      })
+      .catch((e) => {
+        if (e.code === 'ENOTFOUND') {
+          address = 'Unable to contact server!'
+          socket.broadcast.to(room).emit(events.NEW_MESSAGE, generateMessage(partner.name, address))
+        } else {
+          address = e.code
+          socket.broadcast.to(room).emit(events.NEW_MESSAGE, generateMessage(partner.name, address))
+        }
+      })
 	})
 
 

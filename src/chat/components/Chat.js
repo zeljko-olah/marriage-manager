@@ -71,10 +71,12 @@ class Chat extends Component {
     socket.off(events.UPDATE_USER_LIST)
     socket.off(events.NEW_MESSAGE)
     socket.off(events.MARK_AS_READ)
-    socket.off(events.ASK_PERMISION)
+    socket.off(events.MARK_AS_READED)
+    socket.off(events.PERMISION_TO_DELETE)
     socket.off(events.CONFIRM_DELETE)
     socket.off(events.REMOVED_IMPORTANT)
     socket.off(events.CHAT_STAT)
+    socket.off(events.TYPING_USER)
     socket.emit(events.CLIENT_DISCONNECTED)
     window.removeEventListener('resize', this.updateWindowDimensions)
   }
@@ -109,8 +111,8 @@ class Chat extends Component {
     socket.on(events.NEW_MESSAGE, (message) => {
       const { messages } = this.state
       const { user } = this.props
-      if (message.text.includes('shared location')) {
-        message.location = true
+      if (message.location === true) {
+        socket.emit(events.UPDATE_OWN_UNREAD_COUNT )
       }
       const formatedTime = moment(message.createdAt).format('h:mm a')
       const newMessage = Object.assign({}, message, {createdAt: formatedTime})
@@ -280,8 +282,6 @@ class Chat extends Component {
       }) 
       return
     }
-
-    console.log('SENDER IDS', senderIds)
 
     markMessagesAsRead(senderIds).then(() => {
      messages.forEach(m => {

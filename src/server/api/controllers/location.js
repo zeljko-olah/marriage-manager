@@ -5,13 +5,14 @@ const User = require("../models/user")
 
 // SAVE CURRENT LOCATION
 exports.saveCurrentLocation = (req, res, next) => {
-  const {lat, lng, userId} = req.body
+  const {lat, lng, userId, address} = req.body
 
   const location = new Location({
     _id: mongoose.Types.ObjectId(),
     user: userId,
     lat,
-    lng
+    lng,
+    address
 
   })
 
@@ -26,6 +27,7 @@ exports.saveCurrentLocation = (req, res, next) => {
             id: doc._id,
             lat: doc.lat,
             lng: doc.lng,
+            address: doc.address,
             from: user.name,
             createdAt: doc.created_at
           })
@@ -43,7 +45,7 @@ exports.saveCurrentLocation = (req, res, next) => {
 exports.getLocations = (req, res, next) => {
   Location.find()
     .limit(30)
-    .select('_id lat lng user created_at')
+    .select('_id lat lng address user created_at')
     .populate({path: 'user', select: 'name avatar'})
     .exec()
     .then(docs => {
@@ -54,6 +56,7 @@ exports.getLocations = (req, res, next) => {
             id: doc._id,
             lat: doc.lat,
             lng: doc.lng,
+            address: doc.address,
             createdAt: time,
             user: doc.user.name,
             avatar: doc.user.avatar.replace('public/', '')

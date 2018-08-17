@@ -59,7 +59,7 @@ class Message extends Component {
                 {message.location ? (
                   <a onClick={this.goToLocationPage}>{formattedMessage}</a>
                 ) : formattedMessage}
-                {message.unread ? (
+                {message.unread && !message.location ? (
                   <span className='unread' >
                     <CheckIcon />
                   </span>) : null}
@@ -71,7 +71,7 @@ class Message extends Component {
                   </span>) : null}
                 {message.location ? (
                   <span
-                    className="location" >
+                    className={message.unread ? 'unread-location location' : 'location'} >
                     <LocationIcon />
                   </span>) : null}
             </div>
@@ -245,6 +245,14 @@ const StyledMessage = styled.div`
   background-color: ${colors.backdrop}; 
   font-size: 20px;
   cursor: pointer;
+}
+
+& .unread-location::after {
+   content: 'new';
+   position: absolute;
+   transform: rotate(45deg);
+   font-size: 12px;
+   right: -10px;
 }
 
 & .unread {

@@ -22,7 +22,7 @@ class Messages extends Component {
   }
   
   render() {
-    const { messages, user, markAsRead, removeImportant, typingUser, isTyping, close, flash } = this.props
+    const { messages, user, markAsRead, removeImportant, typingUser, isTyping, close } = this.props
     let sender
     let prevSender = ''
     let pointer = true

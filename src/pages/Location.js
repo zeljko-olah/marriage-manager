@@ -42,10 +42,11 @@ class Location extends Component {
   componentDidUpdate = (prevProps) => {
     const { socket, setLocation, setFlashMessage } = this.props
     if (socket !== null && prevProps.socket !== socket) {
-      socket.on(events.LOCATION_SHARED, (coords, user) => {
+      socket.on(events.LOCATION_SHARED, (coords, user, address) => {
         setLocation({
           lat: coords.latitude,
           lng: coords.longitude,
+          address,
           userId: user.id
         }).then(result => {
           console.log("RESULT", result)
@@ -118,29 +119,31 @@ class Location extends Component {
             { recentLocationsOpen ? (
               <StyledLocations>
               <ul>
-                { locations ? locations.map((location, index) => {
-                  const timeParts = location.createdAt.split(',')
-                  const time = timeParts[0]
-                  const date = timeParts[1]
+                { locations.length ? locations.map((location, index) => {
                   return (
                     <li
                       key={location.id}
                       onClick={() => {this.loadLocation(location, index)}} >
-                      <div>
-                        <h4>{index + 1}. {location.user}</h4>                      
-                      </div>
                       <div className="avatar">
                         <Avatar
                           src={location.avatar}
                           name={location.user}/>
                       </div>
-                      <div className="location-time">
-                        <span><strong>{ time }</strong></span>
-                        <span><em>{ date }</em></span>
+                      <div className="address">
+                        <h4><strong>{index + 1}. {location.address}</strong></h4>  
+                        <div className="location-time">
+                          <span><strong>{ location.createdAt }</strong></span>
+                        </div>                    
                       </div>
                     </li>
                   )
-                }) : null }  
+                }) : (
+                <li>
+                  <div>
+                    <h4>{'No recent locations available'}</h4>                      
+                  </div>
+                </li>
+              ) }  
               </ul>            
             
             </StyledLocations>
@@ -237,9 +240,10 @@ const StyledLocations = styled.div`
     }
 
   }
+
   & li {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     margin: 5px;
     border: 1px solid ${colors.prim_color};
@@ -249,7 +253,7 @@ const StyledLocations = styled.div`
     transition: all 0.1s ease-in;
   }
 
-  & li: first-child {
+  & li:first-child {
     margin-top: 0;
   }
 
@@ -262,11 +266,28 @@ const StyledLocations = styled.div`
     display: block;
     font-size: 12px;
     padding-top: 4px;
+    color: tomato;
   }
 
   & .avatar {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     overflow: hidden;
+    margin-left: 10px;
+  }
+
+  & .address {
+    font-size: 15px;
+    flex-grow: 1;
+
+    @media (max-width: 768px) {
+      font-size: 10px;
+    }
+    margin: 0;
+    padding: 10px;
+  }
+
+  & .address h4 {
+    margin: 0 0 5px 0;
   }
 `
