@@ -13,7 +13,6 @@ exports.saveCurrentLocation = (req, res, next) => {
     lat,
     lng,
     address
-
   })
 
   location
@@ -29,7 +28,7 @@ exports.saveCurrentLocation = (req, res, next) => {
             lng: doc.lng,
             address: doc.address,
             from: user.name,
-            createdAt: doc.created_at
+            createdAt: moment(doc.created_at).format('h:mm a, MMM Do')
           })
         })
     })

@@ -10,6 +10,7 @@ import * as actions from '../store/actions'
 import {selectSortedLocations} from '../store/selectors/location'
 
 import * as events from '../events'
+import {getCoordsCallback} from '../shared/utility'
 
 import Map from '../components/Maps/Map.js'
 import Avatar from '../components/user/Avatar'
@@ -42,7 +43,7 @@ class Location extends Component {
   }
   
   componentDidUpdate = (prevProps) => {
-    const { socket, setLocation, lastLocation, setFlashMessage } = this.props
+    const { socket, setLocation, lastLocation, setFlashMessage, getLocations } = this.props
     if (socket !== null && prevProps.socket !== socket) {
       socket.on(events.LOCATION_SHARED, (coords, user, address) => {
         setLocation({
@@ -51,8 +52,8 @@ class Location extends Component {
           address,
           userId: user.id
         }).then(result => {
-          console.log("RESULT", result)
           this.setState(result)
+          getLocations()
           setFlashMessage({
             type: 'success',
             flashMessage: `${result.from} shared location!`
@@ -89,39 +90,32 @@ class Location extends Component {
   sendLocation = () => {
     const { socket, user, setFlashMessage } = this.props
 
-    if (!navigator.geolocation){
-      // If not then alert notification
-      return alert('Geolocation not supported by your browser.');
-    }
-
-    navigator.geolocation.getCurrentPosition(function (position){
+    getCoordsCallback((position) => {
       socket.emit(events.SHARE_LOCATION, {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude
-      }, user, (doc) => {
+      }, user, (_) => {
         setFlashMessage({
           type: 'success',
           flashMessage: `You shared location!`
         })
       } )
-    }, function () {
-      alert('Unable to fetch location.')
     })
   }
   
   render () {
-    const { lat, lng, recentLocationsOpen } = this.state
+    const { lat, lng, recentLocationsOpen, address, createdAt } = this.state
     const { user, locations, activeUsers, lastLocation } = this.props
     return (
       <StyledSection>
         <StyledMainHeading user={ user } >
           <StyledLocationHeading>
             <div className="last-location">
-              <p>
-                {lastLocation ? lastLocation.address : 'Home'}              
+              <p className="last-address">
+                {lastLocation ? lastLocation.address : address}              
               </p>
-              <p>
-                {lastLocation ? lastLocation.createdAt : null}              
+              <p className="last-time">
+                {lastLocation ? lastLocation.createdAt : createdAt}              
               </p>
             </div>
             <div className="actions">
@@ -207,11 +201,37 @@ export default connect( mapStateToProps, mapDispatchToProps )( Location )
 
 const StyledLocationHeading= styled.div`
   display: flex;
+  align-items: center;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
   color: ${colors.prim_font};
   text-align: center;
 
   & .last-location {
+    flex-basis: 50%;
     margin: 10px 10px 0px 10px;
+
+    & p.last-address,
+    & p.last-time {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 5px;
+      @media (max-width: 768px) {
+        font-size: 15px;
+      }
+    }
+
+    & p.last-time {
+      color: ${colors.prim_color};
+      margin-top: 10px;
+      font-weight: 900;
+      font-size: 16px;
+      @media (max-width: 768px) {
+        font-size: 13px;
+      }
+    }
+
   }
 
 
@@ -229,6 +249,7 @@ const StyledLocationHeading= styled.div`
     
     &:disabled {
       background-color: ${colors.disabled};
+      border-color: ${colors.disabled};
       cursor: not-allowed;
     }
   }

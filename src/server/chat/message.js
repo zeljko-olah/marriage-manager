@@ -3,7 +3,7 @@ const uuidv4 = require('uuid/v4')
 
 var generateMessage = (from, text, unread, type) => {
   return {
-    id : uuidv4(),
+    _id : uuidv4(),
     from,
     text,
     createdAt: moment().valueOf(),

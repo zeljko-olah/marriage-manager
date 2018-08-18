@@ -43,7 +43,7 @@ class Messages extends Component {
               }     
                      
               return (<Message
-                        key={message.id}
+                        key={message._id}
                         message={message}
                         user={user}
                         pointer={pointer}

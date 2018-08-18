@@ -14,6 +14,7 @@ import MessageInput from './MessageInput'
 
 import io from 'socket.io-client'
 import * as events from '../../events'
+import {getCoordsPromise} from '../../shared/utility'
 
 import styled from 'styled-components'
 import * as colors from '../../styles/variables'
@@ -220,8 +221,12 @@ class Chat extends Component {
     const { socket, users} = this.state
     const { saveMessage, setFlashMessage, user } = this.props
     if (message.from !== 'Admin') {
-      const pattern = /^!!!/
-      const important = pattern.test(message)
+      const patterns = {
+        important: /^@!!!/,
+        location: /^@loc/,
+        heart: /^@love/
+      }
+      const important = patterns.important.test(message)
       if (message.replace('!!!', '') === '') {
         setFlashMessage({
           type: 'error',
@@ -229,6 +234,27 @@ class Chat extends Component {
         })
         return
       }
+      const location = patterns.location.test(message)
+      if (location) {
+        getCoordsPromise()
+        .then(position => {
+          socket.emit(events.SHARE_LOCATION, {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          }, user, (_) => {
+            setFlashMessage({
+              type: 'success',
+              flashMessage: `You shared location!`
+            })
+          } )
+
+        })
+        .catch(err => {
+          alert(err)
+        })
+        return
+      }
+      
       const unread = !important ? ((users && users.length === 1) || !this.chatOpened ? 'true' : 'false') : 'false'
       saveMessage({
         text: message.replace('!!!', ''),

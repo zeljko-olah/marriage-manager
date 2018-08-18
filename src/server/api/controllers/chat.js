@@ -59,7 +59,7 @@ exports.get_messages = (req, res) => {
         messages: docs.map(doc => {
           const time = formatMessageTime(doc.created_at)
           return {
-            id: doc._id,
+            _id: doc._id,
             text: doc.text,
             createdAt: time,
             unread: doc.unread,

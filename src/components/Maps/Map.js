@@ -5,15 +5,11 @@ import mapStyles from './styles.json'
 
 class Map extends PureComponent {
     
-   maps = React.createRef()
-
    render() {
 
    const { lat, lng } = this.props
-   console.log('MAPS', this.maps)
    const GoogleMapWrapper = withScriptjs(withGoogleMap(props => (
       <GoogleMap
-        ref={this.maps}
         defaultCenter = { { lat, lng: lng } }
         defaultZoom = { 16 }
         defaultOptions={{ styles: mapStyles }}
