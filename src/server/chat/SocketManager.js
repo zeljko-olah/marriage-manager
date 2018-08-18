@@ -35,7 +35,6 @@ module.exports = (socket) => {
     
     // io.emit('USER_CONNECTED', connectedUsers )
     io.to(room).emit(events.UPDATE_USER_LIST, users.getUserList(room))
-    console.log(users.getUserList(room))
 
     socket.emit(events.NEW_MESSAGE, generateMessage('Admin', `Welcome ${user.name}! :)`))
     socket.broadcast.to(room).emit(events.NEW_MESSAGE, generateMessage('Admin', `${user.name} has joined`));

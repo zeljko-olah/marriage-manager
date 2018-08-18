@@ -21,6 +21,7 @@ class Location extends Component {
     lat: 44.8482181,
     lng: 20.3548942,
     from: '',
+    address: 'Home',
     id: '',
     createdAt: null,
     recentLocationsOpen: false
@@ -32,7 +33,8 @@ class Location extends Component {
     try {
       this.setState({
         lat: location.lat,
-        lng: location.lng
+        lng: location.lng,
+        address: 'Home'
       })
     } catch (error) {
       alert(error)
@@ -40,7 +42,7 @@ class Location extends Component {
   }
   
   componentDidUpdate = (prevProps) => {
-    const { socket, setLocation, setFlashMessage } = this.props
+    const { socket, setLocation, lastLocation, setFlashMessage } = this.props
     if (socket !== null && prevProps.socket !== socket) {
       socket.on(events.LOCATION_SHARED, (coords, user, address) => {
         setLocation({
@@ -58,6 +60,13 @@ class Location extends Component {
         })
 
       })
+    }
+    if (lastLocation !== prevProps.lastLocation) {
+     this.setState({
+       lat: lastLocation.lat,
+       lng: lastLocation.lng,
+       address: lastLocation.address
+     })
     }
   }
 
@@ -102,15 +111,27 @@ class Location extends Component {
   
   render () {
     const { lat, lng, recentLocationsOpen } = this.state
-    const { user, locations } = this.props
+    const { user, locations, activeUsers, lastLocation } = this.props
     return (
       <StyledSection>
         <StyledMainHeading user={ user } >
           <StyledLocationHeading>
-            <button onClick={this.sendLocation}>Share Location</button>
-            <button
-              className={recentLocationsOpen ? 'active': ''}
-              onClick={this.toggleLocations}>Recent Places</button>
+            <div className="last-location">
+              <p>
+                {lastLocation ? lastLocation.address : 'Home'}              
+              </p>
+              <p>
+                {lastLocation ? lastLocation.createdAt : null}              
+              </p>
+            </div>
+            <div className="actions">
+              <button 
+                disabled={activeUsers.length !== 2}
+                onClick={this.sendLocation}>Share Location</button>
+              <button
+                className={recentLocationsOpen ? 'active': ''}
+                onClick={this.toggleLocations}>Recent Places</button>
+            </div>
           </StyledLocationHeading>
         </StyledMainHeading>
   
@@ -163,11 +184,14 @@ class Location extends Component {
 
 // MAP REDUX STATE TO PROPS
 const mapStateToProps = state => {
+  const allLocations =  selectSortedLocations(state)
   return {
     user: state.auth.user,
+    activeUsers: state.chat.activeUsers,
     socket: state.chat.socket,
     location: state.location,
-    locations: selectSortedLocations(state)
+    locations: allLocations,
+    lastLocation: allLocations[0]
   }
 }
 
@@ -182,8 +206,13 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect( mapStateToProps, mapDispatchToProps )( Location )
 
 const StyledLocationHeading= styled.div`
+  display: flex;
   color: ${colors.prim_font};
   text-align: center;
+
+  & .last-location {
+    margin: 10px 10px 0px 10px;
+  }
 
 
   & button {
@@ -197,6 +226,11 @@ const StyledLocationHeading= styled.div`
     background-color: ${colors.prim_light};
     color: grey;
     cursor: pointer;
+    
+    &:disabled {
+      background-color: ${colors.disabled};
+      cursor: not-allowed;
+    }
   }
 
   & button.active {
@@ -263,6 +297,7 @@ const StyledLocations = styled.div`
   }
 
   & .location-time span {
+    text-align: right;
     display: block;
     font-size: 12px;
     padding-top: 4px;

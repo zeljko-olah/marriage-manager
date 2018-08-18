@@ -21,9 +21,9 @@ export const StyledMainHeading = styled.div`
 
   & h1 {
     text-align: center;
-    font-size: 40px;
+    font-size: 30px;
     @media (max-width: 768px) {
-      font-size: 30px;
+      font-size: 20px;
     }
     font-style: italic;
     padding: 10px;

@@ -11,7 +11,7 @@ export const sec_font = 'WhiteSmoke'
 
 // UI
 export const danger = 'tomato'
-export const disabled_color = '#ddd'
+export const disabled = '#ddd'
 export const ter_yellow = '#fefeee'
 export const prim_white = '#fff'
 export const border_color = 'grey'

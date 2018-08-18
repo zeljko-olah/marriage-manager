@@ -96,21 +96,24 @@ class Chat extends Component {
     // Events
     socket.emit(events.JOIN, `${user.name} logged in`, {...user, id: socket.id} )
 
-    socket.on(events.USER_CONNECTED, (users)=>{
-			this.setState({ users })
-    })
+    // socket.on(events.USER_CONNECTED, (users)=>{
+		// 	this.setState({ users })
+    // })
 
     socket.on(events.CHAT_STAT, (open)=>{
 			this.chatOpened = open
     })
 
     socket.on(events.UPDATE_USER_LIST, (users) => {
+      const { setUsers } = this.props
       this.setState({users})
+      setUsers(users)
+      
     })
 
     socket.on(events.NEW_MESSAGE, (message) => {
       const { messages } = this.state
-      const { user } = this.props
+      const { user, setFlashMessage } = this.props
       if (message.location === true) {
         socket.emit(events.UPDATE_OWN_UNREAD_COUNT )
       }
@@ -118,7 +121,14 @@ class Chat extends Component {
       const newMessage = Object.assign({}, message, {createdAt: formatedTime})
       const newMessages = messages ? messages.concat(newMessage) : null
       this.setState({messages: newMessages})
-      if (user && user.name !== message.from && message.from !== 'Admin') {
+      if (message.from === 'Admin') {
+        setFlashMessage({
+          type: 'success',
+          flashMessage: message.text
+        })
+        return     
+      }
+      if (user && user.name !== message.from) {
         if (message.important === true) {
           this.audioImportant.play()
           return
@@ -380,6 +390,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch) => ({
   socketInit: (socket) => dispatch(actions.socketInit(socket)),
   getMessages: () => dispatch(actions.getMessages()),
+  setUsers: (users) => dispatch(actions.setUsers(users)),
   saveMessage: (message) => dispatch(actions.saveMessage(message)),
   toggleChat: (showChat) => dispatch( actions.toggleChat(showChat) ),
   emailChatHistory: (messages, user) => dispatch( actions.emailChatHistory(messages, user) ),

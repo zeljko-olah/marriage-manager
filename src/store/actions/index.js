@@ -12,6 +12,7 @@ export {
 export {
   socketInit,
   toggleChat,
+  setUsers,
   getMessages,
   saveMessage,
   emailChatHistory,
