@@ -307,9 +307,8 @@ class Chat extends Component {
     const { markMessagesAsRead, user, setFlashMessage } = this.props
     const { socket, messages} = this.state
 
-    const senderIds = messages
-    .filter(m => m.from !== user.name && m.unread) 
-    .map(m => m.id)  
+    const senderIds = messages.filter(m => m.from !== user.name && m.unread) 
+      .map(m => m._id)  
 
     if (!senderIds.length) {
       setFlashMessage({
@@ -321,13 +320,12 @@ class Chat extends Component {
 
     markMessagesAsRead(senderIds).then(() => {
      messages.forEach(m => {
-        if (senderIds.includes(m.id)) {
+        if (senderIds.includes(m._id)) {
           m.unread = false
           socket.emit(events.MARK_AS_READ, m, user)
         }
       })
       socket.emit(events.UPDATE_OWN_UNREAD_COUNT)  
-      // senderIds = []    
     })
   }
   

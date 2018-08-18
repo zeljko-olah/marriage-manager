@@ -2,7 +2,6 @@ const io = require('./../index.js').io
 const {Users} = require('./users')
 const mongoose = require('mongoose')
 const Message = require("../api/models/message")
-const request = require('request')
 
 const events = require('../../events')
 
