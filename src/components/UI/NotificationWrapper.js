@@ -30,7 +30,7 @@ const Notification = ({info, setFlashMessage}) => {
       <div 
         className={ info ? 'notification-open' :   'notification-closed'}
         ref={(e) => {innerDiv(e)}}
-        onClick={() => {disappear(3000)}}>
+        onClick={() => {disappear(2000)}}>
         
         { /* FLASH MESSAGE */ }
         <p className={info.type}>{info.flashMessage}</p>
@@ -55,15 +55,10 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(Notification)
 
 const StyledNotify = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
   position: absolute;
   z-index: 10000;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  left: 50%;
   transition: all 0.5s linear;
   @media (max-width: 768px) {
     top: 0%;
@@ -78,6 +73,7 @@ const StyledNotify = styled.div`
   &.open {
     opacity: 1;
     transform: translateY(0%);
+  transform: translateX(-50%);
     pointer-events: auto;
   }
 
@@ -87,16 +83,23 @@ const StyledNotify = styled.div`
     text-align: center;
   }
 
-  & p {
-    font-size: 15px;
-    margin: 0;
+  &.open p {
     padding: 10px 20px;
+    font-size: 20px;
+    @media (max-width: 768px) {
+      font-size: 15px;
+    }
+    margin: 0;
     text-transform: uppercase;
     font-weight: 100;
   }
+  
+  &.close p {
+    padding: 0;
+  }
 
   & p.success {
-    background: ${colors.prim_light};
+    background: rgba(127,255,212, 0.8);
     color: ${colors.prim_font};
     border: 2px solid ${colors.prim_color}; 
   }

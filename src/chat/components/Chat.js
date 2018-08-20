@@ -220,20 +220,33 @@ class Chat extends Component {
   handleSendMessage = (message) => {
     const { socket, users} = this.state
     const { saveMessage, setFlashMessage, user } = this.props
+
+    // Skip messages from admin
     if (message.from !== 'Admin') {
+
+      // Shorcodes pattern
       const patterns = {
         important: /^@!!!/,
         location: /^@loc/,
+        link: /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi,
         heart: /^@love/
       }
+
+      // Important message
       const important = patterns.important.test(message)
-      if (message.replace('!!!', '') === '') {
+      message = message.replace('@!!!', '')
+      if (!message) {
         setFlashMessage({
           type: 'error',
           flashMessage: `Empty messages not allowed!`
         })
         return
       }
+
+      // Link
+      const link = patterns.link.test(message)
+
+      // Location message
       const location = patterns.location.test(message)
       if (location) {
         getCoordsPromise()
@@ -246,31 +259,35 @@ class Chat extends Component {
               type: 'success',
               flashMessage: `You shared location!`
             })
-          } )
-
+          })
         })
         .catch(err => {
           alert(err)
         })
         return
       }
-      
+
+      // Set unread messages 
       const unread = !important ? ((users && users.length === 1) || !this.chatOpened ? 'true' : 'false') : 'false'
+
+      // Persist message to db
       saveMessage({
         text: message.replace('!!!', ''),
         userId: user.id,
         unread,
-        important
-      }).then(savedMessage => {
-        socket.emit(events.MESSAGE_SENT, savedMessage)
-        if (savedMessage.important) {
-          socket.emit(events.UPDATE_PARTNER_IMPORTANT_COUNT)
-          return
-        }
-        if (savedMessage.unread) {
-          socket.emit(events.UPDATE_PARTNER_UNREAD_COUNT)
-        }
+        important,
+        link
       })
+        .then(savedMessage => {
+          socket.emit(events.MESSAGE_SENT, savedMessage)
+          if (savedMessage.important) {
+            socket.emit(events.UPDATE_PARTNER_IMPORTANT_COUNT)
+            return
+          }
+          if (savedMessage.unread) {
+            socket.emit(events.UPDATE_PARTNER_UNREAD_COUNT)
+          }
+        })
     }
   }
   
@@ -310,8 +327,6 @@ class Chat extends Component {
     const senderIds = messages.filter(m => m.from !== user.name && m.unread) 
       .map(m => m._id)  
 
-    alert(senderIds)
-
     if (!senderIds.length) {
       setFlashMessage({
         type: 'error',
@@ -338,7 +353,7 @@ class Chat extends Component {
     const { removeImportantMessage, user } = this.props
     removeImportantMessage(id).then(() => {
       const markedMessages = messages.map(m => {
-        if (m.id === id) {
+        if (m._id === id) {
           socket.emit(events.REMOVE_IMPORTANT, m, user)
           m.important = false
         }

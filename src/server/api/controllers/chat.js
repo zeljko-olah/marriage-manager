@@ -8,15 +8,15 @@ const User = require("../models/user")
 // SAVE NEW MESSAGE
 exports.new_message = (req, res, next) => {
   console.log('REQ.BODY:::', req.body)
-  const { text, userId, unread, important } = req.body.message
+  const { text, userId, unread, important, link } = req.body.message
   const message = new Message({
     _id: mongoose.Types.ObjectId(),
     text: text,
     user: userId,
     room: 'love',
     unread: unread,
-    important: important
-
+    important: important,
+    link: link
   })
 
   message
@@ -33,6 +33,7 @@ exports.new_message = (req, res, next) => {
             room: 'love',
             unread: doc.unread,
             important: doc.important,
+            link: doc.link,
             location: doc.location,
             createdAt: doc.created_at
           })
@@ -50,7 +51,7 @@ exports.new_message = (req, res, next) => {
 exports.get_messages = (req, res) => {
 
   Message.find()
-    .select('_id text read created_at unread important location')
+    .select('_id text read created_at unread important link location')
     .populate('user', 'name')
     .exec()
     .then(docs => {
@@ -64,6 +65,7 @@ exports.get_messages = (req, res) => {
             createdAt: time,
             unread: doc.unread,
             important: doc.important,
+            link: doc.link,
             location: doc.location,
             from: doc.user.name,
             user: doc.user

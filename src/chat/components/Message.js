@@ -58,7 +58,11 @@ class Message extends Component {
             <div className="message-inner">
                 {message.location ? (
                   <a onClick={this.goToLocationPage}>{formattedMessage}</a>
-                ) : formattedMessage}
+                ) : null}
+                {message.link ? (
+                  <a href={message.text}>{formattedMessage}</a>
+                ) : null}
+                {!message.link && !message.location ? formattedMessage : null}
                 {message.unread && !message.location ? (
                   <span className='unread' >
                     <CheckIcon />
@@ -66,7 +70,7 @@ class Message extends Component {
                 {message.important ? (
                   <span
                     className="important"
-                    onClick={() => {this.handleImportant(message.id, message.from)}}>
+                    onClick={() => {this.handleImportant(message._id, message.from)}}>
                     <ImportantIcon />
                   </span>) : null}
                 {message.location ? (
