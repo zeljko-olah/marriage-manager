@@ -310,6 +310,8 @@ class Chat extends Component {
     const senderIds = messages.filter(m => m.from !== user.name && m.unread) 
       .map(m => m._id)  
 
+    alert(senderIds)
+
     if (!senderIds.length) {
       setFlashMessage({
         type: 'error',
@@ -384,7 +386,6 @@ class Chat extends Component {
           user={user}
           isTyping={isTyping}
           typingUser={typingUser}
-          markAsRead={this.handleSelectMessages}
           removeImportant={this.handleRemoveImportant}
           close={this.handleCloseChat} />
 

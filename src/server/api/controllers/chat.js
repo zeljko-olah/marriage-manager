@@ -27,7 +27,7 @@ exports.new_message = (req, res, next) => {
         .exec()
         .then(user => {
           res.status(201).json({
-            id: doc._id,
+            _id: doc._id,
             from: user.name,
             text: doc.text,
             room: 'love',
@@ -183,20 +183,25 @@ exports.remove_important_message = (req, res) => {
 exports.mark_as_read = (req, res) => {
   const ids = req.body
 
-  ids.forEach((id) => {
-    Message.update({ _id: id }, { $set: { unread: false }})
+  const promises = ids.map((id) => {
+    return Message.update({ _id: id }, { $set: { unread: false }})
     .exec()
-    .then(() => {
-      res.status(200).json({
-        type: 'success',
-        flashMessage: `Marked as read :)`
-      })
+  })
+
+  console.log('IDS:::', ids)
+  console.log('PROMISEES:::', promises)
+
+  Promise.all(promises)
+  .then(() => {
+    res.status(200).json({
+      type: 'success',
+      flashMessage: `Marked as read :)`
     })
-    .catch(err => {
-      res.status(200).json({
-        type: 'error',
-        flashMessage: `Something went wrong :)`
-      })
+  })
+  .catch(err => {
+    res.status(200).json({
+      type: 'error',
+      flashMessage: `Something went wrong :)`
     })
   })
 }
