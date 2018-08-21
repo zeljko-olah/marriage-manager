@@ -2,6 +2,7 @@ const io = require('./../index.js').io
 const {Users} = require('./users')
 const mongoose = require('mongoose')
 const Message = require("../api/models/message")
+const User = require("../api/models/user")
 
 const events = require('../../events')
 
@@ -157,12 +158,15 @@ module.exports = (socket) => {
    * 
    */
 
-  socket.on(events.SHARE_LOCATION, (loc, userId, callback)=>{
-    const {lat, lng, address, from, createdAt} = loc
+  socket.on(events.SHARE_LOCATION, (loc, user, callback)=>{
+    // Extract adress and from user name
+    const {address, from} = loc
+
+    // Create an save message to db
     const message = new Message({
       _id: mongoose.Types.ObjectId(),
       text: address,
-      user: userId,
+      user: user.id,
       room: room,
       unread: true,
       important: false,
@@ -172,8 +176,23 @@ module.exports = (socket) => {
     message
     .save()
     .then(doc => {
-      socket.broadcast.to(room).emit(events.LOCATION_SHARED, loc)
-      socket.broadcast.to(room).emit(events.NEW_MESSAGE, doc)
+
+      // Create location message
+      const locationMessage = {
+        _id: doc._id,
+        text: doc.text,
+        from: from,
+        room: 'love',
+        unread: doc.unread,
+        important: doc.important,
+        link: doc.link,
+        location: doc.location,
+        createdAt: doc.created_at
+      }
+      
+      // Emit events to update
+      io.to(room).emit(events.LOCATION_SHARED, loc)
+      io.to(room).emit(events.NEW_MESSAGE, locationMessage)
       socket.emit(events.UNREAD_COUNT_UPDATED)          
       callback(doc)
     })

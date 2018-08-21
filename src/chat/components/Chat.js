@@ -112,6 +112,7 @@ class Chat extends Component {
     })
 
     socket.on(events.NEW_MESSAGE, (message) => {
+      console.log('NEW MESSAGE', message)
       const { messages } = this.state
       const { user, setFlashMessage } = this.props
       if (message.location === true) {
@@ -242,6 +243,9 @@ class Chat extends Component {
         return
       }
 
+      // Set unread messages 
+      const unread = !important ? ((users && users.length === 1) || !this.chatOpened ? 'true' : 'false') : 'false'
+
       // Link
       const link = patterns.link.test(message)
 
@@ -252,7 +256,7 @@ class Chat extends Component {
         .then(userLocation => {
           setLocation(userLocation)
             .then(loc => {
-              socket.emit(events.SHARE_LOCATION, loc, user.id, (_) => {
+              socket.emit(events.SHARE_LOCATION, loc, user, (_) => {
                 setFlashMessage({
                   type: 'success',
                   flashMessage: `You shared location!`
@@ -262,9 +266,6 @@ class Chat extends Component {
         })
         return
       }
-
-      // Set unread messages 
-      const unread = !important ? ((users && users.length === 1) || !this.chatOpened ? 'true' : 'false') : 'false'
 
       // Persist message to db
       saveMessage({

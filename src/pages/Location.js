@@ -86,7 +86,7 @@ class Location extends Component {
       .then(userLocation => {
         setLocation(userLocation)
           .then(loc => {
-            socket.emit(events.SHARE_LOCATION, loc, user.id, (_) => {
+            socket.emit(events.SHARE_LOCATION, loc, user, (_) => {
               setFlashMessage({
                 type: 'success',
                 flashMessage: `You shared location!`
