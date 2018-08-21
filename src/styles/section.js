@@ -37,4 +37,26 @@ export const StyledMainHeading = styled.div`
 export const StyledMainContent = styled.div`
   // background: ${colors.ter_grad};
   // padding: 20px;
+  `
+
+  // BUTTON
+export const StyledButton = styled.button`
+  margin-top: 20px;
+  outline: none;
+  border: none;
+  padding: 10px;
+  font-weight: 100;
+  font-size: 25px;
+  text-transform: uppercase;
+  color: #555;
+  background-color: ${colors.prim_light};
+  border: 2px solid Aquamarine;
+  cursor: pointer;
+}
+
+ &:disabled {
+  background: ${colors.disabled};
+  cursor: not-allowed;
+}
 `
+
