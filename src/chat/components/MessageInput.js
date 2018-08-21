@@ -15,7 +15,10 @@ class MessageInput extends PureComponent {
   }
 
   componentDidUpdate(){
-    this.messageInput.focus()
+    const { width } = this.props
+    if (width > 768) {
+      this.messageInput.focus()
+    }
   }
   
   // Methods

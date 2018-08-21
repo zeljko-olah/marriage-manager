@@ -13,7 +13,7 @@ import Messages from './Messages'
 import MessageInput from './MessageInput'
 
 import io from 'socket.io-client'
-import * as events from '../Events'
+import * as events from '../../events'
 
 import styled from 'styled-components'
 import * as colors from '../../styles/variables'
@@ -71,10 +71,12 @@ class Chat extends Component {
     socket.off(events.UPDATE_USER_LIST)
     socket.off(events.NEW_MESSAGE)
     socket.off(events.MARK_AS_READ)
-    socket.off(events.ASK_PERMISION)
+    socket.off(events.MARK_AS_READED)
+    socket.off(events.PERMISION_TO_DELETE)
     socket.off(events.CONFIRM_DELETE)
     socket.off(events.REMOVED_IMPORTANT)
     socket.off(events.CHAT_STAT)
+    socket.off(events.TYPING_USER)
     socket.emit(events.CLIENT_DISCONNECTED)
     window.removeEventListener('resize', this.updateWindowDimensions)
   }
@@ -94,26 +96,40 @@ class Chat extends Component {
     // Events
     socket.emit(events.JOIN, `${user.name} logged in`, {...user, id: socket.id} )
 
-    socket.on(events.USER_CONNECTED, (users)=>{
-			this.setState({ users })
-    })
+    // socket.on(events.USER_CONNECTED, (users)=>{
+		// 	this.setState({ users })
+    // })
 
     socket.on(events.CHAT_STAT, (open)=>{
 			this.chatOpened = open
     })
 
     socket.on(events.UPDATE_USER_LIST, (users) => {
+      const { setUsers } = this.props
       this.setState({users})
+      setUsers(users)
+      
     })
 
     socket.on(events.NEW_MESSAGE, (message) => {
+      console.log('NEW MESSAGE', message)
       const { messages } = this.state
-      const { user } = this.props
+      const { user, setFlashMessage } = this.props
+      if (message.location === true) {
+        socket.emit(events.UPDATE_OWN_UNREAD_COUNT )
+      }
       const formatedTime = moment(message.createdAt).format('h:mm a')
       const newMessage = Object.assign({}, message, {createdAt: formatedTime})
       const newMessages = messages ? messages.concat(newMessage) : null
       this.setState({messages: newMessages})
-      if (user && user.name !== message.from && message.from !== 'Admin') {
+      if (message.from === 'Admin') {
+        setFlashMessage({
+          type: 'success',
+          flashMessage: message.text
+        })
+        return     
+      }
+      if (user && user.name !== message.from) {
         if (message.important === true) {
           this.audioImportant.play()
           return
@@ -188,7 +204,6 @@ class Chat extends Component {
     })
 
     socket.on(events.TYPING_USER, (isTyping, userName) => {
-      console.log('isTyping from partner', isTyping, userName)
       this.setState({
         isTyping,
         typingUser: userName
@@ -204,33 +219,72 @@ class Chat extends Component {
   // Send message
   handleSendMessage = (message) => {
     const { socket, users} = this.state
-    const { saveMessage, setFlashMessage, user } = this.props
+    const { saveMessage, setFlashMessage, user, getUserCoords, setLocation } = this.props
+
+    // Skip messages from admin
     if (message.from !== 'Admin') {
-      const pattern = /^!!!/
-      const important = pattern.test(message)
-      if (message.replace('!!!', '') === '') {
+
+      // Shorcodes pattern
+      const patterns = {
+        important: /^@!!!/,
+        location: /^@loc/,
+        link: /[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/gi,
+        heart: /^@love/
+      }
+
+      // Important message
+      const important = patterns.important.test(message)
+      message = message.replace('@!!!', '')
+      if (!message) {
         setFlashMessage({
           type: 'error',
           flashMessage: `Empty messages not allowed!`
         })
         return
       }
+
+      // Set unread messages 
       const unread = !important ? ((users && users.length === 1) || !this.chatOpened ? 'true' : 'false') : 'false'
+
+      // Link
+      const link = patterns.link.test(message)
+
+      // Location message
+      const location = patterns.location.test(message)
+      if (location) {
+        getUserCoords(user.id)
+        .then(userLocation => {
+          setLocation(userLocation)
+            .then(loc => {
+              socket.emit(events.SHARE_LOCATION, loc, user, (_) => {
+                setFlashMessage({
+                  type: 'success',
+                  flashMessage: `You shared location!`
+                })
+              })
+          })
+        })
+        return
+      }
+
+      // Persist message to db
       saveMessage({
         text: message.replace('!!!', ''),
         userId: user.id,
         unread,
-        important
-      }).then(savedMessage => {
-        socket.emit(events.MESSAGE_SENT, savedMessage)
-        if (savedMessage.important) {
-          socket.emit(events.UPDATE_PARTNER_IMPORTANT_COUNT)
-          return
-        }
-        if (savedMessage.unread) {
-          socket.emit(events.UPDATE_PARTNER_UNREAD_COUNT)
-        }
+        important,
+        link
       })
+        .then(savedMessage => {
+          socket.emit(events.MESSAGE_SENT, savedMessage)
+          if (savedMessage.important) {
+            socket.emit(events.UPDATE_PARTNER_IMPORTANT_COUNT)
+            return
+          }
+          if (savedMessage.unread) {
+            socket.emit(events.UPDATE_PARTNER_UNREAD_COUNT)
+          }
+        })
     }
   }
   
@@ -262,52 +316,33 @@ class Chat extends Component {
     socket.emit('ASK_PERMISION', user)
   }
   
-  // Select multiple messages
-  handleSelectMessages = (id, from) => {
-    const { user } = this.props
-    if (from === user.name ) {
-      return
-    }
-    if (this.ids.includes(id)) {
-      console.log(this.ids.includes(id))
-      this.ids = this.ids.filter(_id => id !== _id)      
-    } else {
-      this.ids.push(id)
-    }
-  }
-  
   // Mark messages as read
   handleMarkAllRead = () => {
     const { markMessagesAsRead, user, setFlashMessage } = this.props
     const { socket, messages} = this.state
 
-    if (!messages.find(m => m.unread === true  && m.from !== user.name)) {
+    const senderIds = messages.filter(m => m.from !== user.name && m.unread) 
+      .map(m => m._id)  
+
+    if (!senderIds.length) {
       setFlashMessage({
         type: 'error',
-        flashMessage: `There are no messages to mark!`
+        flashMessage: `There are no unread messages!`
       }) 
       return
     }
 
-    if (!this.ids.length) {
-      setFlashMessage({
-        type: 'error',
-        flashMessage: `There are no marked messages!`
-      }) 
-      return
-    }
-
-    markMessagesAsRead(this.ids).then(() => {
+    markMessagesAsRead(senderIds).then(() => {
      messages.forEach(m => {
-        if (this.ids.includes(m.id)) {
+        if (senderIds.includes(m._id)) {
           m.unread = false
           socket.emit(events.MARK_AS_READ, m, user)
         }
       })
       socket.emit(events.UPDATE_OWN_UNREAD_COUNT)  
-      this.ids = []    
     })
   }
+  
   
   // Remove important flag from message
   handleRemoveImportant = (id) => {
@@ -315,7 +350,7 @@ class Chat extends Component {
     const { removeImportantMessage, user } = this.props
     removeImportantMessage(id).then(() => {
       const markedMessages = messages.map(m => {
-        if (m.id === id) {
+        if (m._id === id) {
           socket.emit(events.REMOVE_IMPORTANT, m, user)
           m.important = false
         }
@@ -341,7 +376,7 @@ class Chat extends Component {
   // RENDER  
   render () {
     const { users, socket, messages, width, height, typingUser, isTyping } = this.state
-    const { user, info } = this.props
+    const { user, info, showChat } = this.props
 
     return (
       <StyledSection>
@@ -363,13 +398,14 @@ class Chat extends Component {
           user={user}
           isTyping={isTyping}
           typingUser={typingUser}
-          markAsRead={this.handleSelectMessages}
-          removeImportant={this.handleRemoveImportant} />
+          removeImportant={this.handleRemoveImportant}
+          close={this.handleCloseChat} />
 
         { /* MESSAGE INPUT */ }
         <MessageInput
           width={width}
           height={height}
+          showChat={showChat}
           sendMessage={this.handleSendMessage}
           typingStatus={this.handleTypingStatus} />
 
@@ -391,6 +427,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch) => ({
   socketInit: (socket) => dispatch(actions.socketInit(socket)),
   getMessages: () => dispatch(actions.getMessages()),
+  setUsers: (users) => dispatch(actions.setUsers(users)),
   saveMessage: (message) => dispatch(actions.saveMessage(message)),
   toggleChat: (showChat) => dispatch( actions.toggleChat(showChat) ),
   emailChatHistory: (messages, user) => dispatch( actions.emailChatHistory(messages, user) ),
@@ -398,6 +435,8 @@ const mapDispatchToProps = (dispatch) => ({
   markMessagesAsRead: (id) => dispatch( actions.markMessagesAsRead(id) ),
   removeImportantMessage: (id) => dispatch( actions.removeImportantMessage(id) ),
   setFlashMessage: (flash) => dispatch( actions.setFlashMessage(flash) ),
+  setLocation: (userLocation) => dispatch(actions.setLocation(userLocation)),
+  getUserCoords: (userId) => dispatch(actions.getUserCoords(userId))
 })
 
 // EXPORT

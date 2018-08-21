@@ -37,13 +37,13 @@ const StyledAside = styled.aside`
   width: ${props => props.width};
   height: 100%;
   ${props => {
-    return props.side === 'right' ? 'right: 0' : 'left: 0'
+    return props.side === 'right' ? 
+    'right: 0; z-index: 100;' : 'left: 0; z-index: 200;'
   } };
   top: 0;
-  z-index: 200;
   padding: 32px 16px;
   border-right: 3px solid ${colors.prim_color};
-  background-color: ${colors.backdrop};
+  background: ${colors.overlay};
   transition: transform 0.3s ease-out;
 
   @media (max-width: 768px) {

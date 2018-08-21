@@ -8,15 +8,15 @@ const User = require("../models/user")
 // SAVE NEW MESSAGE
 exports.new_message = (req, res, next) => {
   console.log('REQ.BODY:::', req.body)
-  const { text, userId, unread, important } = req.body.message
+  const { text, userId, unread, important, link } = req.body.message
   const message = new Message({
     _id: mongoose.Types.ObjectId(),
     text: text,
     user: userId,
     room: 'love',
     unread: unread,
-    important: important
-
+    important: important,
+    link: link
   })
 
   message
@@ -27,12 +27,14 @@ exports.new_message = (req, res, next) => {
         .exec()
         .then(user => {
           res.status(201).json({
-            id: doc._id,
+            _id: doc._id,
             from: user.name,
             text: doc.text,
             room: 'love',
             unread: doc.unread,
             important: doc.important,
+            link: doc.link,
+            location: doc.location,
             createdAt: doc.created_at
           })
         })
@@ -49,7 +51,7 @@ exports.new_message = (req, res, next) => {
 exports.get_messages = (req, res) => {
 
   Message.find()
-    .select('_id text read created_at unread important')
+    .select('_id text read created_at unread important link location')
     .populate('user', 'name')
     .exec()
     .then(docs => {
@@ -58,11 +60,13 @@ exports.get_messages = (req, res) => {
         messages: docs.map(doc => {
           const time = formatMessageTime(doc.created_at)
           return {
-            id: doc._id,
+            _id: doc._id,
             text: doc.text,
             createdAt: time,
             unread: doc.unread,
             important: doc.important,
+            link: doc.link,
+            location: doc.location,
             from: doc.user.name,
             user: doc.user
           }
@@ -181,20 +185,25 @@ exports.remove_important_message = (req, res) => {
 exports.mark_as_read = (req, res) => {
   const ids = req.body
 
-  ids.forEach((id) => {
-    Message.update({ _id: id }, { $set: { unread: false }})
+  const promises = ids.map((id) => {
+    return Message.update({ _id: id }, { $set: { unread: false }})
     .exec()
-    .then(() => {
-      res.status(200).json({
-        type: 'success',
-        flashMessage: `Marked as read :)`
-      })
+  })
+
+  console.log('IDS:::', ids)
+  console.log('PROMISEES:::', promises)
+
+  Promise.all(promises)
+  .then(() => {
+    res.status(200).json({
+      type: 'success',
+      flashMessage: `Marked as read :)`
     })
-    .catch(err => {
-      res.status(200).json({
-        type: 'error',
-        flashMessage: `Something went wrong :)`
-      })
+  })
+  .catch(err => {
+    res.status(200).json({
+      type: 'error',
+      flashMessage: `Something went wrong :)`
     })
   })
 }

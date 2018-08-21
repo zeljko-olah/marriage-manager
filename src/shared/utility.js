@@ -23,3 +23,32 @@ export const validateForm = (email, password) => {
 
   return null
 }
+
+// GEOLOCATION GET COORDINATES - EXAMPLE WITH CALLBACK
+export const getCoordsCallback = (callback) => {
+  if (!navigator.geolocation){
+    return alert('Geolocation not supported by your browser.');
+  }
+
+  navigator.geolocation.getCurrentPosition(function (position){
+    callback(position)
+  }, function () {
+    alert('Unable to fetch location.')
+  })
+}
+
+// GEOLOCATION GET COORDINATES - EXAMPLE WITH PROMISES
+export const getCoordsPromise = () => {
+  if (!navigator.geolocation){
+    return alert('Geolocation not supported by your browser.');
+  }
+
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(function (position){
+      resolve(position)
+    }, function () {
+      reject('Unable to fetch location.')
+    })
+  })
+
+}

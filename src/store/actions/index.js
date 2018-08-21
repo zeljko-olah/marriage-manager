@@ -12,6 +12,7 @@ export {
 export {
   socketInit,
   toggleChat,
+  setUsers,
   getMessages,
   saveMessage,
   emailChatHistory,
@@ -20,3 +21,10 @@ export {
   markMessagesAsRead,
   removeImportantMessage
 } from './chat'
+
+// LOCATION RELATED ACTIONS
+export {
+  getUserCoords,
+  setLocation,
+  getLocations
+} from './location'

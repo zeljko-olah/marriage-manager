@@ -106,7 +106,7 @@ const StyledForm = styled.div`
   }
 
   & button:disabled {
-    background: ${colors.disabled_color};
+    background: ${colors.disabled};
     cursor: not-allowed;
   }
 `

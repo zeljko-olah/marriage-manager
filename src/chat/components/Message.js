@@ -1,26 +1,15 @@
 import React, {Component} from 'react'
+
+import { history }  from '../../router/AppRouter'
+
 import styled from 'styled-components'
 import * as colors from '../../styles/variables'
 
 import CheckIcon from 'react-icons/lib/md/visibility'
 import ImportantIcon from 'react-icons/lib/md/warning'
+import LocationIcon from 'react-icons/lib/md/location-on'
 
 class Message extends Component {
-  state = {
-    selected: false
-  }
-
-  handleSelected = (id, from) => {
-    const { user, markAsRead } = this.props
-    if (user.name !== from) {
-      markAsRead(id, from)
-      this.setState((prevState) => {
-        return {
-          selected: !prevState.selected
-        }
-      })
-    }
-  }
 
   handleImportant = (id, from) => {
     const { user, removeImportant } = this.props
@@ -28,9 +17,16 @@ class Message extends Component {
       removeImportant(id, from)
     }
   }
+
+  goToLocationPage = (e) => {
+    const { close } = this.props
+    e.preventDefault()
+    history.push('/location')
+    close()
+  }
+  
   
   render () {
-    const { selected } = this.state
     const { message, user, pointer, stylingClass } = this.props
     // Create message CSS class depending on who is sending the message
     let messageClass
@@ -60,18 +56,27 @@ class Message extends Component {
           <div className="message-outer">
             <div className="time">{message.createdAt}</div>
             <div className="message-inner">
-                {formattedMessage}
-                {message.unread ? (
-                  <span
-                    className={selected ? 'marked': 'unread'}
-                    onClick={() => {this.handleSelected(message.id, message.from)}}>
+                {message.location ? (
+                  <a onClick={this.goToLocationPage}>{formattedMessage}</a>
+                ) : null}
+                {message.link ? (
+                  <a href={message.text}>{formattedMessage}</a>
+                ) : null}
+                {!message.link && !message.location ? formattedMessage : null}
+                {message.unread && !message.location ? (
+                  <span className='unread' >
                     <CheckIcon />
                   </span>) : null}
                 {message.important ? (
                   <span
                     className="important"
-                    onClick={() => {this.handleImportant(message.id, message.from)}}>
+                    onClick={() => {this.handleImportant(message._id, message.from)}}>
                     <ImportantIcon />
+                  </span>) : null}
+                {message.location ? (
+                  <span
+                    className={message.unread ? 'unread-location location' : 'location'} >
+                    <LocationIcon />
                   </span>) : null}
             </div>
           </div>
@@ -197,7 +202,8 @@ const StyledMessage = styled.div`
 
 & .unread,
 & .marked,
-& .important {
+& .important,
+& .location {
   display: inline-block;
   position: absolute;
   font-size: 15px;
@@ -210,34 +216,57 @@ const StyledMessage = styled.div`
   cursor: pointer;
 }
 
-& .left .important {
-  bottom: -5px;
-  right: -20px;
+& .unread,
+& .marked,
+& .important,
+& .location {
+  top: 50%;
+  transform: translateY(-50%);
 }
-& .right .important {
-  bottom: -5px;
-  left: -20px;
+
+& .left .unread,
+& .left .marked,
+& .left .important,
+& .left .location {
+  left: -40px;
 }
+
+& .right .unread,
+& .right .marked,
+& .right .important,
+& .right .location {
+  right: -40px;
+}
+
 & .important {
   color: ${colors.sec_color}; 
   background-color: black; 
   font-size: 20px;
+}
+
+& .location {
+  color: ${colors.sec_color}; 
+  background-color: ${colors.backdrop}; 
+  font-size: 20px;
   cursor: pointer;
 }
-& .left .unread,
-& .left .marked {
-  bottom: -5px;
-  right: -20px;
+
+& .unread-location::after {
+   content: 'new';
+   position: absolute;
+   transform: rotate(45deg);
+   font-size: 12px;
+   right: -10px;
 }
 
 & .unread {
   color: tomato;  
-  background-color: ${colors.overlay}; 
+  background-color: ${colors.backdrop}; 
   z-index: 500;
 }
 & .marked {
   color: ${colors.prim_color};  
-  background-color ${colors.overlay}; 
+  background-color ${colors.backdrop}; 
 }
 
 ${props => {

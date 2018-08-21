@@ -1,9 +1,13 @@
 const io = require('./../index.js').io
 const {Users} = require('./users')
+const mongoose = require('mongoose')
+const Message = require("../api/models/message")
+const User = require("../api/models/user")
 
-const events = require('../../chat/Events')
+const events = require('../../events')
 
 const {generateMessage} = require('./message.js')
+const {getAddressFromCoords} = require('../helpers')
 // Instantiate users class
 const users = new Users();
 // @TODO - Hardcore chat room for now
@@ -31,7 +35,6 @@ module.exports = (socket) => {
     
     // io.emit('USER_CONNECTED', connectedUsers )
     io.to(room).emit(events.UPDATE_USER_LIST, users.getUserList(room))
-    console.log(users.getUserList(room))
 
     socket.emit(events.NEW_MESSAGE, generateMessage('Admin', `Welcome ${user.name}! :)`))
     socket.broadcast.to(room).emit(events.NEW_MESSAGE, generateMessage('Admin', `${user.name} has joined`));
@@ -142,7 +145,61 @@ module.exports = (socket) => {
 
   socket.on(events.TYPING, (isTyping, userName)=>{
 		socket.broadcast.to(room).emit(events.TYPING_USER, isTyping, userName)
-	})
+  })
+
+  /**
+  |--------------------------------------------------
+  | LOCATION
+  |--------------------------------------------------
+  */
+  
+  /*
+   * ON SHARE_LOCATION
+   * 
+   */
+
+  socket.on(events.SHARE_LOCATION, (loc, user, callback)=>{
+    // Extract adress and from user name
+    const {address, from} = loc
+
+    // Create an save message to db
+    const message = new Message({
+      _id: mongoose.Types.ObjectId(),
+      text: address,
+      user: user.id,
+      room: room,
+      unread: true,
+      important: false,
+      location: true
+    })
+
+    message
+    .save()
+    .then(doc => {
+
+      // Create location message
+      const locationMessage = {
+        _id: doc._id,
+        text: doc.text,
+        from: from,
+        room: 'love',
+        unread: doc.unread,
+        important: doc.important,
+        link: doc.link,
+        location: doc.location,
+        createdAt: doc.created_at
+      }
+      
+      // Emit events to update
+      io.to(room).emit(events.LOCATION_SHARED, loc)
+      io.to(room).emit(events.NEW_MESSAGE, locationMessage)
+      socket.emit(events.UNREAD_COUNT_UPDATED)          
+      callback(doc)
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  })
 
 
   /*

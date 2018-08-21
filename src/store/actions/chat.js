@@ -23,6 +23,13 @@ export const getMessagesSuccess = (messages) => {
   }
 }
 
+export const setUsers = (users) => {
+  return {
+    type: actionTypes.SET_USERS,
+    users
+  }
+}
+
 export const getMessagesFailed = (error) => {
   return {
     type: actionTypes.GET_MESSAGES,

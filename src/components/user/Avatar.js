@@ -9,9 +9,9 @@ class Avatar extends Component {
 
   render () {
     const { noSource } = this.state
-    const { src, user } = this.props
+    const { src, name } = this.props
 
-    const firstLetter = user ? user.name.substr(0, 1) : ""
+    const firstLetter = name ? name.substr(0, 1) : ""
 
     return (
       <Fragment>
@@ -41,8 +41,8 @@ const StyledAvatar = styled.div`
     overflow: hidden;
     border-radius: 50%;
     display: block;
-    width: 50px;
-    height: 50px;
+    width: 100%;
+    height: 100%;
   }
 
   & span.initials {
@@ -51,7 +51,6 @@ const StyledAvatar = styled.div`
     position: absolute;
     top: -30%;
     right: -10%;
-    // transform: translate(-50%, -50%);
     margin: 0;
     padding: 0;
     color: tomato;
