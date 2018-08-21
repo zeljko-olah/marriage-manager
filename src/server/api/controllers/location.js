@@ -2,40 +2,52 @@ const moment = require('moment')
 const mongoose = require("mongoose")
 const Location = require("../models/location")
 const User = require("../models/user")
+const {getAddressFromCoords} = require('../../helpers')
+
 
 // SAVE CURRENT LOCATION
 exports.saveCurrentLocation = (req, res, next) => {
-  const {lat, lng, userId, address} = req.body
+  const {lat, lng, userId} = req.body
 
-  const location = new Location({
-    _id: mongoose.Types.ObjectId(),
-    user: userId,
-    lat,
-    lng,
-    address
-  })
-
-  location
-    .save()
-    .then(doc => {
-      const id = doc.user
-      User.findById( id, 'name')
-        .exec()
-        .then(user => {
-          res.status(201).json({
-            id: doc._id,
-            lat: doc.lat,
-            lng: doc.lng,
-            address: doc.address,
-            from: user.name,
-            createdAt: moment(doc.created_at).format('h:mm a, MMM Do')
+  getAddressFromCoords(lat, lng)
+    .then(address => {
+      const location = new Location({
+        _id: mongoose.Types.ObjectId(),
+        user: userId,
+        lat,
+        lng,
+        address
+      })
+    
+      location
+        .save()
+        .then(doc => {
+          const id = doc.user
+          User.findById( id, 'name')
+            .exec()
+            .then(user => {
+              res.status(201).json({
+                id: doc._id,
+                lat: doc.lat,
+                lng: doc.lng,
+                address: doc.address,
+                from: user.name,
+                createdAt: moment(doc.created_at).format('h:mm a, MMM Do')
+              })
+            })
+        })
+        .catch(err => {
+          console.log(err)
+          res.status(500).json({
+            error: err
           })
         })
     })
-    .catch(err => {
-      console.log(err)
+    .catch((e) => {
+      console.log(e)
       res.status(500).json({
-        error: err
+        type: 'error',
+        flashMessage: 'Unable to get address. Try again. :('
       })
     })
 }

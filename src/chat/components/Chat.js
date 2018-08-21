@@ -14,7 +14,6 @@ import MessageInput from './MessageInput'
 
 import io from 'socket.io-client'
 import * as events from '../../events'
-import {getCoordsPromise} from '../../shared/utility'
 
 import styled from 'styled-components'
 import * as colors from '../../styles/variables'
@@ -219,7 +218,7 @@ class Chat extends Component {
   // Send message
   handleSendMessage = (message) => {
     const { socket, users} = this.state
-    const { saveMessage, setFlashMessage, user } = this.props
+    const { saveMessage, setFlashMessage, user, getUserCoords, setLocation } = this.props
 
     // Skip messages from admin
     if (message.from !== 'Admin') {
@@ -228,7 +227,7 @@ class Chat extends Component {
       const patterns = {
         important: /^@!!!/,
         location: /^@loc/,
-        link: /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi,
+        link: /[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/gi,
         heart: /^@love/
       }
 
@@ -249,20 +248,17 @@ class Chat extends Component {
       // Location message
       const location = patterns.location.test(message)
       if (location) {
-        getCoordsPromise()
-        .then(position => {
-          socket.emit(events.SHARE_LOCATION, {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          }, user, (_) => {
-            setFlashMessage({
-              type: 'success',
-              flashMessage: `You shared location!`
-            })
+        getUserCoords(user.id)
+        .then(userLocation => {
+          setLocation(userLocation)
+            .then(loc => {
+              socket.emit(events.SHARE_LOCATION, loc, user.id, (_) => {
+                setFlashMessage({
+                  type: 'success',
+                  flashMessage: `You shared location!`
+                })
+              })
           })
-        })
-        .catch(err => {
-          alert(err)
         })
         return
       }
@@ -438,6 +434,8 @@ const mapDispatchToProps = (dispatch) => ({
   markMessagesAsRead: (id) => dispatch( actions.markMessagesAsRead(id) ),
   removeImportantMessage: (id) => dispatch( actions.removeImportantMessage(id) ),
   setFlashMessage: (flash) => dispatch( actions.setFlashMessage(flash) ),
+  setLocation: (userLocation) => dispatch(actions.setLocation(userLocation)),
+  getUserCoords: (userId) => dispatch(actions.getUserCoords(userId))
 })
 
 // EXPORT

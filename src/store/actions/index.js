@@ -24,6 +24,7 @@ export {
 
 // LOCATION RELATED ACTIONS
 export {
+  getUserCoords,
   setLocation,
   getLocations
 } from './location'

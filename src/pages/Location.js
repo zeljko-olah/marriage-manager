@@ -10,7 +10,6 @@ import * as actions from '../store/actions'
 import {selectSortedLocations} from '../store/selectors/location'
 
 import * as events from '../events'
-import {getCoordsCallback} from '../shared/utility'
 
 import Map from '../components/Maps/Map.js'
 import Avatar from '../components/user/Avatar'
@@ -25,7 +24,8 @@ class Location extends Component {
     address: 'Home',
     id: '',
     createdAt: null,
-    recentLocationsOpen: false
+    recentLocationsOpen: false,
+    overide: false
   }
 
   componentDidMount = () => {
@@ -43,23 +43,15 @@ class Location extends Component {
   }
   
   componentDidUpdate = (prevProps) => {
-    const { socket, setLocation, lastLocation, setFlashMessage, getLocations } = this.props
+    const { socket, lastLocation, setFlashMessage, getLocations } = this.props
     if (socket !== null && prevProps.socket !== socket) {
-      socket.on(events.LOCATION_SHARED, (coords, user, address) => {
-        setLocation({
-          lat: coords.latitude,
-          lng: coords.longitude,
-          address,
-          userId: user.id
-        }).then(result => {
-          this.setState(result)
-          getLocations()
-          setFlashMessage({
-            type: 'success',
-            flashMessage: `${result.from} shared location!`
-          })
+      socket.on(events.LOCATION_SHARED, (loc) => {
+        this.setState(loc)
+        getLocations()
+        setFlashMessage({
+          type: 'success',
+          flashMessage: `${loc.from} shared location!`
         })
-
       })
     }
     if (lastLocation !== prevProps.lastLocation) {
@@ -83,44 +75,44 @@ class Location extends Component {
   }
 
   loadLocation = (location, index) => {
-    this.setState(location)
+    console.log(location)
+    this.setState({...location, overide: true})
     this.toggleLocations()
   }
   
   sendLocation = () => {
-    const { socket, user, setFlashMessage } = this.props
-
-    getCoordsCallback((position) => {
-      socket.emit(events.SHARE_LOCATION, {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude
-      }, user, (_) => {
-        setFlashMessage({
-          type: 'success',
-          flashMessage: `You shared location!`
+    const { socket, user, setFlashMessage, setLocation, getUserCoords } = this.props
+    getUserCoords(user.id)
+      .then(userLocation => {
+        setLocation(userLocation)
+          .then(loc => {
+            socket.emit(events.SHARE_LOCATION, loc, user.id, (_) => {
+              setFlashMessage({
+                type: 'success',
+                flashMessage: `You shared location!`
+              })
+            })
         })
-      } )
-    })
+      })
   }
   
   render () {
-    const { lat, lng, recentLocationsOpen, address, createdAt } = this.state
-    const { user, locations, activeUsers, lastLocation } = this.props
+    const { lat, lng, recentLocationsOpen, address, createdAt, overide } = this.state
+    const { user, locations, lastLocation } = this.props
     return (
       <StyledSection>
         <StyledMainHeading user={ user } >
           <StyledLocationHeading>
             <div className="last-location">
               <p className="last-address">
-                {lastLocation ? lastLocation.address : address}              
+                {lastLocation && !overide ? lastLocation.address : address}              
               </p>
               <p className="last-time">
-                {lastLocation ? lastLocation.createdAt : createdAt}              
+                {lastLocation && !overide ? lastLocation.createdAt : createdAt}              
               </p>
             </div>
             <div className="actions">
               <button 
-                disabled={activeUsers.length !== 2}
                 onClick={this.sendLocation}>Share Location</button>
               <button
                 className={recentLocationsOpen ? 'active': ''}
@@ -190,7 +182,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  setLocation: (location) => dispatch(actions.setLocation(location)),
+  setLocation: (userLocation) => dispatch(actions.setLocation(userLocation)),
+  getUserCoords: (userId) => dispatch(actions.getUserCoords(userId)),
   getLocations: () => dispatch(actions.getLocations()),
   setFlashMessage: (flash) => dispatch(actions.setFlashMessage(flash))
 

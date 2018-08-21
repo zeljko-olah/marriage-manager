@@ -157,45 +157,30 @@ module.exports = (socket) => {
    * 
    */
 
-  socket.on(events.SHARE_LOCATION, (coords, partner, callback)=>{
-    const userId = partner.id
-    const lat = coords.latitude
-    const lng = coords.longitude
-    let address = ''
+  socket.on(events.SHARE_LOCATION, (loc, userId, callback)=>{
+    const {lat, lng, address, from, createdAt} = loc
+    const message = new Message({
+      _id: mongoose.Types.ObjectId(),
+      text: address,
+      user: userId,
+      room: room,
+      unread: true,
+      important: false,
+      location: true
+    })
 
-    getAddressFromCoords(lat, lng)
-      .then((address) => {
-        socket.broadcast.to(room).emit(events.LOCATION_SHARED, coords, partner, address)
-        const message = new Message({
-          _id: mongoose.Types.ObjectId(),
-          text: address,
-          user: userId,
-          room: room,
-          unread: true,
-          important: false,
-          location: true
-        })
-    
-        message
-        .save()
-        .then(doc => {
-          socket.broadcast.to(room).emit(events.NEW_MESSAGE, doc)
-          callback(doc)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-      })
-      .catch((e) => {
-        if (e.code === 'ENOTFOUND') {
-          address = 'Unable to contact server!'
-          socket.broadcast.to(room).emit(events.NEW_MESSAGE, generateMessage(partner.name, address))
-        } else {
-          address = e.code
-          socket.broadcast.to(room).emit(events.NEW_MESSAGE, generateMessage(partner.name, address))
-        }
-      })
-	})
+    message
+    .save()
+    .then(doc => {
+      socket.broadcast.to(room).emit(events.LOCATION_SHARED, loc)
+      socket.broadcast.to(room).emit(events.NEW_MESSAGE, doc)
+      socket.emit(events.UNREAD_COUNT_UPDATED)          
+      callback(doc)
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  })
 
 
   /*
