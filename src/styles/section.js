@@ -51,6 +51,47 @@ export const StyledForm = styled.div`
     font-size: 15px;
     color: ${colors.prim_light};
     text-transform: uppercase;
+    @media (max-width: 768px) {
+      font-size: 12px;
+    }
+  }
+
+  & p {
+    margin-top: 5px;
+  }
+
+  & input,
+  & textarea,
+  & select {
+    width: 100%;
+    margin: 0 auto;
+    padding: 8px;
+    color: #fefeee;
+    background-color: transparent;
+    border: 2px solid Aquamarine;
+  }
+
+  & select option {
+    background: #ffffff !important;
+    color: #000000;
+    margin: 8px;
+  }
+
+  & label.drop-down {
+    position: relative;
+    cursor: pointer;
+
+    & span {
+      position: absolute;
+      top: 0px;
+      right: 3px;
+      color: ${colors.ter_yellow};
+      transform: scaleY(1.8);
+
+      @media (max-width: 768px) {
+        top: -3px;
+      }
+    }
   }
 
   // CHECK BOXES
@@ -61,7 +102,10 @@ export const StyledForm = styled.div`
   }
 
   & .checkboxes {
-    flex-basis: 33%;
+    flex-basis: 50%;
+    @media (max-width: 768px) {
+      flex-basis: 50%;
+    }
     text-align: left;
     display: block;
     position: relative;
@@ -73,6 +117,7 @@ export const StyledForm = styled.div`
   & .checkboxes input {
     display: inline-block;
     color: ${colors.ter_yellow};
+    margin-left: 10px;
   }
 
   & .checkboxes input {
@@ -86,7 +131,11 @@ export const StyledForm = styled.div`
   & .checkboxes .checkmark {
     position: absolute;
     top: -4px;
-    right: 23px;
+    right: 45px;
+    @media (max-width: 768px) {
+      top: -4px;
+      right: 35px;
+    }
     opacity: 1;
     height: 25px;
     width: 25px;
@@ -123,27 +172,6 @@ export const StyledForm = styled.div`
     display: block;
   }
 
-  & p {
-    margin-top: 5px;
-  }
-
-  & input,
-  & textarea,
-  & select {
-    width: 100%;
-    margin: 0 auto;
-    padding: 8px;
-    color: #fefeee;
-    background-color: transparent;
-    border: 2px solid Aquamarine;
-  }
-
-  & select option {
-    background: #ffffff !important;
-    color: #000000;
-    margin: 8px;
-  }
-
   & *::placeholder  {
     color: #fefeee;
   }
@@ -163,6 +191,9 @@ export const StyledButton = styled.button`
   background-color: ${colors.prim_light};
   border: 2px solid Aquamarine;
   cursor: pointer;
+  @media (max-width: 768px) {
+  font-size: 20px;         
+  }
 }
 
  &:disabled {
@@ -179,7 +210,9 @@ export const StyledShadow = styled.div`
   padding: 10px;
   background-color: ${colors.backdrop};
   margin-top: 5px;
-  // padding-bottom: 0;
+  @media (max-width: 768px) {
+    padding: 5px 0;
+  }
 `
 
 // DATE PICKET
@@ -248,7 +281,6 @@ export const StyledDatePicker = styled.div`
 
   & .DayPickerNavigation_svg__horizontal {
     fill: red !important;
-
   }
 `
 

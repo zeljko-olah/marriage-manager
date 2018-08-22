@@ -1,7 +1,9 @@
 import React, {Component} from 'react'
 
-// DATE PICKER 3RD PARTY COMPONENENT CSS
-import 'react-dates/lib/css/_datepicker.css'
+import AddTodo from '../components/AddNew/AddTodo'
+import AddReminder from '../components/AddNew/AddReminder'
+
+// Styled components
 import styled from 'styled-components'
 import {
   StyledSection, StyledMainHeading, StyledMainContent, StyledForm, StyledButton,
@@ -9,47 +11,24 @@ import {
 } from '../styles/section'
 import * as colors from '../styles/variables'
 
-import moment from 'moment'
-import 'react-dates/initialize'
-import { SingleDatePicker } from 'react-dates'
-
-import TriangleIcon from 'react-icons/lib/md/arrow-drop-down'
-
 
 class AddNew extends Component {
+
+  // STATE
   state = {
-    activeTab: 'todo',
-    showDescriptionInput: false,
-    createdAt: moment(),
-    calendarFocused: false
+    activeTab: 'todo'
   }
 
+  // HANDLERS
   setActiveTab = (tab) => {
     this.setState({
       activeTab: tab,
     })    
   }
-
-  toggleDescription = () => {
-    this.setState((prevState) => {
-      return { showDescriptionInput: !prevState.showDescriptionInput }
-    })    
-  }
-
-   // Capture createdAt date
-  onDateChange = (createdAt) => {
-    if (createdAt) {
-      this.setState(() => ({ createdAt }))
-    }
-  }
-
-  // Capture focus change on datePicker
-  onFocusChange = ({ focused }) => {
-    this.setState(() => ({ calendarFocused: focused }))
-  }
   
+  // RENDER METHOD
   render () {
-    const { activeTab, showDescriptionInput } = this.state
+    const { activeTab } = this.state
     return (
       <StyledSection>
           <StyledMainHeading>
@@ -71,76 +50,7 @@ class AddNew extends Component {
                   </div>
                 </StyledTabHeader>
                 <StyledTabs>
-                  { activeTab === 'todo' ? (
-                  <StyledForm>
-                    <StyledShadow>
-                      <label><p>Define</p></label>
-                      <p>
-                        <input type="text" />
-                      </p>
-                    </StyledShadow>
-                    <StyledShadow>
-                      <label><p>Who's gonna do it?</p></label>
-                      <StyledShadow>
-                        <div className="contain-checkboxes">
-                          <div className="checkboxes" >
-                            <label htmlFor="">Marina</label>
-                            <input className="checkbox" type="checkbox" />
-                            <span className="checkmark"></span>
-                          </div>
-                          <div className="checkboxes" >
-                            <label htmlFor="">Zeljko</label>
-                            <input className="checkbox" type="checkbox" />
-                            <span className="checkmark"></span>
-                          </div>
-                        </div>
-                      </StyledShadow>
-                    </StyledShadow>
-                    <StyledShadow>
-                      <label><p>Pick a day</p></label>
-                      { /* DATE PICKER COMPONENT */ }
-                      <StyledDatePicker>
-                        <SingleDatePicker
-                          date={this.state.createdAt}
-                          onDateChange={this.onDateChange}
-                          focused={this.state.calendarFocused}
-                          onFocusChange={this.onFocusChange}
-                          numberOfMonths={1}
-                          isOutsideRange={() => false}
-                        />
-                      </StyledDatePicker>
-                    </StyledShadow>
-                    <StyledShadow>
-                      <label
-                        className="drop-down" 
-                        onClick={this.toggleDescription}><p>Describe more...</p><span><TriangleIcon /></span></label>
-                      {showDescriptionInput ? (
-                        <p>
-                        <textarea cols="10" rows="5"></textarea>
-                      </p>
-                      ) : null}
-                    </StyledShadow>
-                    <StyledShadow>
-                      <label><p>Priority...</p></label>
-                      <p>
-                        <select>
-                          <option selected value="low">Low</option>
-                          <option value="high">High</option>
-                          <option selected="selected" value="normal">Normal</option>
-                          <option value="special">Special</option>
-                        </select>
-                      </p>
-                    </StyledShadow>
-                    <StyledButton type="submit">
-                      Add
-                    </StyledButton>
-                  </StyledForm>
-                  ) : (
-                    <div>
-                    <label>Add reminder</label>
-                    <input type="text"/>
-                  </div>
-                  ) }
+                  { activeTab === 'todo' ? <AddTodo /> : <AddReminder /> }
                 </StyledTabs>
               </StyledTabsWrapper>
             </StyledShadow>            
@@ -154,34 +64,51 @@ export default AddNew
 
 const StyledTabsWrapper = styled.div`
   padding: 10px 50px;
+  @media (max-width: 768px) {
+    padding: 0;
+  }
 `
 const StyledTabHeader = styled.div`
   display: flex;
   text-align: center;
   padding: 10px;
+  @media (max-width: 768px) {
+    padding: 5px 0;
+  }
   padding-bottom: 0;
   & div {
     flex-basis: 50%;
     padding: 10px;
     cursor: pointer;
+    position: relative;
+    top: 1px;
+    @media (max-width: 768px) {
+      top: 5px;
+    }
   }
 
   & .active {
-    position: relative;
     z-index: 100;
     border-top: 1px solid grey;
     border-left: 1px solid grey;
     border-right: 1px solid grey;
-    top: 1px;
     background-color: ${colors.prim_color};
   }
 
   & h2 {
-    color: ${colors.prim_font};
+    color: ${colors.ter_yellow};
     text-transform: uppercase;
     letter-spacing: 3px;
     font-weight: 100;
     margin: 5px 0;
+    @media (max-width: 768px) {
+      font-size: 20px;
+      letter-spacing: 3px;
+    }
+  }
+
+  & .active h2 {
+    color: ${colors.prim_font};
   }
 ` 
 
@@ -191,17 +118,8 @@ const StyledTabs = styled.div`
   border: 1px solid grey;
   padding: 10px;
   background-color: ${colors.backdrop};
-
-  & label.drop-down {
-    position: relative;
-    cursor: pointer
-
-    & span {
-      position: absolute;
-      top: 3px;
-      right: 3px;
-      color: ${colors.ter_yellow};
-      transform: scaleY(1.8);
-    }
+  @media (max-width: 768px) {
+    padding: 5px 0;
+    margin: 0;
   }
 `
