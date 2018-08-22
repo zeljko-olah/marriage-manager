@@ -39,8 +39,54 @@ export const StyledMainContent = styled.div`
   // padding: 20px;
   `
 
-  // BUTTON
+// FORM
+export const StyledForm = styled.div`
+  margin: 10px;
+  margin-top: 0;
+  padding: 10px;
+  background-color: ${colors.backdrop};
+
+  & div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px;
+    background-color: ${colors.backdrop};
+  }
+
+  & label p {
+    margin: 0;
+    font-weight: 100;
+    font-size: 20px;
+    color: ${colors.prim_light};
+    text-transform: uppercase;
+  }
+
+  & p {
+    margin-top: 5px;
+  }
+
+  & input,
+  & textarea,
+  & select {
+    width: 100%;
+    margin: 0 auto;
+    padding: 8px;
+    color: #fefeee;
+    background-color: transparent;
+    border: 2px solid Aquamarine;
+  }
+
+  & *::placeholder  {
+    color: #fefeee;
+  }
+
+
+`
+
+// BUTTON
 export const StyledButton = styled.button`
+  width: 100%;
   margin-top: 20px;
   outline: none;
   border: none;

@@ -2,24 +2,35 @@ import React, {Component} from 'react'
 
 
 import styled from 'styled-components'
-import {StyledSection, StyledMainHeading, StyledMainContent, StyledButton} from '../styles/section'
+import {StyledSection, StyledMainHeading, StyledMainContent, StyledForm, StyledButton} from '../styles/section'
 import * as colors from '../styles/variables'
+
+import TriangleIcon from 'react-icons/lib/md/arrow-drop-down'
+
 
 class AddNew extends Component {
   state = {
-    activeTab: 'todo'
+    activeTab: 'todo',
+    showDescriptionInput: false
   }
 
   setActiveTab = (tab) => {
     this.setState({
-      activeTab: tab
+      activeTab: tab,
     })    
   }
+
+  toggleDescription = () => {
+    this.setState((prevState) => {
+      return { showDescriptionInput: !prevState.showDescriptionInput }
+    })    
+  }
+  
   
 
   render () {
 
-    const { activeTab } = this.state
+    const { activeTab, showDescriptionInput } = this.state
     return (
       <StyledSection>
           <StyledMainHeading>
@@ -40,22 +51,45 @@ class AddNew extends Component {
                 </div>
               </StyledTabHeader>
               <StyledTabs>
-                <div>
-                  { activeTab === 'todo' ? (
-                    <div>
-                    <label>Add todo</label>
-                    <input type="text"/>
-                    <StyledButton type="submit">
-                      Add
-                    </StyledButton>
+                { activeTab === 'todo' ? (
+                <StyledForm>
+                  <div>
+                    <label><p>Define goal</p></label>
+                    <p>
+                      <input type="text" />
+                    </p>
                   </div>
-                  ) : (
-                    <div>
-                    <label>Add reminder</label>
-                    <input type="text"/>
+                  <div>
+                    <label
+                      className="drop-down" 
+                      onClick={this.toggleDescription}><p>Describe more...</p><span><TriangleIcon /></span></label>
+                   {showDescriptionInput ? (
+                    <p>
+                    <textarea cols="10" rows="5"></textarea>
+                  </p>
+                   ) : null}
                   </div>
-                  ) }
+                  <div>
+                    <label><p>Priority...</p></label>
+                    <p>
+                      <select>
+                        <option selected value="low">Low</option>
+                        <option value="high">High</option>
+                        <option selected="selected" value="normal">Normal</option>
+                        <option value="special">Special</option>
+                      </select>
+                    </p>
+                  </div>
+                  <StyledButton type="submit">
+                    Add
+                  </StyledButton>
+                </StyledForm>
+                ) : (
+                  <div>
+                  <label>Add reminder</label>
+                  <input type="text"/>
                 </div>
+                ) }
               </StyledTabs>
             </StyledTabsWrapper>
             
@@ -68,7 +102,7 @@ class AddNew extends Component {
 export default AddNew
 
 const StyledTabsWrapper = styled.div`
-  padding: 50px;
+  padding: 10px 50px;
 `
 const StyledTabHeader = styled.div`
   display: flex;
@@ -96,6 +130,7 @@ const StyledTabHeader = styled.div`
     text-transform: uppercase;
     letter-spacing: 3px;
     font-weight: 100;
+    margin: 5px 0;
   }
 ` 
 
@@ -106,8 +141,16 @@ const StyledTabs = styled.div`
   padding: 10px;
   background-color: ${colors.backdrop};
 
-  & div {
-    display: flex;
-    flex-direction: column;
+  & label.drop-down {
+    position: relative;
+    cursor: pointer
+
+    & span {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      color: ${colors.ter_yellow};
+      transform: scaleY(1.8);
+    }
   }
 `

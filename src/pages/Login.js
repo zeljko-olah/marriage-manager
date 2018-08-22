@@ -124,10 +124,10 @@ const mapDispatchToProps = dispatch => {
  */
 
 const LoginFormWrapper = styled.div`
-  width: 300px;
+  width: 350px;
   position: fixed;
-  bottom: 0;
-  right: 20px;
+  bottom: 10px;
+  right: 10px;
   border: 1px solid WhiteSmoke;
   border-top-left-radius: 10px;
   background-color: transparent;
