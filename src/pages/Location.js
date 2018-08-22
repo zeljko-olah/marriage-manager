@@ -2,7 +2,7 @@
 import React, {Component} from 'react'
 
 import styled from 'styled-components'
-import {StyledSection, StyledMainHeading, StyledMainContent} from '../styles/section'
+import {StyledSection, StyledMainHeading, StyledMainContent, StyledButton, StyledShadow} from '../styles/section'
 import * as colors from '../styles/variables'
 
 import { connect } from 'react-redux'
@@ -101,68 +101,79 @@ class Location extends Component {
     const { user, locations, lastLocation } = this.props
     return (
       <StyledSection>
-        <StyledMainHeading user={ user } >
-          <StyledLocationHeading>
-            <div className="last-location">
-              <p className="last-address">
-                {lastLocation && !overide ? lastLocation.address : address}              
-              </p>
-              <p className="last-time">
-                {lastLocation && !overide ? lastLocation.createdAt : createdAt}              
-              </p>
-            </div>
-            <div className="actions">
-              <button 
-                onClick={this.sendLocation}>Share Location</button>
-              <button
-                className={recentLocationsOpen ? 'active': ''}
-                onClick={this.toggleLocations}>Recent Places</button>
-            </div>
-          </StyledLocationHeading>
-        </StyledMainHeading>
-  
-        <StyledMainContent>
-          <StyledContainer>
-            { recentLocationsOpen ? (
-              <StyledLocations>
-              <ul>
-                { locations.length ? locations.map((location, index) => {
-                  return (
-                    <li
-                      key={location.id}
-                      onClick={() => {this.loadLocation(location, index)}} >
-                      <div className="avatar">
-                        <Avatar
-                          src={location.avatar}
-                          name={location.user}/>
-                      </div>
-                      <div className="address">
-                        <h4><strong>{index + 1}. {location.address}</strong></h4>  
-                        <div className="location-time">
-                          <span><strong>{ location.createdAt }</strong></span>
-                        </div>                    
+        <StyledShadow>
+          <StyledShadow>
+            <StyledMainHeading user={ user } >
+              <h1>Location</h1>
+              <StyledLocationHeading>
+                <StyledShadow>
+                  <div className="last-location">
+                    <p className="last-address">
+                      {lastLocation && !overide ? lastLocation.address : address}              
+                    </p>
+                    <p className="last-time">
+                      {lastLocation && !overide ? lastLocation.createdAt : createdAt}              
+                    </p>
+                  </div>
+                </StyledShadow>
+                <div className="actions">
+                  <StyledButton 
+                    onClick={this.sendLocation}>Share Location</StyledButton>
+                  <StyledButton
+                    className={recentLocationsOpen ? 'active': ''}
+                    onClick={this.toggleLocations}>Recent Places</StyledButton>
+                </div>
+              </StyledLocationHeading>
+            </StyledMainHeading>
+          </StyledShadow>
+    
+          <StyledMainContent>
+            <StyledShadow>
+              <StyledContainer>
+                { recentLocationsOpen ? (
+                  <StyledLocations>
+                  <ul>
+                    { locations.length ? locations.map((location, index) => {
+                      return (
+                        <li
+                          key={location.id}
+                          onClick={() => {this.loadLocation(location, index)}} >
+                          <div className="avatar">
+                            <Avatar
+                              src={location.avatar}
+                              name={location.user}/>
+                          </div>
+                          <div className="address">
+                            <h4><strong>{index + 1}. {location.address}</strong></h4>  
+                            <div className="location-time">
+                              <span><strong>{ location.createdAt }</strong></span>
+                            </div>                    
+                          </div>
+                        </li>
+                      )
+                    }) : (
+                    <li>
+                      <div>
+                        <h4>{'No recent locations available'}</h4>                      
                       </div>
                     </li>
-                  )
-                }) : (
-                <li>
-                  <div>
-                    <h4>{'No recent locations available'}</h4>                      
-                  </div>
-                </li>
-              ) }  
-              </ul>            
-            
-            </StyledLocations>
-            ) : null }
-            <StyledMap>
-              <Map
-                lat={lat}
-                lng={lng} />
-            
-            </StyledMap>        
-          </StyledContainer>
-        </StyledMainContent>
+                  ) }  
+                  </ul>            
+                
+                </StyledLocations>
+                ) : null }
+                <StyledMap>
+                  <StyledShadow>
+                    <Map
+                      lat={lat}
+                      lng={lng} />
+                  
+                      </StyledShadow>
+                  </StyledMap>
+              </StyledContainer>
+            </StyledShadow>
+          </StyledMainContent>
+        </StyledShadow>
       </StyledSection>
     )
   }
@@ -215,8 +226,12 @@ const StyledLocationHeading= styled.div`
       }
     }
 
-    & p.last-time {
+    & p.last-address {
       color: ${colors.prim_color};
+    }
+
+    & p.last-time {
+      color: ${colors.prim_light};
       margin-top: 10px;
       font-weight: 900;
       font-size: 16px;
@@ -224,21 +239,13 @@ const StyledLocationHeading= styled.div`
         font-size: 13px;
       }
     }
-
   }
-
 
   & button {
     width: 80%;
     padding: 10px;
     margin: 10px 10px 0px 10px;
     font-size: 15px;
-    font-weight: bold;
-    text-transform: uppercase;
-    border: 2px solid ${colors.prim_color};
-    background-color: ${colors.prim_light};
-    color: grey;
-    cursor: pointer;
     
     &:disabled {
       background-color: ${colors.disabled};
@@ -259,7 +266,6 @@ const StyledLocationHeading= styled.div`
 const StyledContainer= styled.div`
   position: relative;
   display: flex;
-  height: 50vh;
   @media (max-width: 768px) {
     flex-direction: column;
     height: auto;
@@ -286,7 +292,6 @@ const StyledLocations = styled.div`
     ::-webkit-scrollbar { 
       display: none;
     }
-
   }
 
   & li {

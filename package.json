@@ -19,6 +19,7 @@
     "normalize.css": "^8.0.0",
     "prop-type": "0.0.1",
     "react": "^16.4.1",
+    "react-dates": "^17.2.0",
     "react-dom": "^16.4.1",
     "react-google-maps": "^9.4.5",
     "react-icons": "^2.2.7",

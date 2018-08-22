@@ -130,7 +130,7 @@ const LoginFormWrapper = styled.div`
   right: 10px;
   border: 1px solid WhiteSmoke;
   border-top-left-radius: 10px;
-  background-color: transparent;
+  background-color: ${colors.overlay};
   overflow: hidden;
   box-shadow: 0 0 5px #000000;
   font-family: 'Cardo', serif;

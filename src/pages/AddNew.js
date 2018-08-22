@@ -1,9 +1,17 @@
 import React, {Component} from 'react'
 
-
+// DATE PICKER 3RD PARTY COMPONENENT CSS
+import 'react-dates/lib/css/_datepicker.css'
 import styled from 'styled-components'
-import {StyledSection, StyledMainHeading, StyledMainContent, StyledForm, StyledButton} from '../styles/section'
+import {
+  StyledSection, StyledMainHeading, StyledMainContent, StyledForm, StyledButton,
+  StyledShadow, StyledDatePicker
+} from '../styles/section'
 import * as colors from '../styles/variables'
+
+import moment from 'moment'
+import 'react-dates/initialize'
+import { SingleDatePicker } from 'react-dates'
 
 import TriangleIcon from 'react-icons/lib/md/arrow-drop-down'
 
@@ -11,7 +19,9 @@ import TriangleIcon from 'react-icons/lib/md/arrow-drop-down'
 class AddNew extends Component {
   state = {
     activeTab: 'todo',
-    showDescriptionInput: false
+    showDescriptionInput: false,
+    createdAt: moment(),
+    calendarFocused: false
   }
 
   setActiveTab = (tab) => {
@@ -25,11 +35,20 @@ class AddNew extends Component {
       return { showDescriptionInput: !prevState.showDescriptionInput }
     })    
   }
-  
-  
 
+   // Capture createdAt date
+  onDateChange = (createdAt) => {
+    if (createdAt) {
+      this.setState(() => ({ createdAt }))
+    }
+  }
+
+  // Capture focus change on datePicker
+  onFocusChange = ({ focused }) => {
+    this.setState(() => ({ calendarFocused: focused }))
+  }
+  
   render () {
-
     const { activeTab, showDescriptionInput } = this.state
     return (
       <StyledSection>
@@ -38,61 +57,93 @@ class AddNew extends Component {
           </StyledMainHeading>
     
           <StyledMainContent>
-            <StyledTabsWrapper>
-              <StyledTabHeader>
-                <div
-                  className={activeTab === 'todo' ? 'active': ''}
-                  onClick={() => {this.setActiveTab('todo')}} >
-                  <h2>Todo</h2>
-                </div>
-                <div className={activeTab === 'reminder' ? 'active': ''}
-                onClick={() => {this.setActiveTab('reminder')}} >
-                  <h2>Reminder</h2>
-                </div>
-              </StyledTabHeader>
-              <StyledTabs>
-                { activeTab === 'todo' ? (
-                <StyledForm>
-                  <div>
-                    <label><p>Define goal</p></label>
-                    <p>
-                      <input type="text" />
-                    </p>
+            <StyledShadow>
+              <StyledTabsWrapper>
+                <StyledTabHeader>
+                  <div
+                    className={activeTab === 'todo' ? 'active': ''}
+                    onClick={() => {this.setActiveTab('todo')}} >
+                    <h2>Todo</h2>
                   </div>
-                  <div>
-                    <label
-                      className="drop-down" 
-                      onClick={this.toggleDescription}><p>Describe more...</p><span><TriangleIcon /></span></label>
-                   {showDescriptionInput ? (
-                    <p>
-                    <textarea cols="10" rows="5"></textarea>
-                  </p>
-                   ) : null}
+                  <div className={activeTab === 'reminder' ? 'active': ''}
+                  onClick={() => {this.setActiveTab('reminder')}} >
+                    <h2>Reminder</h2>
                   </div>
-                  <div>
-                    <label><p>Priority...</p></label>
-                    <p>
-                      <select>
-                        <option selected value="low">Low</option>
-                        <option value="high">High</option>
-                        <option selected="selected" value="normal">Normal</option>
-                        <option value="special">Special</option>
-                      </select>
-                    </p>
+                </StyledTabHeader>
+                <StyledTabs>
+                  { activeTab === 'todo' ? (
+                  <StyledForm>
+                    <StyledShadow>
+                      <label><p>Define</p></label>
+                      <p>
+                        <input type="text" />
+                      </p>
+                    </StyledShadow>
+                    <StyledShadow>
+                      <label><p>Who's gonna do it?</p></label>
+                      <StyledShadow>
+                        <div className="contain-checkboxes">
+                          <div className="checkboxes" >
+                            <label htmlFor="">Marina</label>
+                            <input className="checkbox" type="checkbox" />
+                            <span className="checkmark"></span>
+                          </div>
+                          <div className="checkboxes" >
+                            <label htmlFor="">Zeljko</label>
+                            <input className="checkbox" type="checkbox" />
+                            <span className="checkmark"></span>
+                          </div>
+                        </div>
+                      </StyledShadow>
+                    </StyledShadow>
+                    <StyledShadow>
+                      <label><p>Pick a day</p></label>
+                      { /* DATE PICKER COMPONENT */ }
+                      <StyledDatePicker>
+                        <SingleDatePicker
+                          date={this.state.createdAt}
+                          onDateChange={this.onDateChange}
+                          focused={this.state.calendarFocused}
+                          onFocusChange={this.onFocusChange}
+                          numberOfMonths={1}
+                          isOutsideRange={() => false}
+                        />
+                      </StyledDatePicker>
+                    </StyledShadow>
+                    <StyledShadow>
+                      <label
+                        className="drop-down" 
+                        onClick={this.toggleDescription}><p>Describe more...</p><span><TriangleIcon /></span></label>
+                      {showDescriptionInput ? (
+                        <p>
+                        <textarea cols="10" rows="5"></textarea>
+                      </p>
+                      ) : null}
+                    </StyledShadow>
+                    <StyledShadow>
+                      <label><p>Priority...</p></label>
+                      <p>
+                        <select>
+                          <option selected value="low">Low</option>
+                          <option value="high">High</option>
+                          <option selected="selected" value="normal">Normal</option>
+                          <option value="special">Special</option>
+                        </select>
+                      </p>
+                    </StyledShadow>
+                    <StyledButton type="submit">
+                      Add
+                    </StyledButton>
+                  </StyledForm>
+                  ) : (
+                    <div>
+                    <label>Add reminder</label>
+                    <input type="text"/>
                   </div>
-                  <StyledButton type="submit">
-                    Add
-                  </StyledButton>
-                </StyledForm>
-                ) : (
-                  <div>
-                  <label>Add reminder</label>
-                  <input type="text"/>
-                </div>
-                ) }
-              </StyledTabs>
-            </StyledTabsWrapper>
-            
+                  ) }
+                </StyledTabs>
+              </StyledTabsWrapper>
+            </StyledShadow>            
           </StyledMainContent>
         </StyledSection>
     )
