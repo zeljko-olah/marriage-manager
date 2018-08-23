@@ -7,14 +7,16 @@ const Todo = require('../models/todo')
 
 // SAVE NEW TODO
 exports.saveTodo = (req, res, next) => {
-  const {text, completed, priority, userId} = req.body
+  const {title, who, priority, userId, date, description} = req.body
 
 
   const todo = new Todo({
     _id: mongoose.Types.ObjectId(),
     user: userId,
-    text,
-    completed,
+    title,
+    description,
+    who,
+    date,
     priority
   })
 
@@ -27,9 +29,12 @@ exports.saveTodo = (req, res, next) => {
         .then(user => {
           res.status(201).json({
             _id: doc._id,
-            text: doc.text,
+            title: doc.text,
+            description: doc.description,
+            who: doc.who,
             completed: doc.completed,
             priority: doc.priority,
+            date: doc.date,
             user: user.name,
             createdAt: moment(doc.created_at).format('h:mm a, MMM Do')
           })
@@ -48,7 +53,7 @@ exports.saveTodo = (req, res, next) => {
 exports.getTodos = (req, res, next) => {
   Todo.find()
     .limit(30)
-    .select('_id text user completed priority created_at')
+    .select('_id title description who user completed priority date created_at')
     .populate({path: 'user', select: '_id name avatar'})
     .exec()
     .then(docs => {
@@ -57,9 +62,12 @@ exports.getTodos = (req, res, next) => {
           const time = moment(doc.created_at)
           return {
             id: doc._id,
-            text: doc.text,
+            title: doc.text,
+            description: doc.description,
+            who: doc.who,
             completed: doc.completed,
             priority: doc.priority,
+            date: doc.date,
             createdAt: time,
             userId: doc.user._id,
             user: doc.user.name,

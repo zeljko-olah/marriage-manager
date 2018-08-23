@@ -71,6 +71,14 @@ export const StyledForm = styled.div`
     border: 2px solid Aquamarine;
   }
 
+  & input.error-title {
+    border: 2px solid ${colors.sec_color};
+  }
+
+  & .error-checkbox {
+    border: 2px solid ${colors.sec_color};
+  }
+
   & select option {
     background: #ffffff !important;
     color: #000000;

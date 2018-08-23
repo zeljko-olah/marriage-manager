@@ -20,5 +20,8 @@ export const SET_FLASH_MESSAGE = 'SET_FLASH_MESSAGE'
 export const SET_LOCATION = 'SET_LOCATION'
 export const GET_LOCATIONS = 'GET_LOCATIONS'
 
+// TODO
+export const ADD_TODO = 'ADD_TODO'
+
 
 

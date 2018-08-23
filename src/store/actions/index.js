@@ -28,3 +28,8 @@ export {
   setLocation,
   getLocations
 } from './location'
+
+// TODO RELATED ACTIONS
+export {
+  addTodo
+} from './todo'

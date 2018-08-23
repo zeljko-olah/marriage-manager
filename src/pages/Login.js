@@ -12,7 +12,7 @@ import MDArrowDown from 'react-icons/lib/md/keyboard-arrow-down'
 import { connect } from 'react-redux'
 import * as actions from '../store/actions'
 
-import { validateForm } from '../shared/utility'
+import { validateForm, clearForm } from '../shared/utility'
 
 class Login extends Component {
   
@@ -32,18 +32,18 @@ class Login extends Component {
     // Dispatch login
     login(email.value, password.value)
       .then((res) => {
-      this.clearForm(payload)
+      clearForm(payload)
     })
   }
 
   // CLEAR THE FORM
-  clearForm = (payload) => {
-    const { email, password } = payload
-    if (email && password) {
-      email.value = ''
-      password.value = ''
-    }
-  }
+  // clearForm = (payload) => {
+  //   const { email, password } = payload
+  //   if (email && password) {
+  //     email.value = ''
+  //     password.value = ''
+  //   }
+  // }
 
   onFocusHandler = () => {
     this.props.setErrors({ error: null })
