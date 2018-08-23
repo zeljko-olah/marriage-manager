@@ -1,13 +1,18 @@
 import React, {Component} from 'react'
 
-import AddTodo from '../components/AddNew/AddTodo'
-import AddReminder from '../components/AddNew/AddReminder'
+// REDUX
+import { connect } from 'react-redux'
+import * as actions from '../store/actions'
+
+import AddItem from '../components/AddNew/AddItem'
+
+// Clear form
+import { clearForm } from '../shared/utility'
 
 // Styled components
 import styled from 'styled-components'
 import {
-  StyledSection, StyledMainHeading, StyledMainContent, StyledForm, StyledButton,
-  StyledShadow, StyledDatePicker
+  StyledSection, StyledMainHeading, StyledMainContent, StyledShadow
 } from '../styles/section'
 import * as colors from '../styles/variables'
 
@@ -16,7 +21,8 @@ class AddNew extends Component {
 
   // STATE
   state = {
-    activeTab: 'todo'
+    activeTab: 'todo',
+    error: ''
   }
 
   // HANDLERS
@@ -25,10 +31,97 @@ class AddNew extends Component {
       activeTab: tab,
     })    
   }
+
+  handleClearError = () => {
+    this.setState({
+      error: ''
+    }) 
+  }
+
+  handleSubmit = (inputs, time) => {
+    // Define variables
+    const { activeTab } = this.state
+    const { user, addTodo, setFlashMessage } = this.props
+    const {title, description, priority } = inputs
+    let desc
+    let who
+    let task = activeTab === 'todo' ? 'todo' : 'reminder'
+    let message = activeTab === 'todo' ?
+      'somebody has to do it!' : 'who needs to be reminded?'
+    
+    // Validate
+    if (title && title.value.trim() === '') {
+      setFlashMessage({
+        type: 'error',
+        flashMessage: `Hey ${user.name}, define a ${task} first!`
+      })
+      this.setState({error: 'title'})
+      return
+    }
+
+    if (!inputs['marina'].checked && !inputs['zeljko'].checked ) {
+      setFlashMessage({
+        type: 'error',
+        flashMessage: `Hey ${user.name}, ${message}`
+      })
+      this.setState({error: 'checkboxes'})
+      return
+    } else if (!inputs['marina'].checked) {
+      who = 'zeljko'
+    } else if (!inputs['zeljko'].checked) {
+      who = 'marina'
+    } else {
+      who = 'both'
+    }
+
+    if (description === undefined) {
+      desc = 'No description'
+    } else {
+      desc = description.value
+    }
+    
+    // Prepare payload
+    const payload = {
+      userId: user.id,
+      title: title.value,
+      description: desc,
+      who,
+      priority: priority.value,
+      date: time.valueOf()
+    }
+    
+    // Persist to database and to store
+    if (activeTab === 'todo') {
+      addTodo(payload)
+      .then(() => {
+        setFlashMessage({
+          type: 'success',
+          flashMessage: `Todo successfully added :)`
+        })
+        // Clear form
+        clearForm(inputs)
+      })
+    } else {
+      alert('Add reminder!')
+       // Clear form
+       clearForm(inputs)
+      // AddReminder(payload)
+      // .then(() => {
+      //   setFlashMessage({
+      //     type: 'success',
+      //     flashMessage: `Todo successfully added :)`
+      //   })
+      //   // Clear form
+      //   clearForm(inputs)
+      //   this.setState({ time: moment() })
+      // })
+    }
+  }
+  
   
   // RENDER METHOD
   render () {
-    const { activeTab } = this.state
+    const { activeTab, error } = this.state
     return (
       <StyledSection>
           <StyledMainHeading>
@@ -37,7 +130,11 @@ class AddNew extends Component {
     
           <StyledMainContent>
             <StyledShadow>
+
+              { /* TABS */ }
               <StyledTabsWrapper>
+
+                { /* TAB HEADER */ }
                 <StyledTabHeader>
                   <div
                     className={activeTab === 'todo' ? 'active': ''}
@@ -49,8 +146,24 @@ class AddNew extends Component {
                     <h2>Reminder</h2>
                   </div>
                 </StyledTabHeader>
+
+                { /* TABS */ }
                 <StyledTabs>
-                  { activeTab === 'todo' ? <AddTodo /> : <AddReminder /> }
+                  { activeTab === 'todo' ? (
+                    <AddItem
+                      title="Define"
+                      who="Who's gonna do it?"
+                      error={error}
+                      clearError={this.handleClearError}
+                      submit={this.handleSubmit} />
+                  ) : (
+                    <AddItem
+                      title="Set a reminder for"
+                      who="Who to remind?"
+                      error={error}
+                      clearError={this.handleClearError}
+                      submit={this.handleSubmit} />
+                  ) }
                 </StyledTabs>
               </StyledTabsWrapper>
             </StyledShadow>            
@@ -60,7 +173,21 @@ class AddNew extends Component {
   }
 } 
 
-export default AddNew
+// MAP REDUX STATE TO PROPS
+const mapStateToProps = state => {
+  return {
+    user: state.auth.user,
+    socket: state.chat.socket
+  }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  addTodo: (todo) => dispatch(actions.addTodo(todo)),
+  setFlashMessage: (flash) => dispatch(actions.setFlashMessage(flash))
+})
+
+// EXPORT
+export default connect( mapStateToProps, mapDispatchToProps )( AddNew )
 
 const StyledTabsWrapper = styled.div`
   padding: 10px 50px;

@@ -1,12 +1,7 @@
 import React from 'react'
-import styled from 'styled-components'
-import * as colors from '../../styles/variables'
 import { StyledButton, StyledForm, StyledShadow } from '../../styles/section'
 
- 
-
 const LoginFrom = ({ submit, onFocus, error }) => {
-
   let payload = {}
   
   return (

@@ -5,14 +5,13 @@ import LoginForm from '../components/Login/LoginForm'
 import styled from 'styled-components'
 import * as colors from '../styles/variables'
 
-
 import MDArrowUp from 'react-icons/lib/md/keyboard-arrow-up'
 import MDArrowDown from 'react-icons/lib/md/keyboard-arrow-down'
 
 import { connect } from 'react-redux'
 import * as actions from '../store/actions'
 
-import { validateForm, clearForm } from '../shared/utility'
+import { validateForm } from '../shared/utility'
 
 class Login extends Component {
   
@@ -32,7 +31,6 @@ class Login extends Component {
     // Dispatch login
     login(email.value, password.value)
       .then((res) => {
-      clearForm(payload)
     })
   }
 
