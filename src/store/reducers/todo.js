@@ -3,26 +3,24 @@ import * as actionTypes from '../actions/actionTypes'
 import { updateObject } from '../../shared/utility'
 
 const initialState = {
-    todo: null
+    todos: null
 }
 
-// SET LOCATION
+// ADD TODO
 const addTodo = (state, action) => {
-    return updateObject( state, action.todo)
+    return updateObject(state, action.todo)
 }
 
-// // GET LOCATIONS
-// const getLocations = (state, action) => {
-//     return updateObject( state, {
-//       locations: action.locations
-//     })
-// }
+// GET TODOS
+const getTodos = (state, action) => {
+    return updateObject(state, action.todos)
+}
 
 // DEFINE REDUCER
 const reducer = ( state = initialState, action ) => {
     switch ( action.type ) {
         case actionTypes.ADD_TODO: return addTodo(state, action)
-        // case actionTypes.GET_LOCATIONS: return getLocations(state, action)
+        case actionTypes.GET_TODOS: return getTodos(state, action)
         default:
             return state
     }

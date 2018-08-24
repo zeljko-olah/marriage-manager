@@ -41,7 +41,7 @@ class AddNew extends Component {
   handleSubmit = (inputs, time) => {
     // Define variables
     const { activeTab } = this.state
-    const { user, addTodo, setFlashMessage, roomUsers } = this.props
+    const { user, addTodo, addReminder, setFlashMessage, roomUsers } = this.props
     const {title, description, priority } = inputs
     let desc
     let who
@@ -102,19 +102,15 @@ class AddNew extends Component {
         clearForm(inputs, roomUsers)
       })
     } else {
-      alert('Add reminder!')
-       // Clear form
-       clearForm(inputs)
-      // AddReminder(payload)
-      // .then(() => {
-      //   setFlashMessage({
-      //     type: 'success',
-      //     flashMessage: `Todo successfully added :)`
-      //   })
-      //   // Clear form
-      //   clearForm(inputs)
-      //   this.setState({ time: moment() })
-      // })
+      addReminder(payload)
+      .then(() => {
+        setFlashMessage({
+          type: 'success',
+          flashMessage: `Reminder successfully added :)`
+        })
+        // Clear form
+        clearForm(inputs, roomUsers)
+      })
     }
   }
   
@@ -187,6 +183,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => ({
   addTodo: (todo) => dispatch(actions.addTodo(todo)),
+  addReminder: (reminder) => dispatch(actions.addReminder(reminder)),
   setFlashMessage: (flash) => dispatch(actions.setFlashMessage(flash))
 })
 

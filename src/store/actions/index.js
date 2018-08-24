@@ -31,5 +31,11 @@ export {
 
 // TODO RELATED ACTIONS
 export {
-  addTodo
+  addTodo,
+  getTodos
 } from './todo'
+
+// REMINDER RELATED ACTIONS
+export {
+  addReminder
+} from './reminder'

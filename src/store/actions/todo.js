@@ -31,29 +31,29 @@ export const addTodo = (todo) => {
   }
 }
 
-// export const getLocationsSuccess = (locations) => {
-//   return {
-//       type: actionTypes.GET_LOCATIONS,
-//       locations
-//   }
-// }
+export const getTodosSuccess = (todos) => {
+  return {
+      type: actionTypes.GET_TODOS,
+      todos
+  }
+}
 
-// export const getLocationsFail = (error) => {
-//   return {
-//       type: actionTypes.GET_LOCATIONS,
-//       error
-//   }
-// }
+export const getTodosFail = (error) => {
+  return {
+      type: actionTypes.GET_TODOS,
+      error
+  }
+}
 
-// export const getLocations = () => {
-//   return dispatch => {
-//     return axios.get('api/location/all')
-//       .then(response => {
-//         dispatch(getLocationsSuccess(response.data.locations))
-//         return response.data
-//       })
-//       .catch(err => {
-//         dispatch(getLocationsFail(err))
-//       })
-//   }
-// }
+export const getTodos = () => {
+  return dispatch => {
+    return axios.get('api/todos/index')
+      .then(response => {
+        dispatch(getTodosSuccess(response.data))
+        return response.data
+      })
+      .catch(err => {
+        dispatch(getTodosFail(err))
+      })
+  }
+}
