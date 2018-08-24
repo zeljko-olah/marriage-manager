@@ -6,6 +6,7 @@ export const allMessagesCount = (state) => {
 
 export const selectUserName = (state) => state.auth.user.name
 export const selectAllMessages = (state) => state.chat.messages
+export const selectAllRoomUsers = (state) => state.chat.allRoomUsers.map(u => u.name)
 
 export const selectUnreadCount = createSelector(
   selectUserName, selectAllMessages, (userName, messages) => {

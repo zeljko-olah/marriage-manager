@@ -38,7 +38,7 @@ export const getCoordsCallback = (callback) => {
 }
 
 // CLEAR FORM
-export const clearForm = (form) => {
+export const clearForm = (form, roomUsers) => {
   const { email, password, title, description, priority } = form
   if (email) {
     email.value = ''
@@ -52,11 +52,11 @@ export const clearForm = (form) => {
   if (description) {
     description.value = ''
   }
-  if (form['marina'].checked) {
-    form['marina'].checked = false
+  if (form[roomUsers[0]].checked) {
+    form[roomUsers[0]].checked = false
   }
-  if (form['zeljko'].checked) {
-    form['zeljko'].checked = false
+  if (form[roomUsers[1]].checked) {
+    form[roomUsers[1]].checked = false
   }
   if (priority) {
     priority.value = 'normal'

@@ -3,6 +3,7 @@ import React, {Component} from 'react'
 // REDUX
 import { connect } from 'react-redux'
 import * as actions from '../store/actions'
+import { selectAllRoomUsers } from '../store/selectors/chat'
 
 import AddItem from '../components/AddNew/AddItem'
 
@@ -15,7 +16,6 @@ import {
   StyledSection, StyledMainHeading, StyledMainContent, StyledShadow
 } from '../styles/section'
 import * as colors from '../styles/variables'
-
 
 class AddNew extends Component {
 
@@ -41,7 +41,7 @@ class AddNew extends Component {
   handleSubmit = (inputs, time) => {
     // Define variables
     const { activeTab } = this.state
-    const { user, addTodo, setFlashMessage } = this.props
+    const { user, addTodo, setFlashMessage, roomUsers } = this.props
     const {title, description, priority } = inputs
     let desc
     let who
@@ -59,17 +59,17 @@ class AddNew extends Component {
       return
     }
 
-    if (!inputs['marina'].checked && !inputs['zeljko'].checked ) {
+    if (!inputs[roomUsers[0]].checked && !inputs[roomUsers[1]].checked ) {
       setFlashMessage({
         type: 'error',
         flashMessage: `Hey ${user.name}, ${message}`
       })
       this.setState({error: 'checkboxes'})
       return
-    } else if (!inputs['marina'].checked) {
-      who = 'zeljko'
-    } else if (!inputs['zeljko'].checked) {
-      who = 'marina'
+    } else if (!inputs[roomUsers[0]].checked) {
+      who = roomUsers[1]
+    } else if (!inputs[roomUsers[1]].checked) {
+      who = roomUsers[0]
     } else {
       who = 'both'
     }
@@ -99,7 +99,7 @@ class AddNew extends Component {
           flashMessage: `Todo successfully added :)`
         })
         // Clear form
-        clearForm(inputs)
+        clearForm(inputs, roomUsers)
       })
     } else {
       alert('Add reminder!')
@@ -122,6 +122,7 @@ class AddNew extends Component {
   // RENDER METHOD
   render () {
     const { activeTab, error } = this.state
+    const { roomUsers } = this.props
     return (
       <StyledSection>
           <StyledMainHeading>
@@ -153,6 +154,7 @@ class AddNew extends Component {
                     <AddItem
                       title="Define"
                       who="Who's gonna do it?"
+                      roomUsers={roomUsers}
                       error={error}
                       clearError={this.handleClearError}
                       submit={this.handleSubmit} />
@@ -160,6 +162,7 @@ class AddNew extends Component {
                     <AddItem
                       title="Set a reminder for"
                       who="Who to remind?"
+                      roomUsers={roomUsers}
                       error={error}
                       clearError={this.handleClearError}
                       submit={this.handleSubmit} />
@@ -177,7 +180,8 @@ class AddNew extends Component {
 const mapStateToProps = state => {
   return {
     user: state.auth.user,
-    socket: state.chat.socket
+    socket: state.chat.socket,
+    roomUsers: selectAllRoomUsers(state)
   }
 }
 

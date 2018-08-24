@@ -61,7 +61,7 @@ class AddReminder extends Component {
 
   render() {
     const { showDescriptionInput } = this.state
-    const { title, who, error, clearError } = this.props
+    const { title, who, error, clearError, roomUsers } = this.props
     
     return (
       <StyledForm
@@ -83,21 +83,21 @@ class AddReminder extends Component {
           <StyledShadow className={error === 'checkboxes' ? 'error-checkbox': ''}>
             <div className="contain-checkboxes">
               <div className="checkboxes" >
-                <label htmlFor="">Marina</label>
+                <label htmlFor="">{roomUsers[0]}</label>
                   <input
                     className="checkbox"
                     type="checkbox"
                     value="marina"
-                    ref={input => {this.inputs['marina'] = input}}  />
+                    ref={input => {this.inputs[roomUsers[0]] = input}}  />
                 <span className="checkmark"></span>
               </div>
               <div className="checkboxes" >
-                <label htmlFor="">Zeljko</label>
+                <label htmlFor="">{roomUsers[1]}</label>
                   <input
                     className="checkbox"
                     type="checkbox"
                     value='zeljko'
-                    ref={input => {this.inputs['zeljko'] = input}} />
+                    ref={input => {this.inputs[roomUsers[1]] = input}} />
                 <span className="checkmark"></span>
               </div>
             </div>

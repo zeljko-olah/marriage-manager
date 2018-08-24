@@ -104,10 +104,10 @@ class Chat extends Component {
 			this.chatOpened = open
     })
 
-    socket.on(events.UPDATE_USER_LIST, (users) => {
+    socket.on(events.UPDATE_USER_LIST, (activeUsers, allRoomUsers) => {
       const { setUsers } = this.props
-      this.setState({users})
-      setUsers(users)
+      this.setState({activeUsers})
+      setUsers(activeUsers, allRoomUsers)
       
     })
 
@@ -427,7 +427,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch) => ({
   socketInit: (socket) => dispatch(actions.socketInit(socket)),
   getMessages: () => dispatch(actions.getMessages()),
-  setUsers: (users) => dispatch(actions.setUsers(users)),
+  setUsers: (activeUsers, allRoomUsers) => dispatch(actions.setUsers(activeUsers, allRoomUsers)),
   saveMessage: (message) => dispatch(actions.saveMessage(message)),
   toggleChat: (showChat) => dispatch( actions.toggleChat(showChat) ),
   emailChatHistory: (messages, user) => dispatch( actions.emailChatHistory(messages, user) ),

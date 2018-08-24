@@ -23,10 +23,11 @@ export const getMessagesSuccess = (messages) => {
   }
 }
 
-export const setUsers = (users) => {
+export const setUsers = (activeUsers, allRoomUsers) => {
   return {
     type: actionTypes.SET_USERS,
-    users
+    activeUsers,
+    allRoomUsers
   }
 }
 
