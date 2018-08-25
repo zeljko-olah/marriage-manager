@@ -59,9 +59,6 @@ class AddNew extends Component {
       return
     }
 
-    alert(roomUsers[0])
-    alert(inputs[roomUsers[0]])
-
     if (!inputs[roomUsers[0]].checked && !inputs[roomUsers[1]].checked ) {
       setFlashMessage({
         type: 'error',

@@ -32,7 +32,8 @@ export {
 // TODO RELATED ACTIONS
 export {
   addTodo,
-  getTodos
+  getTodos,
+  getTodosForDate
 } from './todo'
 
 // REMINDER RELATED ACTIONS

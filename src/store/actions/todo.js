@@ -45,14 +45,30 @@ export const getTodosFail = (error) => {
   }
 }
 
-export const getTodos = () => {
+// export const getTodos = () => {
+//   return dispatch => {
+//     return axios.get('api/todos/index')
+//       .then(response => {
+//         dispatch(getTodosSuccess(response.data))
+//         return response.data
+//       })
+//       .catch(err => {
+//         dispatch(getTodosFail(err))
+//       })
+//   }
+// }
+
+export const getTodosForDate = (date) => {
   return dispatch => {
-    return axios.get('api/todos/index')
+    return axios.get('api/todos/index', {
+      params: {date: date}
+    })
       .then(response => {
         dispatch(getTodosSuccess(response.data))
         return response.data
       })
       .catch(err => {
+        console.log(err)
         dispatch(getTodosFail(err))
       })
   }

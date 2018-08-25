@@ -51,7 +51,15 @@ exports.saveTodo = (req, res, next) => {
 
 // GET LATEST 30 TODOS
 exports.getTodos = (req, res, next) => {
-  Todo.find()
+  console.log('QUERY', req.query)
+  const { date } = req.query
+  const start = moment(Number(date)).startOf('day').valueOf()
+  const end = moment(Number(date)).endOf('day').valueOf()
+  console.log(start < date)
+  console.log(date)
+  console.log(end > date)
+
+  Todo.find().where('date').gte(start).lte(end)
     .limit(30)
     .select('_id title description who user completed priority date created_at')
     .populate({path: 'user', select: '_id name avatar'})

@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import moment from 'moment'
 
 // REDUX
 import { connect } from 'react-redux'
@@ -6,13 +7,13 @@ import * as actions from '../store/actions'
 import { selectAllRoomUsers } from '../store/selectors/chat'
 
 import Todo from '../components/Todos/Todo'
+import TodosMenu from '../components/Todos/TodosMenu'
 
 // Styled components
 // import styled from 'styled-components'
 import {
   StyledSection, StyledMainHeading, StyledMainContent, StyledShadow
 } from '../styles/section'
-// import * as colors from '../styles/variables'
 
 class Todos extends Component {
 
@@ -21,9 +22,17 @@ class Todos extends Component {
 
   // LIFECYCLE HOOKS
   componentDidMount = () => {
-    const { getTodos } = this.props
-    getTodos().then(() => {
-      this.setState({todos: this.props.loadedTodos})
+    const { getTodosForDate } = this.props
+    getTodosForDate(moment().valueOf()).then((data) => {
+      console.log('Succes!!!!')
+      console.log(data)
+    })
+  }
+
+  handleDateUpdate = (date) => {
+    const { getTodosForDate } = this.props
+    getTodosForDate(date).then(() => {
+      console.log('Success after update date!')
     })
   }
 
@@ -42,7 +51,8 @@ class Todos extends Component {
             <StyledShadow>
 
               { /* TODOS */ }
-              <h2>todos...</h2>
+              <TodosMenu
+                dateUpdate={this.handleDateUpdate} />
               { todos && todos.map(todo => (
                 <Todo
                   key={todo.id}
@@ -69,7 +79,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => ({
   setFlashMessage: (flash) => dispatch(actions.setFlashMessage(flash)),
-  getTodos: () => dispatch(actions.getTodos())
+  getTodos: () => dispatch(actions.getTodos()),
+  getTodosForDate: (date) => dispatch(actions.getTodosForDate(date))
 
 })
 

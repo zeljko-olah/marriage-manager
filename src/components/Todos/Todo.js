@@ -14,13 +14,13 @@ import ActiveIcon from 'react-icons/lib/md/directions-run'
 import MoreHorizIcon from 'react-icons/lib/md/more-horiz'
 
 const handleAvatars = (todo, users) => {
-  const user = todo.who.toLowerCase()
+  const user = todo.who
 
   let avatar
   if (user === 'both') {
     avatar = [users[0], users[1]]
   } else {
-    avatar = [users.find(u => u.name = user)]
+    avatar = [users.find(u => u.name === user)]
   }
 
   return avatar.map(a => (
@@ -44,7 +44,8 @@ const Todo = ({todo, users}) => {
   }
 
   let day
-  const formatDate = moment(todo.date).format('do MMM')
+  const formatDate = moment(todo.date).format('MMM D')
+  console.log(formatDate)
   let todoTime = moment(todo.date)
   let today = moment()
   if (today.isSame(todoTime, 'd')) {
@@ -90,19 +91,19 @@ const Todo = ({todo, users}) => {
           </StyledShadow>
             <div className="todo-content">
               <div className="">
-                <span>Task is for {todo.who}</span>
+                <span>Task is for <strong>{todo.who}</strong></span>
               </div>
               <div className="todo-avatar">
                 <span>{avatarForUser }</span>
               </div>
               <div className="schedule">
-                <span>to do it {day === 'today' ? day : `on ${formatDate}`}</span>
+                <span>to do it <strong>{day === 'today' ? day : `on ${formatDate}`}</strong></span>
               </div>
               <div>
-                <span>with {todo.priority} priority.</span>
+                <span>with <strong>{todo.priority}</strong> priority.</span>
               </div>
               <div className="todo-description">
-                <span>See description <MoreHorizIcon /></span>
+                <span><strong>See description <MoreHorizIcon /></strong></span>
                 <div>{todo.description}</div>
               </div>
             </div>
@@ -137,7 +138,9 @@ const StyledTodo = styled.div`
   }
 
   & h2 {
-    font-size: 20px;
+    font-size: 17px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
     padding-left: 10px;
     color: ${colors.prim_color};
     margin: 5px 5px;
@@ -177,9 +180,7 @@ const StyledTodo = styled.div`
     color:${colors.ter_yellow};
 
     & > div {
-      // text-transform: uppercase;
-      font-weight: 900;
-      font-size: 12px;
+      font-size: 10px;
       margin-left: 5px;
       font-style: italic;
     }
@@ -192,7 +193,7 @@ const StyledTodo = styled.div`
   }
 
   & .todo-avatar span div {
-    width: 40px;
+    width: 30px;
   }
 
   & .todo-description {
@@ -209,10 +210,12 @@ const StyledTodo = styled.div`
     & div {
       position: absolute;
       min-width: 200px;
-      top: -60px;
+      top: -50px;
       right: 10px;
       display: block;
       padding: 10px;
+      font-size: 13px;
+      font-weight: bold;
       background-color: ${colors.ter_yellow};
       color: ${colors.prim_font};
       border-radius: 3px;
@@ -221,7 +224,7 @@ const StyledTodo = styled.div`
       &:after {
         content: '';
         position: absolute;
-        top: 100%;
+        top: 90%;
         left: 90%;
         border-top: 8px solid ${colors.ter_yellow};
         border-left: 8px solid transparent;
@@ -239,6 +242,11 @@ const StyledTodo = styled.div`
     top: 30%;
     right: 10%;
     transform: rotate(45deg);
+  }
+
+  & strong {
+    text-transform: uppercase;
+    color: ${colors.prim_color};
   }
 
   .completed .todo-labeled {

@@ -94,9 +94,15 @@ export default connect( mapStateToProps, mapDispatchToProps )( Header )
 
 
 const StyledHeader = styled.header`
+  position: fixed;
+  z-index: 10000;
+  width: 100vw;
+  top: 0;
+  right: 0;
   margin: 0;
   padding: 10px 30px;
   border-bottom: 2px solid ${colors.prim_color};
+  background: ${colors.overlay};
   display: flex;
   justify-content: space-between;
   align-items: center;
