@@ -45,7 +45,7 @@ exports.user_signup = (req, res, next) => {
               name,
               password: hash,
               // req.file due to upload.single middleware
-              avatar: req.file.path
+              avatar: req.file.path.replace('public/', '')
             })
 
             // Save the user
@@ -154,7 +154,7 @@ exports.user_login = (req, res, next) => {
               name: user[0].name,
               email: user[0].email,
               rooms: user[0].rooms,
-              avatar: user[0].avatar.replace('public/', '')
+              avatar: user[0].avatar
             }
           })
         }

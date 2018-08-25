@@ -71,7 +71,7 @@ exports.getTodos = (req, res, next) => {
             createdAt: time,
             userId: doc.user._id,
             user: doc.user.name,
-            avatar: doc.user.avatar.replace('public/', '')
+            avatar: doc.user.avatar
           }
         })
       })

@@ -3,7 +3,7 @@ import React, {Component} from 'react'
 // REDUX
 import { connect } from 'react-redux'
 import * as actions from '../store/actions'
-// import { selectAllRoomUsers } from '../store/selectors/chat'
+import { selectAllRoomUsers } from '../store/selectors/chat'
 
 import Todo from '../components/Todos/Todo'
 
@@ -31,7 +31,7 @@ class Todos extends Component {
 
   // RENDER METHOD
   render () {
-    const { todos } = this.props
+    const { todos, users } = this.props
     return (
       <StyledSection>
           <StyledMainHeading>
@@ -45,7 +45,9 @@ class Todos extends Component {
               <h2>todos...</h2>
               { todos && todos.map(todo => (
                 <Todo
-                  todo={todo} />
+                  key={todo.id}
+                  todo={todo}
+                  users={users} />
               ))}
               
             </StyledShadow>            
@@ -60,7 +62,8 @@ const mapStateToProps = state => {
   return {
     user: state.auth.user,
     socket: state.chat.socket,
-    todos: state.todo.todos
+    todos: state.todo.todos,
+    users: selectAllRoomUsers(state)
   }
 }
 

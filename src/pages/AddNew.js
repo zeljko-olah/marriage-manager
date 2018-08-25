@@ -3,7 +3,7 @@ import React, {Component} from 'react'
 // REDUX
 import { connect } from 'react-redux'
 import * as actions from '../store/actions'
-import { selectAllRoomUsers } from '../store/selectors/chat'
+import { selectAllRoomUsernames } from '../store/selectors/chat'
 
 import AddItem from '../components/AddNew/AddItem'
 
@@ -41,7 +41,7 @@ class AddNew extends Component {
   handleSubmit = (inputs, time) => {
     // Define variables
     const { activeTab } = this.state
-    const { user, addTodo, addReminder, setFlashMessage, roomUsers } = this.props
+    const { user, addTodo, addReminder, setFlashMessage, roomUsers, history } = this.props
     const {title, description, priority } = inputs
     let desc
     let who
@@ -59,6 +59,9 @@ class AddNew extends Component {
       return
     }
 
+    alert(roomUsers[0])
+    alert(inputs[roomUsers[0]])
+
     if (!inputs[roomUsers[0]].checked && !inputs[roomUsers[1]].checked ) {
       setFlashMessage({
         type: 'error',
@@ -74,7 +77,7 @@ class AddNew extends Component {
       who = 'both'
     }
 
-    if (description === undefined) {
+    if (!description) {
       desc = 'No description'
     } else {
       desc = description.value
@@ -100,6 +103,8 @@ class AddNew extends Component {
         })
         // Clear form
         clearForm(inputs, roomUsers)
+        history.push('/todos')
+
       })
     } else {
       addReminder(payload)
@@ -177,7 +182,7 @@ const mapStateToProps = state => {
   return {
     user: state.auth.user,
     socket: state.chat.socket,
-    roomUsers: selectAllRoomUsers(state)
+    roomUsers: selectAllRoomUsernames(state)
   }
 }
 

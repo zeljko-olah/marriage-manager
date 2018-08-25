@@ -19,7 +19,7 @@ module.exports = (socket) => {
   const getDefaultRoom = async () => {
     const room = await Room.findOne({default: true})
     .select('name')
-    .populate('users', 'name -_id')
+    .populate('users')
     .exec()
     return room
   }

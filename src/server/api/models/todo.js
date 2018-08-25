@@ -5,7 +5,7 @@ const todoSchema = mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String },
     who: { type: String, required: true },
-    completed: { type: Boolean, default: false },
+    completed: { type: String, default: 'active' },
     priority: {type: String, required: true, default: 'normal'},
     date: { type: Number, required: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true  }

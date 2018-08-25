@@ -18,7 +18,7 @@ import moment from 'moment'
 import TriangleIcon from 'react-icons/lib/md/arrow-drop-down'
 
 // COMPONENT
-class AddReminder extends Component {
+class AddItem extends Component {
   
   // STATE
   state = {
@@ -152,5 +152,5 @@ class AddReminder extends Component {
   }
 }
 
-export default AddReminder
+export default AddItem
 

@@ -7,7 +7,13 @@ export const StyledSection = styled.section`
   border: 3px solid ${colors.prim_color};
   border-top-left-radius: 20px;
   overflow: hidden;
+  height: 70vh;
+  overflow-y: scroll;
+  ::-webkit-scrollbar { 
+    display: none;
+  }
   @media (max-width: 768px) {
+    height: auto;
     overflow: auto;
     border: none;
     border-top-left-radius: 0;
