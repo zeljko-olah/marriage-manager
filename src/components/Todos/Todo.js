@@ -55,16 +55,36 @@ class Todo extends Component {
       return {showMarkTodo: !prevState.showMarkTodo}
     })
   }
+
   closeMarkTodos = () => {
     this.setState({
       showMarkTodo: false
     })
   }
+
+  handleUpdateTodoStatus = (id, status) => {
+    const { updateTodoStatus } = this.props
+    updateTodoStatus(id, status)
+    this.closeMarkTodos()
+  }
+
+  handleDeleteTodo = (id) => {
+    const { deleteTodo } = this.props
+    deleteTodo(id)
+    this.closeMarkTodos()
+  }
+
+  handleRenewTodo = (id) => {
+    const { renewTodo } = this.props
+    renewTodo(id)
+    this.closeMarkTodos()
+  }
+  
   
 
   render () {
     const { showMoreInfo, showMarkTodo } = this.state
-    const {todo, users} = this.props
+    const {todo, users, isToday, currentDate} = this.props
 
     // Display avatar which task is it
     let avatarForUser;
@@ -77,7 +97,6 @@ class Todo extends Component {
   
     let day
     const formatDate = moment(todo.date).format('MMM D')
-    console.log(formatDate)
     let todoTime = moment(todo.date)
     let today = moment()
     if (today.isSame(todoTime, 'd')) {
@@ -122,13 +141,31 @@ class Todo extends Component {
                 <MoreIcon onClick={this.handleMarkTodos} />
                   <WithOutsideClick executeMethod={this.closeMarkTodos}>
                     <div 
-                      className={showMarkTodo ? 'show-todo-actions todo-actions': 'hide-todo-actions todo-actions'}>
-                      { todo.completed !== 'completed' ? <CheckIcon className="done"/> : null }
-                      { todo.completed !== 'active' ? <ActiveIcon className="active"/> : null }
-                      { todo.completed !== 'failed' ? <FailIcon className="fail"/> : null }
-                      <RenewIcon className="renew"/>
+                      className={showMarkTodo ? 'show-todo-actions todo-actions': 'hide-todo-actions todo-actions'} >
+                      { todo.completed !== 'completed' ? (
+                        <CheckIcon
+                          className="done"
+                          onClick={() => {this.handleUpdateTodoStatus(todo.id, 'completed')}} />
+                      ) : null }
+                      { todo.completed !== 'active' ? (
+                        <ActiveIcon 
+                          className="active"
+                          onClick={() => {this.handleUpdateTodoStatus(todo.id, 'active')}} />
+                      ) : null }
+                      { todo.completed !== 'failed' ? (
+                        <FailIcon
+                          className="fail"
+                          onClick={() => {this.handleUpdateTodoStatus(todo.id, 'failed')}} />
+                      ) : null }
+                      { !isToday ? (
+                        <RenewIcon
+                        className="renew"
+                        onClick={() => {this.handleRenewTodo(todo.id)}} />
+                      ) : null }
                       <EditIcon className="edit"/>
-                      <DeleteIcon className="delete"/>
+                      <DeleteIcon
+                        className="delete"
+                        onClick={() => {this.handleDeleteTodo(todo.id)}} />
                     </div>
                   </WithOutsideClick>
                 </div>
@@ -152,8 +189,7 @@ class Todo extends Component {
                   <div>{todo.description}</div>
                 </div>
               </div>
-              
-          </StyledShadow>
+            </StyledShadow>
         </div>
       </StyledTodo>
     )
@@ -352,12 +388,13 @@ const StyledTodo = styled.div`
   .todo-labeled {
     position: absolute;
     color: white;
-    font-size: 10px;
+    font-size: 20px;
     text-transform: uppercase;
     padding: 3px;
     top: 40%;
-    right: 10%;
-    transform: rotate(45deg);
+    right: 30%;
+    transform: rotate(30deg);
+    z-index: 1000;
   }
 
   & strong {
@@ -367,12 +404,14 @@ const StyledTodo = styled.div`
 
   .completed .todo-labeled {
     color: ${colors.success};
-    border: 1px solid ${colors.success};
+    border: 2px solid ${colors.success};
+    // background-color: ${colors.success_light};
   }
 
   .failed .todo-labeled {
     color: ${colors.sec_color};
     border: 1px solid ${colors.sec_color};
+    background-color: ${colors.sec_light};
   }
 
   .active .todo-labeled {

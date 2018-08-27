@@ -23,6 +23,8 @@ export const GET_LOCATIONS = 'GET_LOCATIONS'
 // TODO
 export const ADD_TODO = 'ADD_TODO'
 export const GET_TODOS = 'GET_TODOS'
+export const SET_CURRENT_DATE = 'SET_CURRENT_DATE'
+
 
 // REMINDER
 export const ADD_REMINDER = 'ADD_REMINDER'

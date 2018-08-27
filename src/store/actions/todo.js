@@ -1,6 +1,8 @@
 import axios from '../../http'
 import * as actionTypes from './actionTypes'
 
+import { setFlashMessage } from './index'
+
 // SUCCESS
 export const addTodoSuccess = (todo) => {
   return {
@@ -72,4 +74,53 @@ export const getTodosForDate = (date) => {
         dispatch(getTodosFail(err))
       })
   }
+}
+
+export const updateTodoStatus = (id, status) => {
+  return dispatch => {
+    return axios.patch('api/todos/completed', {id, status})
+      .then(response => {
+        dispatch(setFlashMessage(response.data))
+        return response.data
+      })
+      .catch(err => {
+        console.log(err)
+        dispatch(setFlashMessage(err.data))
+      })
+  }
+}
+
+export const deleteTodo = (id) => {
+  return dispatch => {
+    return axios.delete('api/todos/delete/', {params: {id: id}})
+      .then(response => {
+        dispatch(setFlashMessage(response.data))
+        return response.data
+      })
+      .catch(err => {
+        console.log(err)
+        dispatch(setFlashMessage(err.data))
+      })
+  }
+}
+
+export const renewTodo = (id, date) => {
+  return dispatch => {
+    return axios.patch('api/todos/renew', {id, date})
+      .then(response => {
+        dispatch(setFlashMessage(response.data))
+        return response.data
+      })
+      .catch(err => {
+        console.log(err)
+        dispatch(setFlashMessage(err.data))
+      })
+  }
+}
+
+export const setCurrentDate = (date) => {
+  return {
+    type: actionTypes.SET_CURRENT_DATE,
+    date
+}
 }

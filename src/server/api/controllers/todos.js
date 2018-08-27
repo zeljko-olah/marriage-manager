@@ -102,3 +102,66 @@ exports.getTodos = (req, res, next) => {
     })
 }
 
+exports.updateTodoStatus = (req, res, next) => {
+  console.log('REQ.BODY:::', req.body)
+  const { id, status } = req.body
+
+  Todo.update({ _id: id }, { $set: {completed: status} })
+    .exec()
+    .then(doc => {
+      console.log(doc)
+      res.status(200).json({
+        type: 'success',
+        flashMessage: 'Great. Status updated'
+      })
+    })
+    .catch(err => {
+      res.status(500).json({
+        type: 'error',
+        flashMessage: 'Something went wrong'
+      })
+    })
+}
+
+exports.renewTodo = (req, res, next) => {
+  console.log('REQ.BODY:::', req.body)
+  const { id, date } = req.body
+  const now = moment().valueOf()
+
+  Todo.update({ _id: id }, { $set: {date: now} })
+    .exec()
+    .then(doc => {
+      console.log(doc)
+      res.status(200).json({
+        type: 'success',
+        flashMessage: 'Great. Todo renewed'
+      })
+    })
+    .catch(err => {
+      res.status(500).json({
+        type: 'error',
+        flashMessage: 'Something went wrong'
+      })
+    })
+}
+
+exports.deleteTodo = (req, res, next) => {
+  const { id } = req.query
+
+  Todo.deleteOne({ _id: id })
+    .exec()
+    .then(doc => {
+      console.log(doc)
+      res.status(200).json({
+        type: 'success',
+        flashMessage: 'Great. Todo deleted'
+      })
+    })
+    .catch(err => {
+      res.status(500).json({
+        type: 'error',
+        flashMessage: 'Something went wrong'
+      })
+    })
+}
+

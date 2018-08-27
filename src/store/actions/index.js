@@ -33,7 +33,11 @@ export {
 export {
   addTodo,
   getTodos,
-  getTodosForDate
+  getTodosForDate,
+  updateTodoStatus,
+  deleteTodo,
+  renewTodo,
+  setCurrentDate
 } from './todo'
 
 // REMINDER RELATED ACTIONS

@@ -5,7 +5,7 @@ import moment from 'moment'
 import { connect } from 'react-redux'
 import * as actions from '../store/actions'
 import { selectAllRoomUsers } from '../store/selectors/chat'
-import { selectNewTodosFirst } from '../store/selectors/todos'
+import { selectNewTodosFirst, selectTodosDate, selectIsToday } from '../store/selectors/todos'
 
 import Todo from '../components/Todos/Todo'
 import TodosMenu from '../components/Todos/TodosMenu'
@@ -19,29 +19,49 @@ import {
 class Todos extends Component {
 
   // STATE
-  // state = {}
 
   // LIFECYCLE HOOKS
   componentDidMount = () => {
     const { getTodosForDate } = this.props
     getTodosForDate(moment().valueOf()).then((data) => {
-      console.log('Succes!!!!')
-      console.log(data)
     })
   }
 
+  // HANDLERS  
   handleDateUpdate = (date) => {
-    const { getTodosForDate } = this.props
+    const { getTodosForDate, setCurrentDate } = this.props
+    setCurrentDate(moment(date))
     getTodosForDate(date).then(() => {
       console.log('Success after update date!')
     })
   }
 
-  // HANDLERS
+  handleUpdateStatus = (id, status) => {
+    const { updateTodoStatus, getTodosForDate, todosDate } = this.props
+    updateTodoStatus(id, status).then(() => {
+      getTodosForDate(todosDate)
+    })
+  }
+
+  handleDeleteTodo = (id) => {
+    const { deleteTodo, getTodosForDate, todosDate } = this.props
+    deleteTodo(id).then(() => {
+      getTodosForDate(todosDate)
+    })
+  }
+
+  handleRenewTodo = (id) => {
+    const { renewTodo, getTodosForDate, todosDate, setCurrentDate } = this.props
+    renewTodo(id, todosDate).then(() => {
+      getTodosForDate(moment().valueOf())
+      setCurrentDate(moment())
+    })
+  }
+  
 
   // RENDER METHOD
   render () {
-    const { todos, users } = this.props
+    const { todos, users, isToday, todosDate, updateTodoStatus } = this.props
     return (
       <StyledSection>
           <StyledMainHeading>
@@ -53,12 +73,17 @@ class Todos extends Component {
 
               { /* TODOS */ }
               <TodosMenu
-                dateUpdate={this.handleDateUpdate} />
+                dateUpdate={this.handleDateUpdate}
+                todosDate={moment(todosDate)} />
               { todos && todos.map(todo => (
                 <Todo
                   key={todo.id}
                   todo={todo}
-                  users={users} />
+                  users={users}
+                  isToday={isToday}
+                  updateTodoStatus={this.handleUpdateStatus}
+                  deleteTodo={this.handleDeleteTodo}
+                  renewTodo={this.handleRenewTodo}/>
               ))}
               
             </StyledShadow>            
@@ -74,14 +99,21 @@ const mapStateToProps = state => {
     user: state.auth.user,
     socket: state.chat.socket,
     todos: selectNewTodosFirst(state),
-    users: selectAllRoomUsers(state)
+    users: selectAllRoomUsers(state),
+    todosDate: selectTodosDate(state),
+    isToday: selectIsToday(state)
   }
 }
 
 const mapDispatchToProps = (dispatch) => ({
   setFlashMessage: (flash) => dispatch(actions.setFlashMessage(flash)),
   getTodos: () => dispatch(actions.getTodos()),
-  getTodosForDate: (date) => dispatch(actions.getTodosForDate(date))
+  getTodosForDate: (date) => dispatch(actions.getTodosForDate(date)),
+  updateTodoStatus: (id, status) => dispatch(actions.updateTodoStatus(id, status)),
+  deleteTodo: (id) => dispatch(actions.deleteTodo(id)),
+  setCurrentDate: (date) => dispatch(actions.setCurrentDate(date)),
+  renewTodo: (id, todosDate) => dispatch(actions.renewTodo(id, todosDate))
+  
 
 })
 

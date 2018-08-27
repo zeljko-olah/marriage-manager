@@ -23,9 +23,12 @@ class TodosMenu extends Component {
 
   componentDidUpdate = (prevProps, prevState) => {
     const { time } = this.state
-    const { dateUpdate } = this.props
+    const { dateUpdate, todosDate } = this.props
     if (prevState.time.valueOf() !== time.valueOf()) {
       dateUpdate(time.valueOf())
+    }
+    if (prevProps.todosDate !== todosDate) {
+      this.onDateChange(moment(todosDate))
     }
   }
 
