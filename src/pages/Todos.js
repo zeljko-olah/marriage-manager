@@ -5,6 +5,7 @@ import moment from 'moment'
 import { connect } from 'react-redux'
 import * as actions from '../store/actions'
 import { selectAllRoomUsers } from '../store/selectors/chat'
+import { selectNewTodosFirst } from '../store/selectors/todos'
 
 import Todo from '../components/Todos/Todo'
 import TodosMenu from '../components/Todos/TodosMenu'
@@ -72,7 +73,7 @@ const mapStateToProps = state => {
   return {
     user: state.auth.user,
     socket: state.chat.socket,
-    todos: state.todo.todos,
+    todos: selectNewTodosFirst(state),
     users: selectAllRoomUsers(state)
   }
 }

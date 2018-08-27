@@ -9,6 +9,7 @@ import * as colors from '../../styles/variables'
 import { StyledShadow, StyledDatePicker } from '../../styles/section'
 
 import CalendarIcon from 'react-icons/lib/md/date-range'
+import MoreIcon from 'react-icons/lib/md/more-vert'
 
 
 class TodosMenu extends Component {
@@ -46,23 +47,28 @@ class TodosMenu extends Component {
     <StyledShadow>
       <StyledTodosMenu>
         <div className="todo-calendar">
-          { /* DATE PICKER COMPONENT */ }
-          <StyledDatePicker>
-            <SingleDatePicker
-              date={this.state.time}
-              onDateChange={this.onDateChange}
-              focused={this.state.calendarFocused}
-              onFocusChange={this.onFocusChange}
-              numberOfMonths={1}
-              isOutsideRange={day => false}
-            />
-          </StyledDatePicker>
-          <CalendarIcon />
+          <StyledShadow>
+            { /* DATE PICKER COMPONENT */ }
+            <StyledDatePicker>
+              <SingleDatePicker
+                date={this.state.time}
+                onDateChange={this.onDateChange}
+                focused={this.state.calendarFocused}
+                onFocusChange={this.onFocusChange}
+                numberOfMonths={1}
+                isOutsideRange={day => false}
+              />
+            </StyledDatePicker>
+            <CalendarIcon />
+          </StyledShadow>
         </div>
         <div className="status-menu">
-          <span>Active</span>
-          <span>Completed</span>
-          <span>Failed</span>
+          <StyledShadow>
+            <p>Percentage {'70%'}</p>
+          </StyledShadow>
+        </div>
+        <div className="more-icon">
+          <MoreIcon />
         </div>
       </StyledTodosMenu>
     </StyledShadow>
@@ -74,9 +80,11 @@ export default TodosMenu
 
 const StyledTodosMenu = styled.div`
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: ${colors.prim_light};
 
   & input {
-    // width: 1%;
     margin: 0 auto;
     padding: 8px;
     color: #fefeee;
@@ -90,14 +98,24 @@ const StyledTodosMenu = styled.div`
     width: 30%;
   }
   & .status-menu {
-    flex-grow: 1;
+    // flex-grow: 1;
+    text-align: center;
+    text-transform: uppercase;
+
+    & p {
+      margin: 0;
+    }
   }
 
   & .todo-calendar svg {
-    color: ${colors.prim_light}
     position: absolute;
     font-size: 30px;
     top: 7px;
     right: 5px;
+  }
+
+  & .more-icon {
+    font-size: 30px;
+    cursor: pointer;
   }
 `

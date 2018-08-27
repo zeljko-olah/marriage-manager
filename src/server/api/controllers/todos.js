@@ -51,13 +51,24 @@ exports.saveTodo = (req, res, next) => {
 
 // GET LATEST 30 TODOS
 exports.getTodos = (req, res, next) => {
-  console.log('QUERY', req.query)
   const { date } = req.query
   const start = moment(Number(date)).startOf('day').valueOf()
   const end = moment(Number(date)).endOf('day').valueOf()
-  console.log(start < date)
-  console.log(date)
-  console.log(end > date)
+  const yesterday = moment(Number(date)).startOf('day').add(-1, 'days').valueOf()
+
+  Todo.find().where('date').lte(start).gte(yesterday)
+    .exec()
+    .then((todos) => {
+      const active = todos.filter(t => t.completed === 'active')
+      console.log('ACTIVE', active)
+
+      if (active.length) {
+        active.forEach(a => {
+          console.log('AAA:::', a)
+        Todo.findByIdAndUpdate(a._id, { $set: { completed: 'failed' }}).exec()
+      })        
+      }
+    })
 
   Todo.find().where('date').gte(start).lte(end)
     .limit(30)

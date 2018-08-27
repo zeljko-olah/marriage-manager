@@ -1,6 +1,7 @@
-import React from 'react'
+import React, {Component} from 'react'
 import moment from 'moment'
 
+import WithOutsideClick from '../../hoc/WithOutsideClick'
 import Avatar from '../../components/user/Avatar'
 
 // Styled components
@@ -8,10 +9,14 @@ import styled from 'styled-components'
 import { StyledShadow } from '../../styles/section'
 import * as colors from '../../styles/variables'
 
-import CheckIcon from 'react-icons/lib/md/done-all'
+import CheckIcon from 'react-icons/lib/md/done'
 import FailIcon from 'react-icons/lib/md/thumb-down'
 import ActiveIcon from 'react-icons/lib/md/directions-run'
 import MoreHorizIcon from 'react-icons/lib/md/more-horiz'
+import MoreIcon from 'react-icons/lib/md/more-vert'
+import DeleteIcon from  'react-icons/lib/md/delete'
+import EditIcon from  'react-icons/lib/md/edit'
+import RenewIcon from  'react-icons/lib/md/refresh'
 
 const handleAvatars = (todo, users) => {
   const user = todo.who
@@ -32,89 +37,127 @@ const handleAvatars = (todo, users) => {
 }
 
 // COMPONENT
-const Todo = ({todo, users}) => {
+class Todo extends Component {
 
-  // Display avatar which task is it
-  let avatarForUser;
+  state = {
+    showMoreInfo: false,
+    showMarkTodo: false
+  }
+
+  handleShowMore = () => {
+    this.setState((prevState) => {
+      return {showMoreInfo: !prevState.showMoreInfo}
+    })
+  }
+
+  handleMarkTodos = () => {
+    this.setState((prevState) => {
+      return {showMarkTodo: !prevState.showMarkTodo}
+    })
+  }
+  closeMarkTodos = () => {
+    this.setState({
+      showMarkTodo: false
+    })
+  }
   
-  if (!users.length) {
-    avatarForUser = null
-  } else {
-    avatarForUser = handleAvatars(todo, users)
-  }
 
-  let day
-  const formatDate = moment(todo.date).format('MMM D')
-  console.log(formatDate)
-  let todoTime = moment(todo.date)
-  let today = moment()
-  if (today.isSame(todoTime, 'd')) {
-   day = 'today'
-  }
+  render () {
+    const { showMoreInfo, showMarkTodo } = this.state
+    const {todo, users} = this.props
 
-  let statusClassName
-  let statusIcon
-  switch (todo.completed) {
-    case 'completed':
-      statusClassName = 'completed'
-      statusIcon = (
-        <span><CheckIcon /></span>
-      )
-      break
-    case 'failed':
-      statusClassName = 'failed'
-      statusIcon = (
-        <span><FailIcon /></span>
-      )
-      break
-    default:
-      statusClassName = 'active'
-      statusIcon = (
-        <span><ActiveIcon /></span>
-      )
-      break
-  }
-
-
-
-  return (
-    <StyledTodo>
-      <div className = {statusClassName}>
-        <StyledShadow>
+    // Display avatar which task is it
+    let avatarForUser;
+    
+    if (!users.length) {
+      avatarForUser = null
+    } else {
+      avatarForUser = handleAvatars(todo, users)
+    }
+  
+    let day
+    const formatDate = moment(todo.date).format('MMM D')
+    console.log(formatDate)
+    let todoTime = moment(todo.date)
+    let today = moment()
+    if (today.isSame(todoTime, 'd')) {
+     day = 'today'
+    }
+  
+    let statusClassName
+    let statusIcon
+    switch (todo.completed) {
+      case 'completed':
+        statusClassName = 'completed'
+        statusIcon = (
+          <span><CheckIcon /></span>
+        )
+        break
+      case 'failed':
+        statusClassName = 'failed'
+        statusIcon = (
+          <span><FailIcon /></span>
+        )
+        break
+      default:
+        statusClassName = 'active'
+        statusIcon = (
+          <span><ActiveIcon /></span>
+        )
+        break
+    }
+  
+    return (
+      <StyledTodo>
+        <div className = {statusClassName}>
           <StyledShadow>
-            <div className="todo-header">
-              <h2>{todo.title}</h2> 
-              <div className="check-icon">
-                { statusIcon }
+            <StyledShadow>
+              <div
+                className="todo-header">
+                <div className="check-icon">
+                  { statusIcon }
+                </div>
+                <h2 onClick={this.handleShowMore}>{todo.title}</h2> 
+                <div className="mark-todo-icon">
+                <MoreIcon onClick={this.handleMarkTodos} />
+                  <WithOutsideClick executeMethod={this.closeMarkTodos}>
+                    <div 
+                      className={showMarkTodo ? 'show-todo-actions todo-actions': 'hide-todo-actions todo-actions'}>
+                      { todo.completed !== 'completed' ? <CheckIcon className="done"/> : null }
+                      { todo.completed !== 'active' ? <ActiveIcon className="active"/> : null }
+                      { todo.completed !== 'failed' ? <FailIcon className="fail"/> : null }
+                      <RenewIcon className="renew"/>
+                      <EditIcon className="edit"/>
+                      <DeleteIcon className="delete"/>
+                    </div>
+                  </WithOutsideClick>
+                </div>
               </div>
-            </div>
+            </StyledShadow>
+              <div className={showMoreInfo ? 'todo-content show' : 'todo-content hide'}>
+                <div className="">
+                  <span>Task is for <strong>{todo.who}</strong></span>
+                </div>
+                <div className="todo-avatar">
+                  <span>{avatarForUser }</span>
+                </div>
+                <div className="schedule">
+                  <span>Do it <strong>{day === 'today' ? day : `on ${formatDate}`}</strong></span>
+                </div>
+                <div>
+                  <span>With <strong>{todo.priority}</strong> priority.</span>
+                </div>
+                <div className="todo-description">
+                  <span><strong>See description <MoreHorizIcon /></strong></span>
+                  <div>{todo.description}</div>
+                </div>
+              </div>
+              
           </StyledShadow>
-            <div className="todo-content">
-              <div className="">
-                <span>Task is for <strong>{todo.who}</strong></span>
-              </div>
-              <div className="todo-avatar">
-                <span>{avatarForUser }</span>
-              </div>
-              <div className="schedule">
-                <span>to do it <strong>{day === 'today' ? day : `on ${formatDate}`}</strong></span>
-              </div>
-              <div>
-                <span>with <strong>{todo.priority}</strong> priority.</span>
-              </div>
-              <div className="todo-description">
-                <span><strong>See description <MoreHorizIcon /></strong></span>
-                <div>{todo.description}</div>
-              </div>
-            </div>
-            
-        </StyledShadow>
-        <div className="todo-labeled">
-          {statusClassName}!
         </div>
-      </div>
-    </StyledTodo>
-  )
+      </StyledTodo>
+    )
+  }
 }
 
 export default Todo
@@ -124,24 +167,25 @@ const StyledTodo = styled.div`
 
   & .todo-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
+    cursor: pointer;
   }
-  & .completed .todo-header {
-    border-left: 10px solid ${colors.success};
+  & .completed .todo-header h2 {
+    // border-left: 5px solid ${colors.success};
   }
-  & .failed .todo-header {
-    border-left: 10px solid ${colors.sec_color};
+  & .failed .todo-header h2{
+    // border-left: 5px solid ${colors.sec_color};
   }
-  & .active .todo-header {
-    border-left: 10px solid ${colors.prim_color};
+  & .active .todo-header h2 {
+    // border-left: 5px solid ${colors.prim_color};
   }
 
   & h2 {
     font-size: 17px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    padding-left: 10px;
+    padding-left: 5px;
     color: ${colors.prim_color};
     margin: 5px 5px;
   }
@@ -155,6 +199,66 @@ const StyledTodo = styled.div`
   }
   & .failed h2 {
     color: ${colors.sec_color};
+  }
+
+  & .mark-todo-icon {
+    position: relative;
+    flex-grow: 1;
+    text-align: right;
+    font-size: 20px;
+    cursor: pointer;
+    color: ${colors.prim_light};
+
+    & .todo-actions {
+      position: absolute;
+      top: -9px;
+      right: -9px;
+      padding: 9px;
+      transition: all .3s ease-in; 
+      transform-origin: top right;
+
+      & svg {
+        margin-right: 5px;
+        color: grey;
+        transition: all .1s linear;
+
+        &:hover {
+          transform: scale(1.1) translateX(10%);
+
+        }
+      }
+
+      & svg.done:hover {
+        color: ${colors.success};
+      }
+      & svg.active:hover {
+        color: ${colors.prim_color};
+      }
+      & svg.fail:hover {
+        color: ${colors.sec_color};
+      }
+      & svg.delete:hover {
+        color: ${colors.sec_light};
+      }
+      & svg.edit:hover {
+        color: ${colors.boy_color};
+      }
+      & svg.renew:hover {
+        color: ${colors.girl_color};
+      }
+    }
+
+    .show-todo-actions {
+      background-color: ${colors.overlay};
+      opacity: 1;
+      transform: scale(1);
+      margin-right: 0;
+    }
+    .hide-todo-actions {
+      margin-right: 15px;
+      opacity: 0;
+      transform: scale(0);
+    }
   }
 
   & .check-icon {
@@ -178,12 +282,23 @@ const StyledTodo = styled.div`
     justify-content: flex-start;
     align-items: center;
     color:${colors.ter_yellow};
+    transition: all .3s ease-in;
 
     & > div {
       font-size: 10px;
       margin-left: 5px;
       font-style: italic;
     }
+  }
+  & .hide {
+    opacity: 0;
+    height: 0;
+    transform: translateY(-10%);
+  }
+  & .show {
+    opacity: 1;
+    height: 20px;
+    transform: translateY(0);
   }
 
   & .todo-avatar {
@@ -203,10 +318,11 @@ const StyledTodo = styled.div`
     }
   }
   & .todo-description:hover {
+
     & span {
     cursor: pointer;
-
     }
+
     & div {
       position: absolute;
       min-width: 200px;
@@ -236,10 +352,10 @@ const StyledTodo = styled.div`
   .todo-labeled {
     position: absolute;
     color: white;
-    font-size: 15px;
+    font-size: 10px;
     text-transform: uppercase;
     padding: 3px;
-    top: 30%;
+    top: 40%;
     right: 10%;
     transform: rotate(45deg);
   }
@@ -251,12 +367,12 @@ const StyledTodo = styled.div`
 
   .completed .todo-labeled {
     color: ${colors.success};
-    border: 2px solid ${colors.success};
+    border: 1px solid ${colors.success};
   }
 
   .failed .todo-labeled {
     color: ${colors.sec_color};
-    border: 2px solid ${colors.sec_color};
+    border: 1px solid ${colors.sec_color};
   }
 
   .active .todo-labeled {
