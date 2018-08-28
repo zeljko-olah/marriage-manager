@@ -5,7 +5,9 @@ import { updateObject } from '../../shared/utility'
 
 const initialState = {
     todos: null,
-    date: moment()
+    date: moment(),
+    sortType: '',
+    sortCriteria: ''
 }
 
 // ADD TODO
@@ -23,12 +25,21 @@ const setCurrentDate = (state, action) => {
     return updateObject(state, {date: action.date})
 }
 
+// SET SORT PARAMETERS
+const sortTodos = (state, action) => {
+    return updateObject(state, {
+      sortType: action.sortType,
+      sortCriteria: action.criteria
+    })
+}
+
 // DEFINE REDUCER
 const reducer = ( state = initialState, action ) => {
     switch ( action.type ) {
         case actionTypes.ADD_TODO: return addTodo(state, action)
         case actionTypes.GET_TODOS: return getTodos(state, action)
         case actionTypes.SET_CURRENT_DATE: return setCurrentDate(state, action)
+        case actionTypes.SORT_TODOS: return sortTodos(state, action)
         default:
             return state
     }

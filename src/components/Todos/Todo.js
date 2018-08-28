@@ -195,8 +195,10 @@ class Todo extends Component {
                   </WithOutsideClick>
                 </form>
                )  }
-
-                <div className="mark-todo-icon">
+               <div className="todo-avatar">
+                <span>{avatarForUser }</span>
+              </div>
+              <div className="mark-todo-icon">
                 <MoreIcon onClick={this.handleMarkTodos} />
                   <WithOutsideClick executeMethod={this.closeMarkTodos}>
                     <div 
@@ -235,9 +237,6 @@ class Todo extends Component {
               <div className={showMoreInfo ? 'todo-content show' : 'todo-content hide'}>
                 <div className="">
                   <span>Task is for <strong>{todo.who}</strong></span>
-                </div>
-                <div className="todo-avatar">
-                  <span>{avatarForUser }</span>
                 </div>
                 <div className="schedule">
                   <span>Do it <strong>{day === 'today' ? day : `on ${formatDate}`}</strong></span>

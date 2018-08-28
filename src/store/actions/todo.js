@@ -138,5 +138,13 @@ export const setCurrentDate = (date) => {
   return {
     type: actionTypes.SET_CURRENT_DATE,
     date
+  }
 }
+
+export const sortTodos = (criteria, sortType) => {
+  return {
+    type: actionTypes.SORT_TODOS,
+    criteria,
+    sortType
+  }
 }

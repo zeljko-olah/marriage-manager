@@ -5,7 +5,9 @@ import moment from 'moment'
 import { connect } from 'react-redux'
 import * as actions from '../store/actions'
 import { selectAllRoomUsers } from '../store/selectors/chat'
-import { selectNewTodosFirst, selectTodosDate, selectIsToday } from '../store/selectors/todos'
+import { 
+  selectPercentage, selectTodosDate, selectIsToday, selectFilteredTodos, selectTodoStatusCount
+ } from '../store/selectors/todos'
 
 import Todo from '../components/Todos/Todo'
 import TodosMenu from '../components/Todos/TodosMenu'
@@ -66,21 +68,53 @@ class Todos extends Component {
       getTodosForDate(todosDate)
     })
   }
+
+  handleSortByUser = (userName) => {
+    const { sortTodos } = this.props
+    let type = 'user'
+    if (!userName) {
+      type = ''
+    }
+    sortTodos(userName, type)
+  }
+
+  handleSortByStatus = (status) => {
+    const { sortTodos } = this.props
+    let type = 'status'
+    if (!status) {
+      type = ''
+    }
+    sortTodos(status, type)
+  }
+
+  handleCongratulations = () => {
+    const { setFlashMessage } = this.props
+    setFlashMessage({
+      type: 'success',
+      flashMessage: `Congratulations. You did it all!`
+    })
+  }
   
 
   // RENDER METHOD
   render () {
-    const { todos, users, isToday, todosDate } = this.props
+    const { todos, users, isToday, todosDate, percentage, filterBy, statusCount } = this.props
 
     let listTodos = null
 
-    if (todos.length === 0) {
+    if (todos && todos.length === 0) {
       listTodos = (
         <StyledShadow>
           <StyledNoTodos>
-            <div>
-              No Tasks for {moment(todosDate).format('MMM Do, YYYY')}
-            </div>
+            {filterBy === '' ? (
+              <div>
+                No Tasks for {moment(todosDate).format('MMM Do, YYYY')}
+              </div>
+            ) : (
+              <div>
+                No Tasks for desired filter.
+              </div>
+            )}
           </StyledNoTodos>
         </StyledShadow>
       ) 
@@ -112,7 +146,13 @@ class Todos extends Component {
               { /* TODOS */ }
               <TodosMenu
                 dateUpdate={this.handleDateUpdate}
-                todosDate={moment(todosDate)} />
+                todosDate={moment(todosDate)}
+                percentage={percentage}
+                statusCount={statusCount}
+                users={users}
+                sortByUser={this.handleSortByUser}
+                sortByStatus={this.handleSortByStatus}
+                congratulations={this.handleCongratulations} />
               {listTodos}
               
             </StyledShadow>            
@@ -127,10 +167,14 @@ const mapStateToProps = state => {
   return {
     user: state.auth.user,
     socket: state.chat.socket,
-    todos: selectNewTodosFirst(state),
+    // todos: selectNewTodosFirst(state),
+    todos: selectFilteredTodos(state),
+    percentage: selectPercentage(state),
+    statusCount: selectTodoStatusCount(state),
     users: selectAllRoomUsers(state),
     todosDate: selectTodosDate(state),
-    isToday: selectIsToday(state)
+    isToday: selectIsToday(state),
+    filterBy: state.todo.sortType
   }
 }
 
@@ -142,7 +186,8 @@ const mapDispatchToProps = (dispatch) => ({
   deleteTodo: (id) => dispatch(actions.deleteTodo(id)),
   setCurrentDate: (date) => dispatch(actions.setCurrentDate(date)),
   renewTodo: (id, todosDate) => dispatch(actions.renewTodo(id, todosDate)),
-  editTodoTitle: (id, title) => dispatch(actions.editTodoTitle(id, title))
+  editTodoTitle: (id, title) => dispatch(actions.editTodoTitle(id, title)),
+  sortTodos: (criteria, type) => dispatch(actions.sortTodos(criteria, type))
 })
 
 // EXPORT
