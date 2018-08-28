@@ -62,7 +62,7 @@ class TodosMenu extends Component {
                 isOutsideRange={day => false}
               />
             </StyledDatePicker>
-            <CalendarIcon />
+            <CalendarIcon className="calendar-icon" />
           </StyledShadow>
         </div>
         <div className="status-menu">
@@ -96,12 +96,22 @@ const StyledTodosMenu = styled.div`
     cursor: pointer;
   }
 
+  & .todo-calendar svg {
+    top: 5px;
+    right: 10px;
+  }
+
+  & .todo-calendar .DayPickerNavigation_button {
+    width: 40px;
+    height: 30px;
+    top: 20px;
+  }
+
   & .todo-calendar {
     position: relative;
     width: 30%;
   }
   & .status-menu {
-    // flex-grow: 1;
     text-align: center;
     text-transform: uppercase;
 
@@ -110,11 +120,11 @@ const StyledTodosMenu = styled.div`
     }
   }
 
-  & .todo-calendar svg {
+  & .todo-calendar .calendar-icon {
     position: absolute;
     font-size: 30px;
-    top: 7px;
-    right: 5px;
+    top: 22px;
+    right: 14px;
   }
 
   & .more-icon {

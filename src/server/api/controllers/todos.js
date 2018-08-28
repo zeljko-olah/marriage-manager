@@ -112,7 +112,7 @@ exports.updateTodoStatus = (req, res, next) => {
       console.log(doc)
       res.status(200).json({
         type: 'success',
-        flashMessage: 'Great. Status updated'
+        flashMessage: `${status === 'failed' ? 'Ooops':'Great'}. Task is now ${status}`
       })
     })
     .catch(err => {
@@ -128,21 +128,57 @@ exports.renewTodo = (req, res, next) => {
   const { id, date } = req.body
   const now = moment().valueOf()
 
-  Todo.update({ _id: id }, { $set: {date: now} })
-    .exec()
-    .then(doc => {
-      console.log(doc)
-      res.status(200).json({
-        type: 'success',
-        flashMessage: 'Great. Todo renewed'
+  // Todo.update({ _id: id }, { $set: {date: now} })
+  Todo.findById(id)
+  .exec()
+  .then(doc => {
+    console.log('DOC', doc)
+    const clone = doc
+    clone._id = mongoose.Types.ObjectId()
+    clone.isNew = true
+    clone.date = now
+    clone.completed = 'active'
+
+    clone
+      .save()
+      .then(clonedTodo => {
+        console.log('CLONE:::', clonedTodo)
+        res.status(200).json({
+          type: 'success',
+          flashMessage: 'Great. Todo renewed'
+        })
       })
-    })
-    .catch(err => {
-      res.status(500).json({
-        type: 'error',
-        flashMessage: 'Something went wrong'
+      .catch(err => {
+        console.log('ERR', err)
       })
+  })
+  .catch(err => {
+    res.status(500).json({
+      type: 'error',
+      flashMessage: 'Something went wrong'
     })
+  })
+}
+
+exports.editTodoTitle = (req, res, next) => {
+  console.log('REQ.BODY:::', req.body)
+  const { id, title } = req.body
+
+  Todo.update({ _id: id }, { $set: {title: title} })
+  .exec()
+  .then(doc => {
+    console.log('DOC', doc)
+    res.status(200).json({
+      type: 'success',
+      flashMessage: 'Great. Todo title edited'
+    })
+  })
+  .catch(err => {
+    res.status(500).json({
+      type: 'error',
+      flashMessage: 'Something went wrong'
+    })
+  })
 }
 
 exports.deleteTodo = (req, res, next) => {

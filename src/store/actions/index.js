@@ -37,7 +37,8 @@ export {
   updateTodoStatus,
   deleteTodo,
   renewTodo,
-  setCurrentDate
+  setCurrentDate,
+  editTodoTitle
 } from './todo'
 
 // REMINDER RELATED ACTIONS

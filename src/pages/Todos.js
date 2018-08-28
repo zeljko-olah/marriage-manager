@@ -11,7 +11,8 @@ import Todo from '../components/Todos/Todo'
 import TodosMenu from '../components/Todos/TodosMenu'
 
 // Styled components
-// import styled from 'styled-components'
+import styled from 'styled-components'
+import * as colors from '../styles/variables'
 import {
   StyledSection, StyledMainHeading, StyledMainContent, StyledShadow
 } from '../styles/section'
@@ -32,6 +33,7 @@ class Todos extends Component {
     const { getTodosForDate, setCurrentDate } = this.props
     setCurrentDate(moment(date))
     getTodosForDate(date).then(() => {
+      // @TODO - loading
       console.log('Success after update date!')
     })
   }
@@ -57,11 +59,47 @@ class Todos extends Component {
       setCurrentDate(moment())
     })
   }
+
+  handleEditTodoTitle = (id, title) => {
+    const { editTodoTitle, getTodosForDate, todosDate } = this.props
+    editTodoTitle(id, title).then(() => {
+      getTodosForDate(todosDate)
+    })
+  }
   
 
   // RENDER METHOD
   render () {
-    const { todos, users, isToday, todosDate, updateTodoStatus } = this.props
+    const { todos, users, isToday, todosDate } = this.props
+
+    let listTodos = null
+
+    if (todos.length === 0) {
+      listTodos = (
+        <StyledShadow>
+          <StyledNoTodos>
+            <div>
+              No Tasks for {moment(todosDate).format('MMM Do, YYYY')}
+            </div>
+          </StyledNoTodos>
+        </StyledShadow>
+      ) 
+    }
+
+    if (todos && todos.length) {
+      listTodos = todos.map(todo => (
+        <Todo
+          key={todo.id}
+          todo={todo}
+          users={users}
+          isToday={isToday}
+          updateTodoStatus={this.handleUpdateStatus}
+          deleteTodo={this.handleDeleteTodo}
+          renewTodo={this.handleRenewTodo}
+          editTodoTitle={this.handleEditTodoTitle}/>
+      ))
+    }
+
     return (
       <StyledSection>
           <StyledMainHeading>
@@ -75,16 +113,7 @@ class Todos extends Component {
               <TodosMenu
                 dateUpdate={this.handleDateUpdate}
                 todosDate={moment(todosDate)} />
-              { todos && todos.map(todo => (
-                <Todo
-                  key={todo.id}
-                  todo={todo}
-                  users={users}
-                  isToday={isToday}
-                  updateTodoStatus={this.handleUpdateStatus}
-                  deleteTodo={this.handleDeleteTodo}
-                  renewTodo={this.handleRenewTodo}/>
-              ))}
+              {listTodos}
               
             </StyledShadow>            
           </StyledMainContent>
@@ -112,10 +141,22 @@ const mapDispatchToProps = (dispatch) => ({
   updateTodoStatus: (id, status) => dispatch(actions.updateTodoStatus(id, status)),
   deleteTodo: (id) => dispatch(actions.deleteTodo(id)),
   setCurrentDate: (date) => dispatch(actions.setCurrentDate(date)),
-  renewTodo: (id, todosDate) => dispatch(actions.renewTodo(id, todosDate))
-  
-
+  renewTodo: (id, todosDate) => dispatch(actions.renewTodo(id, todosDate)),
+  editTodoTitle: (id, title) => dispatch(actions.editTodoTitle(id, title))
 })
 
 // EXPORT
 export default connect( mapStateToProps, mapDispatchToProps )( Todos )
+
+const StyledNoTodos = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+
+  & div {
+    color: ${colors.prim_light};
+    font-size: 20px;
+    text-transform: uppercase;
+  }
+`

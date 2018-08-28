@@ -41,8 +41,13 @@ class Todo extends Component {
 
   state = {
     showMoreInfo: false,
-    showMarkTodo: false
+    showMarkTodo: false,
+    showEditMode: false,
+    editTitle: 'Zeljko je car'
   }
+  
+  todoId = ''
+  titleInput = React.createRef()
 
   handleShowMore = () => {
     this.setState((prevState) => {
@@ -79,12 +84,50 @@ class Todo extends Component {
     renewTodo(id)
     this.closeMarkTodos()
   }
-  
+
+  handleEditMode = (todo) => {
+    const { showMoreInfo } = this.state
+    this.setState((prevState) => {
+      return {
+        showEditMode: !prevState.showEditMode,
+        editTitle: todo.title
+      }
+    }, () => {
+      if (this.state.showEditMode) {
+        this.titleInput.current.focus()
+        this.closeMarkTodos()
+        if (!showMoreInfo) {
+          this.handleShowMore()          
+        }
+        this.todoId = todo.id
+      }
+    })
+  }
+
+  closeEditMode = () => {
+    this.setState({
+      showEditMode: false,
+      showMoreInfo: false
+    })
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault()
+    const { editTodoTitle } = this.props
+    const { editTitle } = this.state
+    editTodoTitle(this.todoId, editTitle)
+    this.setState((prevState) => {
+      return {
+        showEditMode: !prevState.showEditMode,
+        showMoreInfo: !prevState.showMoreInfo
+      }
+    })
+  }
   
 
   render () {
-    const { showMoreInfo, showMarkTodo } = this.state
-    const {todo, users, isToday, currentDate} = this.props
+    const { showMoreInfo, showMarkTodo, showEditMode, editTitle } = this.state
+    const {todo, users, isToday} = this.props
 
     // Display avatar which task is it
     let avatarForUser;
@@ -136,7 +179,23 @@ class Todo extends Component {
                 <div className="check-icon">
                   { statusIcon }
                 </div>
-                <h2 onClick={this.handleShowMore}>{todo.title}</h2> 
+               { !showEditMode ? (
+                <h2 onClick={this.handleShowMore}>{todo.title}</h2>
+               ) : (
+                <form className="edit-todo-form" onSubmit={this.handleSubmit}>
+                  <WithOutsideClick executeMethod={this.closeEditMode}>
+                      <input
+                        className="edit-title"
+                        type="text"
+                        ref={this.titleInput}
+                        value={editTitle}
+                        onChange={({target}) => {this.setState({
+                          editTitle: target.value
+                        })}} />
+                  </WithOutsideClick>
+                </form>
+               )  }
+
                 <div className="mark-todo-icon">
                 <MoreIcon onClick={this.handleMarkTodos} />
                   <WithOutsideClick executeMethod={this.closeMarkTodos}>
@@ -147,7 +206,7 @@ class Todo extends Component {
                           className="done"
                           onClick={() => {this.handleUpdateTodoStatus(todo.id, 'completed')}} />
                       ) : null }
-                      { todo.completed !== 'active' ? (
+                      { todo.completed !== 'active' && isToday ? (
                         <ActiveIcon 
                           className="active"
                           onClick={() => {this.handleUpdateTodoStatus(todo.id, 'active')}} />
@@ -162,7 +221,9 @@ class Todo extends Component {
                         className="renew"
                         onClick={() => {this.handleRenewTodo(todo.id)}} />
                       ) : null }
-                      <EditIcon className="edit"/>
+                      <EditIcon
+                        className="edit"
+                        onClick={() => {this.handleEditMode(todo)}}/>
                       <DeleteIcon
                         className="delete"
                         onClick={() => {this.handleDeleteTodo(todo.id)}} />
@@ -217,29 +278,46 @@ const StyledTodo = styled.div`
     // border-left: 5px solid ${colors.prim_color};
   }
 
-  & h2 {
+  & h2, input.edit-title {
+    flex-grow: 1;
     font-size: 17px;
     letter-spacing: 2px;
     text-transform: uppercase;
     padding-left: 5px;
     color: ${colors.prim_color};
     margin: 5px 5px;
+    background-color: transparent;
+  }
+
+  & .edit-todo-form {
+    width: 100%;
+    flex-grow: 1;
+  }
+
+  & input.edit-title {
+    width: 100%;
+    padding: 5px;
+    outline: none;
+    border: none;
   }
   
-  & .completed h2 {
+  & .completed h2,
+  & .completed input.edit-title {
     color: ${colors.success};
     text-decoration: line-through;
   }
-  & .active h2 {
+  & .active h2,
+  & .active input.edit-title {
     color: ${colors.prim_color};
   }
-  & .failed h2 {
+  & .failed h2,
+  & .failed input.edit-title {
     color: ${colors.sec_color};
   }
 
   & .mark-todo-icon {
     position: relative;
-    flex-grow: 1;
+    flex-basis: 25%;
     text-align: right;
     font-size: 20px;
     cursor: pointer;
@@ -417,4 +495,12 @@ const StyledTodo = styled.div`
   .active .todo-labeled {
     display: none;
   }
+
+  // EDIT TODO FORM
+  .edit-todo-form {
+    & .edit-title {
+      width: 100%;
+    }
+  }
 `
+ 

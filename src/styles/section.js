@@ -3,12 +3,13 @@ import * as colors from './variables'
 
 // PAGE SECTIONS
 export const StyledSection = styled.section`
+  position: relative;
   margin-top: 100px;
   background-color: ${colors.overlay};
   border: 3px solid ${colors.prim_color};
   border-top-left-radius: 20px;
   overflow: hidden;
-  height: 70vh;
+  max-height: 80vh;
   overflow-y: scroll;
   ::-webkit-scrollbar { 
     display: none;

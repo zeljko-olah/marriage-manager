@@ -112,8 +112,24 @@ export const renewTodo = (id, date) => {
         return response.data
       })
       .catch(err => {
-        console.log(err)
-        dispatch(setFlashMessage(err.data))
+        if (err) {
+          dispatch(setFlashMessage(err.response.data))
+        }
+      })
+  }
+}
+
+export const editTodoTitle = (id, title) => {
+  return dispatch => {
+    return axios.patch('api/todos/title', {id, title})
+      .then(response => {
+        dispatch(setFlashMessage(response.data))
+        return response.data
+      })
+      .catch(err => {
+        if (err) {
+          dispatch(setFlashMessage(err.response.data))
+        }
       })
   }
 }

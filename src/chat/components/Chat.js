@@ -108,11 +108,9 @@ class Chat extends Component {
       const { setUsers } = this.props
       this.setState({activeUsers})
       setUsers(activeUsers, allRoomUsers)
-      
     })
 
     socket.on(events.NEW_MESSAGE, (message) => {
-      console.log('NEW MESSAGE', message)
       const { messages } = this.state
       const { user, setFlashMessage } = this.props
       if (message.location === true) {
