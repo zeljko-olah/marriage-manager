@@ -31,8 +31,6 @@ module.exports = (socket) => {
     */
 
     const room = defaultRoom.name
-    const roomUsers = defaultRoom.users
-    console.log('ROOM USERS', roomUsers)
 
     socket.on(events.JOIN, (message, user) => {
       // Set the user on the socket
@@ -46,7 +44,7 @@ module.exports = (socket) => {
       users.addUser(socket.id, user, room )
       
       // io.emit('USER_CONNECTED', connectedUsers )
-      io.to(room).emit(events.UPDATE_USER_LIST, users.getUserList(room), roomUsers)
+      io.to(room).emit(events.UPDATE_USER_LIST, users.getUserList(room))
 
       socket.emit(events.NEW_MESSAGE, generateMessage('Admin', `Welcome ${user.name}! :)`))
       socket.broadcast.to(room).emit(events.NEW_MESSAGE, generateMessage('Admin', `${user.name} has joined`));
@@ -233,7 +231,7 @@ module.exports = (socket) => {
       // If there is a user
       if(user) {
         // Update the room's users list
-        io.to(room).emit(events.UPDATE_USER_LIST, users.getUserList(room), roomUsers)
+        io.to(room).emit(events.UPDATE_USER_LIST, users.getUserList(room))
         io.to(room).emit(events.NEW_MESSAGE, generateMessage('Admin', `${user.name} has left.`))
       }
       

@@ -3,12 +3,15 @@ import moment from 'moment'
 
 export const selectUserName = (state) => state.auth.user.name
 export const selectAllTodos = (state) => state.todo.todos
+
 export const selectFilterParameters = (state) => {
   return {
     userType: state.todo.filterUserType,
     userCriteria: state.todo.filterUserCriteria,
     statusType: state.todo.filterStatusType,
-    statusCriteria: state.todo.filterStatusCriteria
+    statusCriteria: state.todo.filterStatusCriteria,
+    priorityType: state.todo.filterPriorityType,
+    priorityCriteria: state.todo.filterPriorityCriteria
   }
 }
 
@@ -25,10 +28,10 @@ export const selectIsToday = createSelector(
 
 export const selectFilteredTodos = createSelector(
   selectFilterParameters, selectAllTodos,  (filterParameters, todos) => {
-    const {userCriteria, statusCriteria} = filterParameters
+    const {userCriteria, statusCriteria, priorityCriteria} = filterParameters
     let filteredTodos = todos
     if (todos) {
-      if (userCriteria === '' && statusCriteria === '' ) {
+      if (userCriteria === '' && statusCriteria === '' && priorityCriteria === '' ) {
         return todos
       }
       if (userCriteria !== '') {
@@ -36,6 +39,9 @@ export const selectFilteredTodos = createSelector(
       }
       if (statusCriteria !== '') {
         filteredTodos = filteredTodos.filter(t => t.completed === statusCriteria) 
+      }        
+      if (priorityCriteria !== '') {
+        filteredTodos = filteredTodos.filter(t => t.priority === priorityCriteria) 
       }        
       return filteredTodos
 

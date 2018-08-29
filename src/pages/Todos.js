@@ -25,7 +25,7 @@ class Todos extends Component {
 
   // LIFECYCLE HOOKS
   componentDidMount = () => {
-    const { getTodosForDate, user, sortUserTodos } = this.props
+    const { getTodosForDate } = this.props
     getTodosForDate(moment().valueOf()).then(() => {
       // sortUserTodos(user.name, 'user')
     })
@@ -88,6 +88,15 @@ class Todos extends Component {
     sortStatusTodos(status, type)
   }
 
+  handleSortByPriority = (priority) => {
+    const { sortPriorityTodos } = this.props
+    let type = 'priority'
+    if (!priority) {
+      type = ''
+    }
+    sortPriorityTodos(priority, type)
+  }
+
   handleCongratulations = () => {
     const { setFlashMessage } = this.props
     setFlashMessage({
@@ -100,7 +109,7 @@ class Todos extends Component {
   // RENDER METHOD
   render () {
     const { 
-      todos, users, isToday, todosDate, percentage, filterByUser, filterByStatus, statusCount
+      todos, users, isToday, todosDate, percentage, filterByUser, filterByStatus, filterByPriority, statusCount
     } = this.props
 
     let listTodos = null
@@ -156,8 +165,10 @@ class Todos extends Component {
                   users={users}
                   sortByUser={this.handleSortByUser}
                   sortByStatus={this.handleSortByStatus}
+                  sortByPriority={this.handleSortByPriority}
                   filterByUser={filterByUser}
                   filterByStatus={filterByStatus}
+                  filterByPriority={filterByPriority}
                   congratulations={this.handleCongratulations} />
                   
                 {listTodos}
@@ -183,7 +194,8 @@ const mapStateToProps = state => {
     todosDate: selectTodosDate(state),
     isToday: selectIsToday(state),
     filterByUser: state.todo.filterUserCriteria,
-    filterByStatus: state.todo.filterStatusCriteria
+    filterByStatus: state.todo.filterStatusCriteria,
+    filterByPriority: state.todo.filterPriorityCriteria
   }
 }
 
@@ -197,7 +209,8 @@ const mapDispatchToProps = (dispatch) => ({
   renewTodo: (id, todosDate) => dispatch(actions.renewTodo(id, todosDate)),
   editTodoTitle: (id, title) => dispatch(actions.editTodoTitle(id, title)),
   sortUserTodos: (criteria, type) => dispatch(actions.sortUserTodos(criteria, type)),
-  sortStatusTodos: (criteria, type) => dispatch(actions.sortStatusTodos(criteria, type))
+  sortStatusTodos: (criteria, type) => dispatch(actions.sortStatusTodos(criteria, type)),
+  sortPriorityTodos: (criteria, type) => dispatch(actions.sortPriorityTodos(criteria, type))
 })
 
 // EXPORT

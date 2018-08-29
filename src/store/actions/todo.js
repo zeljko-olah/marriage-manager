@@ -155,3 +155,10 @@ export const sortStatusTodos = (criteria, filterType) => {
     filterType
   }
 }
+export const sortPriorityTodos = (criteria, filterType) => {
+  return {
+    type: actionTypes.SORT_PRIORITY_TODOS,
+    criteria,
+    filterType
+  }
+}

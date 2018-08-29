@@ -138,13 +138,7 @@ class Todo extends Component {
       avatarForUser = handleAvatars(todo, users)
     }
   
-    let day
     const formatDate = moment(todo.date).format('MMM D')
-    let todoTime = moment(todo.date)
-    let today = moment()
-    if (today.isSame(todoTime, 'd')) {
-     day = 'today'
-    }
   
     let statusClassName
     let statusIcon

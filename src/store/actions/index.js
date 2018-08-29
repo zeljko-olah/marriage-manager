@@ -8,8 +8,9 @@ export {
   logout
 } from './auth'
 
-// ORDER RELATED ACTIONS
+// CHAT RELATED ACTIONS
 export {
+  getDefaultRoomUsers,
   socketInit,
   toggleChat,
   setUsers,
@@ -40,7 +41,8 @@ export {
   setCurrentDate,
   editTodoTitle,
   sortUserTodos,
-  sortStatusTodos
+  sortStatusTodos,
+  sortPriorityTodos
 } from './todo'
 
 // REMINDER RELATED ACTIONS

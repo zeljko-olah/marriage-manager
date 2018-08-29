@@ -4,6 +4,26 @@ const {formatMessageTime} = require('./../../helpers')
 const mongoose = require("mongoose")
 const Message = require("../models/message")
 const User = require("../models/user")
+const Room = require("../models/room")
+
+// GET ALL USERS
+exports.get_all_users = (req, res, next) => {
+  const {userId} = req.query
+  Room.findOne({ users: {$in: userId}, default: true })
+    .select('_id')
+    .populate('users', 'name avatar')
+    .exec()
+    .then((doc) => {
+      res.status(200).json(doc)
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({
+        error: err
+      })
+    })
+}
+
 
 // SAVE NEW MESSAGE
 exports.new_message = (req, res, next) => {

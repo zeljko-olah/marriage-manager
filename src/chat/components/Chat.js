@@ -49,8 +49,10 @@ class Chat extends Component {
 
   // LIFECYCLE HOOKS
   componentDidMount = () => {
+    const { user, getMessages, getDefaultRoomUsers } = this.props
+    getDefaultRoomUsers(user.id)
     this.initSocket()
-    this.props.getMessages().then(() => {
+    getMessages().then(() => {
       this.setState({messages: this.props.loadedMessages})
     })
     this.updateWindowDimensions();
@@ -104,10 +106,10 @@ class Chat extends Component {
 			this.chatOpened = open
     })
 
-    socket.on(events.UPDATE_USER_LIST, (activeUsers, allRoomUsers) => {
+    socket.on(events.UPDATE_USER_LIST, (activeUsers) => {
       const { setUsers } = this.props
       this.setState({activeUsers})
-      setUsers(activeUsers, allRoomUsers)
+      setUsers(activeUsers)
     })
 
     socket.on(events.NEW_MESSAGE, (message) => {
@@ -424,8 +426,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => ({
   socketInit: (socket) => dispatch(actions.socketInit(socket)),
+  getDefaultRoomUsers: (userId) => dispatch(actions.getDefaultRoomUsers(userId)),
   getMessages: () => dispatch(actions.getMessages()),
-  setUsers: (activeUsers, allRoomUsers) => dispatch(actions.setUsers(activeUsers, allRoomUsers)),
+  setUsers: (activeUsers) => dispatch(actions.setUsers(activeUsers)),
   saveMessage: (message) => dispatch(actions.saveMessage(message)),
   toggleChat: (showChat) => dispatch( actions.toggleChat(showChat) ),
   emailChatHistory: (messages, user) => dispatch( actions.emailChatHistory(messages, user) ),

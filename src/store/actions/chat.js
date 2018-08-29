@@ -16,18 +16,37 @@ export const toggleChat = (showChat) => {
   }
 }
 
+export const getDefaultRoomUsers = (userId) => {
+  return dispatch => {
+    return axios.get('api/chat/allusers', {
+      params: {userId: userId}
+    })
+      .then(response => {
+        
+        const {users} = response.data
+        console.log(users)
+        dispatch(getDefaultRoomUsersSuccess(users))
+      })
+      .catch(err => {
+        console.log(err)
+        dispatch(setFlashMessage({
+          type: 'error',
+          flashMessage: 'Something went wrong'
+        }))
+      })
+  }
+}
+
+export const getDefaultRoomUsersSuccess = (users) => {
+  return {
+    type: actionTypes.GET_ROOM_USERS,
+    users
+  }
+}
 export const getMessagesSuccess = (messages) => {
   return {
     type: actionTypes.GET_MESSAGES,
     messages
-  }
-}
-
-export const setUsers = (activeUsers, allRoomUsers) => {
-  return {
-    type: actionTypes.SET_USERS,
-    activeUsers,
-    allRoomUsers
   }
 }
 
@@ -51,6 +70,13 @@ export const getMessages = () => {
           flashMessage: 'Something went wrong'
         }))
       })
+  }
+}
+
+export const setUsers = (activeUsers) => {
+  return {
+    type: actionTypes.SET_USERS,
+    activeUsers
   }
 }
 

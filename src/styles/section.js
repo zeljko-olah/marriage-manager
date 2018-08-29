@@ -210,7 +210,14 @@ export const StyledButton = styled.button`
   @media (max-width: 768px) {
   font-size: 20px;         
   }
-}
+
+  ${props => props.small ? `
+  margin-top: 0;
+  margin-left: 10px;
+  width: auto;
+  padding: 5px;
+  font-size: 15px;
+  ` : ''}
 
  &:disabled {
   background: ${colors.disabled};

@@ -9,7 +9,9 @@ const initialState = {
     filterUserType: '',
     filterUserCriteria: '',
     filterStatusType: '',
-    filterStatusCriteria: ''
+    filterStatusCriteria: '',
+    filterPriorityType: '',
+    filterPriorityCriteria: ''
 }
 
 // ADD TODO
@@ -43,6 +45,14 @@ const sortStatusTodos = (state, action) => {
     })
 }
 
+// SET SORT PARAMETERS
+const sortPriorityTodos = (state, action) => {
+    return updateObject(state, {
+      filterPriorityType: action.filterType,
+      filterPriorityCriteria: action.criteria
+    })
+}
+
 // DEFINE REDUCER
 const reducer = ( state = initialState, action ) => {
     switch ( action.type ) {
@@ -51,6 +61,7 @@ const reducer = ( state = initialState, action ) => {
         case actionTypes.SET_CURRENT_DATE: return setCurrentDate(state, action)
         case actionTypes.SORT_USER_TODOS: return sortUserTodos(state, action)
         case actionTypes.SORT_STATUS_TODOS: return sortStatusTodos(state, action)
+        case actionTypes.SORT_PRIORITY_TODOS: return sortPriorityTodos(state, action)
         default:
             return state
     }

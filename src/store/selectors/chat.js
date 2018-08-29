@@ -11,7 +11,6 @@ export const selectAllRoomUsers = (state) => {
   const {allRoomUsers} = state.chat
   if (allRoomUsers) {
     return allRoomUsers.map(u => {
-      alert
       return {
         id: u._id,
         name: u.name,
