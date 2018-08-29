@@ -168,6 +168,8 @@ class Todo extends Component {
         )
         break
     }
+
+    let priorityShort = todo.priority.substring(0, 1)
   
     return (
       <StyledTodo>
@@ -202,14 +204,14 @@ class Todo extends Component {
                 </form>
               )}
 
-              { /* TODO PRIORITY */ }
-              <div className="todo-priority">
-                <span>P</span>
-              </div>
-
               { /* TODO AVATARS */ }
               <div className="todo-avatar">
                 <span>{avatarForUser }</span>
+              </div>
+
+               { /* TODO PRIORITY */ }
+              <div className={`todo-priority ${todo.priority}`}>
+                <span>{priorityShort}</span>
               </div>
 
               { /* TODO ACTIONS */ }
@@ -331,9 +333,50 @@ const StyledTodo = styled.div`
     color: ${colors.sec_color};
   }
 
+  & .todo-priority {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+    border-radius: 50%;
+
+    & span {
+      text-transform: uppercase;
+    }
+
+    &.normal {
+      & span {
+        font-size: 8px;
+        color: ${colors.prim_color}; 
+        font-weight: bold;
+      }
+    }
+    &.high {
+      & span {
+        font-size: 12px;
+        color: ${colors.sec_light}; 
+      }
+    }
+    &.low {
+      & span {
+        font-size: 8px;
+        color: ${colors.ter_yellow}; 
+      }
+    }
+    &.special {
+      & span {
+        font-size: 20px;
+        font-weight: 900;
+        color: ${colors.sec_color}; 
+      }
+    }
+  }
+
   & .mark-todo-icon {
     position: relative;
-    flex-basis: 25%;
+    flex-basis: 20%;
     text-align: right;
     font-size: 20px;
     cursor: pointer;
@@ -344,10 +387,11 @@ const StyledTodo = styled.div`
       top: -9px;
       right: -9px;
       padding: 9px;
-      transition: all .3s ease-in; 
+      transition: all .2s ease-in; 
       transform-origin: top right;
 
       & svg {
+        font-size: 15px;
         margin-right: 5px;
         color: grey;
         transition: all .1s linear;
