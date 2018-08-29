@@ -27,7 +27,7 @@ function StyledProgressbar(props) {
         // Customize the circle behind the path
         trail: {
           // Tweak the trail color:
-          stroke: '#CCFFEE',
+          stroke: '#555',
         },
         // Customize the text
         text: {

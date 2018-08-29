@@ -6,8 +6,10 @@ import { updateObject } from '../../shared/utility'
 const initialState = {
     todos: null,
     date: moment(),
-    sortType: '',
-    sortCriteria: ''
+    filterUserType: '',
+    filterUserCriteria: '',
+    filterStatusType: '',
+    filterStatusCriteria: ''
 }
 
 // ADD TODO
@@ -26,10 +28,18 @@ const setCurrentDate = (state, action) => {
 }
 
 // SET SORT PARAMETERS
-const sortTodos = (state, action) => {
+const sortUserTodos = (state, action) => {
     return updateObject(state, {
-      sortType: action.sortType,
-      sortCriteria: action.criteria
+      filterUserType: action.filterType,
+      filterUserCriteria: action.criteria
+    })
+}
+
+// SET SORT PARAMETERS
+const sortStatusTodos = (state, action) => {
+    return updateObject(state, {
+      filterStatusType: action.filterType,
+      filterStatusCriteria: action.criteria
     })
 }
 
@@ -39,7 +49,8 @@ const reducer = ( state = initialState, action ) => {
         case actionTypes.ADD_TODO: return addTodo(state, action)
         case actionTypes.GET_TODOS: return getTodos(state, action)
         case actionTypes.SET_CURRENT_DATE: return setCurrentDate(state, action)
-        case actionTypes.SORT_TODOS: return sortTodos(state, action)
+        case actionTypes.SORT_USER_TODOS: return sortUserTodos(state, action)
+        case actionTypes.SORT_STATUS_TODOS: return sortStatusTodos(state, action)
         default:
             return state
     }

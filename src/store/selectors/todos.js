@@ -5,8 +5,10 @@ export const selectUserName = (state) => state.auth.user.name
 export const selectAllTodos = (state) => state.todo.todos
 export const selectFilterParameters = (state) => {
   return {
-    type: state.todo.sortType,
-    criteria: state.todo.sortCriteria
+    userType: state.todo.filterUserType,
+    userCriteria: state.todo.filterUserCriteria,
+    statusType: state.todo.filterStatusType,
+    statusCriteria: state.todo.filterStatusCriteria
   }
 }
 
@@ -21,23 +23,33 @@ export const selectIsToday = createSelector(
   }
 )
 
-export const selectPercentage = createSelector(
-  selectAllTodos, (todos) => {
+export const selectFilteredTodos = createSelector(
+  selectFilterParameters, selectAllTodos,  (filterParameters, todos) => {
+    const {userCriteria, statusCriteria} = filterParameters
+    let filteredTodos = todos
     if (todos) {
-      const todosCount = todos.length
-      const completed = todos.filter(t => t.completed === 'completed').length
-      const percentage = completed / todosCount * 100
-      return percentage
+      if (userCriteria === '' && statusCriteria === '' ) {
+        return todos
+      }
+      if (userCriteria !== '') {
+        filteredTodos = todos.filter(t => t.who === userCriteria)
+      }
+      if (statusCriteria !== '') {
+        filteredTodos = filteredTodos.filter(t => t.completed === statusCriteria) 
+      }        
+      return filteredTodos
+
+    } else {
+      return todos
     }
-  }
-)
+})
 
 export const selectTodoStatusCount = createSelector(
-  selectAllTodos, (todos) => {
-    if (todos) {
-      const completed = todos.filter(t => t.completed === 'completed').length
-      const active = todos.filter(t => t.completed === 'active').length
-      const failed = todos.filter(t => t.completed === 'failed').length
+  selectFilteredTodos, (filteredTodos) => {
+    if (filteredTodos) {
+      const completed = filteredTodos.filter(t => t.completed === 'completed').length
+      const active = filteredTodos.filter(t => t.completed === 'active').length
+      const failed = filteredTodos.filter(t => t.completed === 'failed').length
 
       return {
         completed,
@@ -48,25 +60,24 @@ export const selectTodoStatusCount = createSelector(
   }
 )
 
-export const selectFilteredTodos = createSelector(
-  selectFilterParameters, selectAllTodos,  (filterParameters, todos) => {
-    if (filterParameters.type === 'user') {
-      return todos.filter(t => t.who === filterParameters.criteria)      
+export const selectNewTodosFirst = createSelector(
+  selectFilteredTodos, (filteredTodos) => {
+    if (filteredTodos) {
+      return filteredTodos
+      .sort((a,b) => moment(b.createdAt).valueOf() - moment(a.createdAt).valueOf())
+    } else {
+      return []
     }
-    if (filterParameters.type === 'status') {
-      return todos.filter(t => t.completed === filterParameters.criteria) 
-    }
-
-    return todos
   }
 )
 
-export const selectNewTodosFirst = (state) => {
-  const {todos} = state.todo
-  if (todos) {
-    return todos
-    .sort((a,b) => moment(b.createdAt).valueOf() - moment(a.createdAt).valueOf())
-  } else {
-    return []
+export const selectPercentage = createSelector(
+  selectFilteredTodos, (filteredTodos) => {
+    if (filteredTodos) {
+      const filteredTodosCount = filteredTodos.length
+      const completed = filteredTodos.filter(t => t.completed === 'completed').length
+      const percentage = completed / filteredTodosCount * 100
+      return Math.trunc(percentage)
+    }
   }
-}
+)

@@ -174,14 +174,20 @@ class Todo extends Component {
         <div className = {statusClassName}>
           <StyledShadow>
             <StyledShadow>
+
+              { /* TODO HEADER */ }
               <div
                 className="todo-header">
-                <div className="check-icon">
-                  { statusIcon }
-                </div>
-               { !showEditMode ? (
+
+              { /* STATUS ICON */ }
+              <div className="check-icon">
+                { statusIcon }
+              </div>
+
+              { /* TODO TITLE */ }
+              { !showEditMode ? (
                 <h2 onClick={this.handleShowMore}>{todo.title}</h2>
-               ) : (
+              ) : (
                 <form className="edit-todo-form" onSubmit={this.handleSubmit}>
                   <WithOutsideClick executeMethod={this.closeEditMode}>
                       <input
@@ -194,10 +200,19 @@ class Todo extends Component {
                         })}} />
                   </WithOutsideClick>
                 </form>
-               )  }
-               <div className="todo-avatar">
+              )}
+
+              { /* TODO PRIORITY */ }
+              <div className="todo-priority">
+                <span>P</span>
+              </div>
+
+              { /* TODO AVATARS */ }
+              <div className="todo-avatar">
                 <span>{avatarForUser }</span>
               </div>
+
+              { /* TODO ACTIONS */ }
               <div className="mark-todo-icon">
                 <MoreIcon onClick={this.handleMarkTodos} />
                   <WithOutsideClick executeMethod={this.closeMarkTodos}>
@@ -234,22 +249,24 @@ class Todo extends Component {
                 </div>
               </div>
             </StyledShadow>
-              <div className={showMoreInfo ? 'todo-content show' : 'todo-content hide'}>
-                <div className="">
-                  <span>Task is for <strong>{todo.who}</strong></span>
-                </div>
-                <div className="schedule">
-                  <span>Do it <strong>{day === 'today' ? day : `on ${formatDate}`}</strong></span>
-                </div>
-                <div>
-                  <span>With <strong>{todo.priority}</strong> priority.</span>
-                </div>
-                <div className="todo-description">
-                  <span><strong>See description <MoreHorizIcon /></strong></span>
-                  <div>{todo.description}</div>
-                </div>
+            
+            { /* TODO CONTENT */ }
+            <div className={showMoreInfo ? 'todo-content show' : 'todo-content hide'}>
+              <div className="schedule">
+                <span><strong>{formatDate}</strong></span>
               </div>
-            </StyledShadow>
+              <div className="">
+                <span>Task for <strong>{todo.who}</strong></span>
+              </div>
+              <div>
+                <span>priority:<strong>{todo.priority}</strong></span>
+              </div>
+              <div className="todo-description">
+                <span><strong>See description <MoreHorizIcon /></strong></span>
+                <div>{todo.description}</div>
+              </div>
+            </div>
+          </StyledShadow>
         </div>
       </StyledTodo>
     )
@@ -279,12 +296,12 @@ const StyledTodo = styled.div`
 
   & h2, input.edit-title {
     flex-grow: 1;
-    font-size: 17px;
+    font-size: 15px;
     letter-spacing: 2px;
     text-transform: uppercase;
     padding-left: 5px;
     color: ${colors.prim_color};
-    margin: 5px 5px;
+    margin: 0px 5px;
     background-color: transparent;
   }
 
@@ -392,13 +409,13 @@ const StyledTodo = styled.div`
 
   & .todo-content {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     color:${colors.ter_yellow};
     transition: all .3s ease-in;
 
     & > div {
-      font-size: 10px;
+      font-size: 12px;
       margin-left: 5px;
       font-style: italic;
     }
@@ -425,7 +442,6 @@ const StyledTodo = styled.div`
   }
 
   & .todo-description {
-    position: relative;
     & div {
       display: none;
     }
@@ -439,8 +455,8 @@ const StyledTodo = styled.div`
     & div {
       position: absolute;
       min-width: 200px;
-      top: -50px;
-      right: 10px;
+      top: -10px;
+      right: 120px;
       display: block;
       padding: 10px;
       font-size: 13px;
@@ -453,11 +469,12 @@ const StyledTodo = styled.div`
       &:after {
         content: '';
         position: absolute;
-        top: 90%;
-        left: 90%;
-        border-top: 8px solid ${colors.ter_yellow};
-        border-left: 8px solid transparent;
+        top: 30%;
+        left: 100%;
+        border-left: 8px solid ${colors.ter_yellow};
+        border-top: 8px solid transparent;
         border-right: 8px solid transparent;
+        border-bottom: 8px solid transparent;
       }
     }
   }

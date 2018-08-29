@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import * as actions from '../store/actions'
 import { selectAllRoomUsers } from '../store/selectors/chat'
 import { 
-  selectPercentage, selectTodosDate, selectIsToday, selectFilteredTodos, selectTodoStatusCount
+  selectPercentage, selectTodosDate, selectIsToday, selectNewTodosFirst, selectTodoStatusCount
  } from '../store/selectors/todos'
 
 import Todo from '../components/Todos/Todo'
@@ -25,8 +25,9 @@ class Todos extends Component {
 
   // LIFECYCLE HOOKS
   componentDidMount = () => {
-    const { getTodosForDate } = this.props
-    getTodosForDate(moment().valueOf()).then((data) => {
+    const { getTodosForDate, user, sortUserTodos } = this.props
+    getTodosForDate(moment().valueOf()).then(() => {
+      // sortUserTodos(user.name, 'user')
     })
   }
 
@@ -70,21 +71,21 @@ class Todos extends Component {
   }
 
   handleSortByUser = (userName) => {
-    const { sortTodos } = this.props
+    const { sortUserTodos } = this.props
     let type = 'user'
     if (!userName) {
       type = ''
     }
-    sortTodos(userName, type)
+    sortUserTodos(userName, type)
   }
 
   handleSortByStatus = (status) => {
-    const { sortTodos } = this.props
+    const { sortStatusTodos } = this.props
     let type = 'status'
     if (!status) {
       type = ''
     }
-    sortTodos(status, type)
+    sortStatusTodos(status, type)
   }
 
   handleCongratulations = () => {
@@ -98,7 +99,9 @@ class Todos extends Component {
 
   // RENDER METHOD
   render () {
-    const { todos, users, isToday, todosDate, percentage, filterBy, statusCount } = this.props
+    const { 
+      todos, users, isToday, todosDate, percentage, filterByUser, filterByStatus, statusCount
+    } = this.props
 
     let listTodos = null
 
@@ -106,7 +109,7 @@ class Todos extends Component {
       listTodos = (
         <StyledShadow>
           <StyledNoTodos>
-            {filterBy === '' ? (
+            {filterByUser === '' && filterByStatus ==='' ? (
               <div>
                 No Tasks for {moment(todosDate).format('MMM Do, YYYY')}
               </div>
@@ -141,21 +144,26 @@ class Todos extends Component {
           </StyledMainHeading>
     
           <StyledMainContent>
-            <StyledShadow>
+            <StyledTodos>
+              <StyledShadow>
 
-              { /* TODOS */ }
-              <TodosMenu
-                dateUpdate={this.handleDateUpdate}
-                todosDate={moment(todosDate)}
-                percentage={percentage}
-                statusCount={statusCount}
-                users={users}
-                sortByUser={this.handleSortByUser}
-                sortByStatus={this.handleSortByStatus}
-                congratulations={this.handleCongratulations} />
-              {listTodos}
-              
-            </StyledShadow>            
+                { /* TODOS */ }
+                <TodosMenu
+                  dateUpdate={this.handleDateUpdate}
+                  todosDate={moment(todosDate)}
+                  percentage={percentage}
+                  statusCount={statusCount}
+                  users={users}
+                  sortByUser={this.handleSortByUser}
+                  sortByStatus={this.handleSortByStatus}
+                  filterByUser={filterByUser}
+                  filterByStatus={filterByStatus}
+                  congratulations={this.handleCongratulations} />
+                  
+                {listTodos}
+                
+              </StyledShadow>      
+            </StyledTodos>      
           </StyledMainContent>
         </StyledSection>
     )
@@ -168,13 +176,14 @@ const mapStateToProps = state => {
     user: state.auth.user,
     socket: state.chat.socket,
     // todos: selectNewTodosFirst(state),
-    todos: selectFilteredTodos(state),
+    todos: selectNewTodosFirst(state),
     percentage: selectPercentage(state),
     statusCount: selectTodoStatusCount(state),
     users: selectAllRoomUsers(state),
     todosDate: selectTodosDate(state),
     isToday: selectIsToday(state),
-    filterBy: state.todo.sortType
+    filterByUser: state.todo.filterUserCriteria,
+    filterByStatus: state.todo.filterStatusCriteria
   }
 }
 
@@ -187,11 +196,26 @@ const mapDispatchToProps = (dispatch) => ({
   setCurrentDate: (date) => dispatch(actions.setCurrentDate(date)),
   renewTodo: (id, todosDate) => dispatch(actions.renewTodo(id, todosDate)),
   editTodoTitle: (id, title) => dispatch(actions.editTodoTitle(id, title)),
-  sortTodos: (criteria, type) => dispatch(actions.sortTodos(criteria, type))
+  sortUserTodos: (criteria, type) => dispatch(actions.sortUserTodos(criteria, type)),
+  sortStatusTodos: (criteria, type) => dispatch(actions.sortStatusTodos(criteria, type))
 })
 
 // EXPORT
 export default connect( mapStateToProps, mapDispatchToProps )( Todos )
+
+const StyledTodos = styled.div`
+
+  & .completed {
+    color: ${colors.success};
+  }
+  & .failed {
+    color: ${colors.sec_color};
+  }
+  & .active {
+    color: ${colors.prim_color};
+  }
+  
+`
 
 const StyledNoTodos = styled.div`
   display: flex;

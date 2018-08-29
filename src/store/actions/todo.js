@@ -141,10 +141,17 @@ export const setCurrentDate = (date) => {
   }
 }
 
-export const sortTodos = (criteria, sortType) => {
+export const sortUserTodos = (criteria, filterType) => {
   return {
-    type: actionTypes.SORT_TODOS,
+    type: actionTypes.SORT_USER_TODOS,
     criteria,
-    sortType
+    filterType
+  }
+}
+export const sortStatusTodos = (criteria, filterType) => {
+  return {
+    type: actionTypes.SORT_STATUS_TODOS,
+    criteria,
+    filterType
   }
 }

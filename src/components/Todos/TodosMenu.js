@@ -11,7 +11,6 @@ import { StyledShadow, StyledDatePicker } from '../../styles/section'
 import CalendarIcon from 'react-icons/lib/md/date-range'
 import ArrowDownIcon from 'react-icons/lib/md/arrow-drop-down'
 
-import CircularProgressbar from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 import StyledProgressbar from './StyledProgressbar';
 import WithOutsideClick from '../../hoc/WithOutsideClick'
@@ -89,7 +88,7 @@ class TodosMenu extends Component {
   }  
 
   render() {
-    const { users, percentage, statusCount } = this.props
+    const { users, percentage, statusCount, filterByUser, filterByStatus } = this.props
     const { showUserFilter, showStatusFilter } = this.state
     return (
     <StyledShadow>
@@ -125,12 +124,12 @@ class TodosMenu extends Component {
           <div className="status-count">
             { statusCount && Object.keys(statusCount).length > 0 ? (
               <div>
-                <p>{statusCount.completed} done</p>
-                <p>{statusCount.active} active</p>
-                <p>{statusCount.failed} failed</p>
+                <p className="completed"><span>{statusCount.completed}</span> done</p>
+                <p className="active"><span>{statusCount.active}</span> active</p>
+                <p className="failed"><span>{statusCount.failed}</span> failed</p>
               </div>
             ) : (
-              <div>Hello</div>
+              <div>Loading...</div>
             ) }
           </div>
             <div className="filter-by-user">
@@ -139,12 +138,20 @@ class TodosMenu extends Component {
                 onClick={this.handleShowUserFilter}
               >
                 Filter by user <ArrowDownIcon /></span>
-              {showUserFilter && (
+              {users.length && showUserFilter && (
                 <div className="filter-dropdown">
-                  <p onClick={() => {this.handleSortByUser(users[0].name)}}>{users[0].name}</p>
-                  <p onClick={() => {this.handleSortByUser(users[1].name)}}>{users[1].name}</p>
-                  <p onClick={() => {this.handleSortByUser('both')}}>Both</p>
-                  <p onClick={() => {this.handleSortByUser('')}}>All</p>
+                  <p 
+                    className={filterByUser === users[0].name ? 'selected' : ''} 
+                    onClick={() => {this.handleSortByUser(users[0].name)}}>{users[0].name}</p>
+                  <p 
+                    className={filterByUser === users[1].name ? 'selected' : ''} 
+                    onClick={() => {this.handleSortByUser(users[1].name)}}>{users[1].name}</p>
+                  <p 
+                    className={filterByUser === 'both' ? 'selected' : ''} 
+                    onClick={() => {this.handleSortByUser('both')}}>Both</p>
+                  <p 
+                    className={filterByUser === '' ? 'selected' : '' } 
+                    onClick={() => {this.handleSortByUser('')}}>All</p>
                 </div> 
               )}         
             </div>
@@ -156,10 +163,18 @@ class TodosMenu extends Component {
                 Filter by status <ArrowDownIcon /></span>
               {showStatusFilter && (
                 <div className="filter-dropdown">
-                  <p onClick={() => {this.handleSortByStatus('completed')}}>Completed</p>
-                  <p onClick={() => {this.handleSortByStatus('active')}}>Active</p>
-                  <p onClick={() => {this.handleSortByStatus('failed')}}>Failed</p>
-                  <p onClick={() => {this.handleSortByStatus('')}}>All</p>
+                  <p
+                    className={filterByStatus === 'completed' ? 'selected' : ''}
+                    onClick={() => {this.handleSortByStatus('completed')}}>Completed</p>
+                  <p
+                    className={filterByStatus === 'active' ? 'selected' : ''} 
+                    onClick={() => {this.handleSortByStatus('active')}}>Active</p>
+                  <p
+                    className={filterByStatus === 'failed' ? 'selected' : ''} 
+                    onClick={() => {this.handleSortByStatus('failed')}}>Failed</p>
+                  <p
+                    className={filterByStatus === '' ? 'selected' : ''} 
+                    onClick={() => {this.handleSortByStatus('')}}>All</p>
                 </div>  
               )}
             </div>
@@ -230,6 +245,14 @@ const StyledTodosMenu = styled.div`
     flex-basis: 100px;
     & p {
       margin: 0;
+      font-style: italic;
+      letter-spacing: 1px;
+
+      & span {
+        position: relative;
+        font-size: 20px;
+        top: 3px;
+      }
     }
   }
   
@@ -245,7 +268,7 @@ const StyledTodosMenu = styled.div`
       z-index: 2000;
       top: 15px;
       right: 5px;
-      width: 100px;
+      width: 90px;
       border-radius: 3px;
       box-shadow: 1px 1px 10px ${colors.overlay};
       background-color: ${colors.ter_yellow};
@@ -258,6 +281,10 @@ const StyledTodosMenu = styled.div`
         &.selected {
           background-color: ${colors.prim_light};
         }
+        &:hover {
+          background-color: ${colors.prim_light};
+        }
+
       }
     }
   }
