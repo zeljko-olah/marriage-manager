@@ -71,7 +71,7 @@ exports.new_message = (req, res, next) => {
 exports.get_messages = (req, res) => {
 
   Message.find()
-    .select('_id text read created_at unread important link location')
+    .select('_id text read created_at unread important link location todo')
     .populate('user', 'name')
     .exec()
     .then(docs => {
@@ -87,6 +87,7 @@ exports.get_messages = (req, res) => {
             important: doc.important,
             link: doc.link,
             location: doc.location,
+            todo: doc.todo,
             from: doc.user.name,
             user: doc.user
           }

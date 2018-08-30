@@ -4,7 +4,6 @@ import React, {Component} from 'react'
 import {StyledSection, StyledMainHeading, StyledMainContent} from '../styles/section'
 
 import { connect } from 'react-redux'
-import * as actions from '../store/actions'
 
 // COMPONENT
 class Welcome extends Component {

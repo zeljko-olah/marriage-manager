@@ -29,7 +29,7 @@ exports.saveTodo = (req, res, next) => {
         .then(user => {
           res.status(201).json({
             _id: doc._id,
-            title: doc.text,
+            title: doc.title,
             description: doc.description,
             who: doc.who,
             completed: doc.completed,

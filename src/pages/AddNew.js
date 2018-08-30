@@ -17,6 +17,9 @@ import {
 } from '../styles/section'
 import * as colors from '../styles/variables'
 
+// Events
+import * as events from '../events'
+
 class AddNew extends Component {
 
   // STATE
@@ -41,7 +44,7 @@ class AddNew extends Component {
   handleSubmit = (inputs, time) => {
     // Define variables
     const { activeTab } = this.state
-    const { user, addTodo, addReminder, setFlashMessage, roomUsers, history } = this.props
+    const { user, addTodo, addReminder, setFlashMessage, roomUsers, history, socket } = this.props
     const {title, description, priority } = inputs
     let desc
     let who
@@ -93,7 +96,8 @@ class AddNew extends Component {
     // Persist to database and to store
     if (activeTab === 'todo') {
       addTodo(payload)
-      .then(() => {
+      .then(( todo) => {
+        socket.emit(events.TODO_ADD, todo, user)
         setFlashMessage({
           type: 'success',
           flashMessage: `Todo successfully added :)`

@@ -33,6 +33,7 @@ class Chat extends Component {
   state = {
     socket: null,
     users: [],
+    activeUsers: [],
     messages: [],
     width: 0,
     height: 0,
@@ -97,10 +98,6 @@ class Chat extends Component {
 
     // Events
     socket.emit(events.JOIN, `${user.name} logged in`, {...user, id: socket.id} )
-
-    // socket.on(events.USER_CONNECTED, (users)=>{
-		// 	this.setState({ users })
-    // })
 
     socket.on(events.CHAT_STAT, (open)=>{
 			this.chatOpened = open
@@ -218,7 +215,7 @@ class Chat extends Component {
   // HANDLERS
   // Send message
   handleSendMessage = (message) => {
-    const { socket, users} = this.state
+    const { socket, activeUsers} = this.state
     const { saveMessage, setFlashMessage, user, getUserCoords, setLocation } = this.props
 
     // Skip messages from admin
@@ -244,7 +241,7 @@ class Chat extends Component {
       }
 
       // Set unread messages 
-      const unread = !important ? ((users && users.length === 1) || !this.chatOpened ? 'true' : 'false') : 'false'
+      const unread = !important ? ((activeUsers && activeUsers.length === 1) || !this.chatOpened ? 'true' : 'false') : 'false'
 
       // Link
       const link = patterns.link.test(message)
@@ -266,7 +263,6 @@ class Chat extends Component {
         })
         return
       }
-
       // Persist message to db
       saveMessage({
         text: message.replace('!!!', ''),
@@ -304,9 +300,9 @@ class Chat extends Component {
   
   // Delete all chat messages
   handleDeleteChat = (user) => {
-    const { socket, users } = this.state
+    const { socket, activeUsers } = this.state
     const { setFlashMessage } = this.props
-    if (users.length < 2) {
+    if (activeUsers.length < 2) {
       setFlashMessage({
         type: 'error',
         flashMessage: `Not possible if your partner is offline`
@@ -375,7 +371,7 @@ class Chat extends Component {
 
   // RENDER  
   render () {
-    const { users, socket, messages, width, height, typingUser, isTyping } = this.state
+    const { activeUsers, socket, messages, width, height, typingUser, isTyping } = this.state
     const { user, info, showChat } = this.props
 
     return (
@@ -384,7 +380,7 @@ class Chat extends Component {
         { /* CHAT HEADING */ }
         <ChatHeading
           user={user}
-          users={users}
+          users={activeUsers}
           socket={socket}
           close={this.handleCloseChat}
           info={info}

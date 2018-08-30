@@ -114,6 +114,7 @@ class TodosMenu extends Component {
       users, percentage, statusCount, filterByUser, filterByStatus, filterByPriority
     } = this.props
     const { showUserFilter, showStatusFilter, showPriorityFilter } = this.state
+    const noFilters = filterByUser === '' && filterByStatus === '' && filterByPriority === ''
     return (
     <StyledShadow>
       <WithOutsideClick executeMethod={this.handleCloseFilters}>
@@ -249,7 +250,7 @@ class TodosMenu extends Component {
             <StyledButton
               small
               onClick={this.handleResetFilters}
-              disabled={filterByUser === '' && filterByStatus === '' && filterByPriority === ''}>
+              style={noFilters ? {opacity: 0, pointerEvents: 'none', transform: 'scale(0)'} : {opacity: 1, transform: 'scale(1)'} }>
               Reset filters
             </StyledButton>
           </div>
@@ -289,6 +290,10 @@ const StyledTodosMenu = styled.div`
     background-color: transparent;
     border: 2px solid Aquamarine;
     cursor: pointer;
+  }
+
+  & button {
+    transition: all .3s linear;
   }
 
   & .todo-calendar svg {

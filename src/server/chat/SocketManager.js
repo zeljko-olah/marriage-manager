@@ -182,7 +182,6 @@ module.exports = (socket) => {
         important: false,
         location: true
       })
-
       message
       .save()
       .then(doc => {
@@ -201,15 +200,74 @@ module.exports = (socket) => {
         }
         
         // Emit events to update
-        io.to(room).emit(events.LOCATION_SHARED, loc)
+        socket.broadcast.to(room).emit(events.LOCATION_SHARED, loc)
         io.to(room).emit(events.NEW_MESSAGE, locationMessage)
-        socket.emit(events.UNREAD_COUNT_UPDATED)          
+        socket.broadcast.to(room).emit(events.UNREAD_COUNT_UPDATED)         
         callback(doc)
       })
       .catch(err => {
         console.log(err)
       })
     })
+
+
+    /**
+    |--------------------------------------------------
+    | TODOS
+    |--------------------------------------------------
+    */
+    
+    /*
+    * ON TODO_ADD
+    * 
+    */
+
+    socket.on(events.TODO_ADD, (todo, user)=>{
+      // Extract adress and from user name
+      console.log('USER:::', user)
+      console.log('TODO:::', todo)
+      console.log('ROOM', room)
+
+     // Create an save message to db
+     const message = new Message({
+      _id: mongoose.Types.ObjectId(),
+      text: todo.title,
+      user: user.id,
+      room: room,
+      unread: true,
+      important: false,
+      location: false,
+      todo: true
+    })
+
+    message
+    .save()
+    .then(doc => {
+
+      // Create location message
+      const todoMessage = {
+        _id: doc._id,
+        text: doc.text,
+        from: user.name,
+        room: room,
+        unread: doc.unread,
+        important: doc.important,
+        link: doc.link,
+        location: doc.location,
+        todo: doc.todo,
+        createdAt: doc.created_at
+      }
+      
+      // Emit events to update
+      io.to(room).emit(events.TODO_ADDED, todo, user)
+      io.to(room).emit(events.NEW_MESSAGE, todoMessage)
+      socket.broadcast.to(room).emit(events.UNREAD_COUNT_UPDATED) 
+      // callback(doc)        
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  })
 
 
     /*

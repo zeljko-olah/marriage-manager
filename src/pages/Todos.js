@@ -19,6 +19,9 @@ import {
   StyledSection, StyledMainHeading, StyledMainContent, StyledShadow
 } from '../styles/section'
 
+// Events
+import * as events from '../events'
+
 class Todos extends Component {
 
   // STATE
@@ -29,6 +32,24 @@ class Todos extends Component {
     getTodosForDate(moment().valueOf()).then(() => {
       // sortUserTodos(user.name, 'user')
     })
+  }
+
+  componentDidUpdate = (prevProps) => {
+    const { socket, setFlashMessage, getTodosForDate } = this.props
+    if (socket !== null && prevProps.socket !== socket) {
+      socket.on(events.TODO_ADDED, (todo, user) => {
+        getTodosForDate(todo.date)
+        setFlashMessage({
+          type: 'success',
+          flashMessage: `${user.name} added new task!`
+        })
+      })
+    }
+  }
+
+  componentWillUnmount() {
+    const { socket } = this.props
+    socket.off(events.TODO_ADDED)
   }
 
   // HANDLERS  
@@ -186,7 +207,6 @@ const mapStateToProps = state => {
   return {
     user: state.auth.user,
     socket: state.chat.socket,
-    // todos: selectNewTodosFirst(state),
     todos: selectNewTodosFirst(state),
     percentage: selectPercentage(state),
     statusCount: selectTodoStatusCount(state),

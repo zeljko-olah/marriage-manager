@@ -8,6 +8,7 @@ const messageSchema = mongoose.Schema({
     important: { type: Boolean, default: false },
     link: { type: Boolean, default: false },
     location: { type: Boolean, default: false },
+    todo: { type: Boolean, default: false },
     room: { type: String, required: true }
 },
 { timestamps: { createdAt: 'created_at' } })

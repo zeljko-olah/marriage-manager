@@ -78,12 +78,14 @@ export const selectNewTodosFirst = createSelector(
 )
 
 export const selectPercentage = createSelector(
-  selectFilteredTodos, (filteredTodos) => {
-    if (filteredTodos) {
+  selectFilteredTodos, selectFilterParameters, (filteredTodos, filterParameters) => {
+    if (filteredTodos && !filterParameters.statusCriteria) {
       const filteredTodosCount = filteredTodos.length
       const completed = filteredTodos.filter(t => t.completed === 'completed').length
       const percentage = completed / filteredTodosCount * 100
       return Math.trunc(percentage)
+    } else {
+      return 0
     }
   }
 )

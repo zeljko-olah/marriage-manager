@@ -19,12 +19,10 @@ export const toggleChat = (showChat) => {
 export const getDefaultRoomUsers = (userId) => {
   return dispatch => {
     return axios.get('api/chat/allusers', {
-      params: {userId: userId}
+      params: {userId}
     })
       .then(response => {
-        
         const {users} = response.data
-        console.log(users)
         dispatch(getDefaultRoomUsersSuccess(users))
       })
       .catch(err => {
