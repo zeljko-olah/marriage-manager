@@ -127,7 +127,7 @@ class Todo extends Component {
 
   render () {
     const { showMoreInfo, showMarkTodo, showEditMode, editTitle } = this.state
-    const {todo, users, isToday} = this.props
+    const {todo, user, users, isToday} = this.props
 
     // Display avatar which task is it
     let avatarForUser;
@@ -237,9 +237,11 @@ class Todo extends Component {
                       <EditIcon
                         className="edit"
                         onClick={() => {this.handleEditMode(todo)}}/>
-                      <DeleteIcon
+                      { user.name === todo.who || todo.who === 'both' ? (
+                        <DeleteIcon
                         className="delete"
                         onClick={() => {this.handleDeleteTodo(todo.id)}} />
+                      ) : null }
                     </div>
                   </WithOutsideClick>
                 </div>
@@ -391,7 +393,7 @@ const StyledTodo = styled.div`
         transition: all .1s linear;
 
         &:hover {
-          transform: scale(1.1) translateX(10%);
+          transform: scale(1.3) translateX(10%);
 
         }
       }

@@ -446,9 +446,9 @@ const StyledSection = styled.section`
   border: 2px solid ${colors.prim_color};
   border-top-left-radius: 20px;
   box-shadow: ${colors.box_shadow};
-  max-width: 600px;
+  max-width: 768px;
   overflow: hidden;
-  margin: 30px auto 0;
+  margin: 80px auto 0;
   @media (max-width: 768px) {
     display: flex;
     flex-direction: column;

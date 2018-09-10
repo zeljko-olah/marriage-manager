@@ -130,7 +130,7 @@ class Todos extends Component {
   // RENDER METHOD
   render () {
     const { 
-      todos, users, isToday, todosDate, percentage, filterByUser, filterByStatus, filterByPriority, statusCount
+      todos, user, users, isToday, todosDate, percentage, filterByUser, filterByStatus, filterByPriority, statusCount
     } = this.props
 
     let listTodos = null
@@ -158,6 +158,7 @@ class Todos extends Component {
         <Todo
           key={todo.id}
           todo={todo}
+          user={user}
           users={users}
           isToday={isToday}
           updateTodoStatus={this.handleUpdateStatus}

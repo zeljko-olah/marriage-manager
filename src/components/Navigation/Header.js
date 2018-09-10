@@ -15,6 +15,7 @@ import * as colors from '../../styles/variables'
 
 // ICONS
 import MenuIcon from 'react-icons/lib/md/menu'
+import ArrowBackIcon from 'react-icons/lib/md/arrow-back'
 import ChatIcon from 'react-icons/lib/md/forum'
 
 class Header extends Component {
@@ -44,7 +45,8 @@ class Header extends Component {
       showChat,
       toggleChat,
       countUnread,
-      countImportant
+      countImportant,
+      showMobileMenu
     } = this.props
 
     return (
@@ -54,7 +56,12 @@ class Header extends Component {
         <span
           className="items"
           onClick={ menuToggleClicked }>
-          <i><MenuIcon /></i>
+          { !showMobileMenu ? (
+            <i><MenuIcon /></i>
+          ) : (
+            <i><ArrowBackIcon /></i>
+
+          ) }
         </span>
   
         { /* NAV ITEMS */ }
@@ -67,7 +74,6 @@ class Header extends Component {
           <i className={show ? 'open-chat': null}><ChatIcon /></i>
           { countUnread ? (<span className="unread-count">{countUnread}</span>) : null }
           { countImportant ? (<span className="important-count">{countImportant}!</span>) : null }
-          
         </span>
       </StyledHeader>
     )

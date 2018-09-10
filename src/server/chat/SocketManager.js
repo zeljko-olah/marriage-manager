@@ -228,7 +228,7 @@ module.exports = (socket) => {
       console.log('TODO:::', todo)
       console.log('ROOM', room)
 
-     // Create an save message to db
+     // Create and save message to db
      const message = new Message({
       _id: mongoose.Types.ObjectId(),
       text: todo.title,

@@ -75,7 +75,7 @@ class Message extends Component {
                   <a href={message.text}>{formattedMessage}</a>
                 ) : null}
                 {!message.link && !message.location && !message.todo ? formattedMessage : null}
-                {message.unread && !message.location ? (
+                {message.unread && !message.location && !message.todo ? (
                   <span className='unread' >
                     <CheckIcon />
                   </span>) : null}
@@ -92,7 +92,7 @@ class Message extends Component {
                   </span>) : null}
                 {message.todo ? (
                   <span
-                    className={message.todo ? 'unread-todo todo' : 'todo'} >
+                    className={message.unread ? 'unread-todo todo' : 'todo'} >
                     <TodoIcon />
                   </span>) : null}
             </div>
@@ -162,6 +162,10 @@ const StyledMessage = styled.div`
       return !props.pointer && 'display: none;' 
     }}
   }
+}
+
+& div.message-inner a {
+  cursor: pointer;
 }
 
 & div.left .message-inner {
@@ -254,7 +258,7 @@ const StyledMessage = styled.div`
 & .right .unread,
 & .right .marked,
 & .right .important,
-& .right .location, {
+& .right .location,
 & .right .todo {
   right: -40px;
 }
@@ -278,13 +282,15 @@ const StyledMessage = styled.div`
   cursor: pointer;
 }
 
-& .unread-location::after {
+& .unread-location::after,
 & .unread-todo::after {
    content: 'new';
    position: absolute;
    transform: rotate(45deg);
    font-size: 12px;
+   top: 0;
    right: -10px;
+   z-index: 1200;
 }
 
 & .unread {

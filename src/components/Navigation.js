@@ -37,6 +37,7 @@ class Navigation extends Component {
         <Header
           show={showMobileMenu}
           menuToggleClicked={this.menuToggleHandler}
+          showMobileMenu={showMobileMenu}
           chatToggleClicked={this.chatToggleHandler}
         />
 
@@ -68,7 +69,7 @@ export default Navigation
 const StyledLogo = styled.h1`
   font-size: 50px;
   text-align: center;
-  padding-bottom: 13px;
+  padding-bottom: 0px;
   margin-top: 0px;
   text-shadow: ${text_shadow};
   color: ${danger};
