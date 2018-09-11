@@ -70,7 +70,7 @@ exports.getLocations = (req, res, next) => {
             address: doc.address,
             createdAt: time,
             user: doc.user.name,
-            avatar: doc.user.avatar.replace('public/', '')
+            avatar: doc.user.avatar
           }
         })
         .sort()

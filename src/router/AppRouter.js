@@ -10,7 +10,7 @@ import createHistory from 'history/createBrowserHistory'
 // MAIN ROUTE COMPONENTS
 import LoginPage from '../pages/Login.js'
 import Welcome from '../pages/Welcome.js'
-import NewPerson from '../pages/NewPerson.js'
+import AddNew from '../pages/AddNew.js'
 import Todos from '../pages/Todos.js'
 import Reminder from '../pages/Reminder.js'
 import Location from '../pages/Location.js'
@@ -32,7 +32,7 @@ const AppRouter = () => (
       <PublicRoute path="/" component={LoginPage} exact={true} />
       <PrivateRoute path="/welcome" component={Welcome} />
       <PrivateRoute path="/todos" component={Todos} />
-      <PrivateRoute path="/add" component={NewPerson} />
+      <PrivateRoute path="/add" component={AddNew} />
       <PrivateRoute path="/reminder" component={Reminder} />
       <PrivateRoute path="/location" component={Location} />
       <Redirect to="/" />

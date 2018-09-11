@@ -23,6 +23,8 @@ const cors = require('cors')
 const userRoutes = require('./api/routes/user')
 const chatRoutes = require('./api/routes/chat')
 const locationRoutes = require('./api/routes/location')
+const todoRoutes = require('./api/routes/todos')
+const reminderRoutes = require('./api/routes/reminders')
 
 // Define public path to serve it
 const publicPath = path.join(__dirname, '../../build')
@@ -63,6 +65,8 @@ app.use(cors())
 app.use("/api/user", userRoutes)
 app.use("/api/chat", chatRoutes)
 app.use("/api/location", locationRoutes)
+app.use("/api/todos", todoRoutes)
+app.use("/api/reminders", reminderRoutes)
 
 // Serve React Build
 // app.get('/', (req, res) => {

@@ -37,6 +37,32 @@ export const getCoordsCallback = (callback) => {
   })
 }
 
+// CLEAR FORM
+export const clearForm = (form, roomUsers) => {
+  const { email, password, title, description, priority } = form
+  if (email) {
+    email.value = ''
+  }
+  if (password) {
+    password.value = ''
+  }
+  if (title) {
+    title.value = ''
+  }
+  if (description) {
+    description.value = ''
+  }
+  if (form[roomUsers[0]].checked) {
+    form[roomUsers[0]].checked = false
+  }
+  if (form[roomUsers[1]].checked) {
+    form[roomUsers[1]].checked = false
+  }
+  if (priority) {
+    priority.value = 'normal'
+  }
+}
+
 // GEOLOCATION GET COORDINATES - EXAMPLE WITH PROMISES
 export const getCoordsPromise = () => {
   if (!navigator.geolocation){

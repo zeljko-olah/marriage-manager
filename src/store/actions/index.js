@@ -8,8 +8,9 @@ export {
   logout
 } from './auth'
 
-// ORDER RELATED ACTIONS
+// CHAT RELATED ACTIONS
 export {
+  getDefaultRoomUsers,
   socketInit,
   toggleChat,
   setUsers,
@@ -28,3 +29,23 @@ export {
   setLocation,
   getLocations
 } from './location'
+
+// TODO RELATED ACTIONS
+export {
+  addTodo,
+  getTodos,
+  getTodosForDate,
+  updateTodoStatus,
+  deleteTodo,
+  renewTodo,
+  setCurrentDate,
+  editTodoTitle,
+  sortUserTodos,
+  sortStatusTodos,
+  sortPriorityTodos
+} from './todo'
+
+// REMINDER RELATED ACTIONS
+export {
+  addReminder
+} from './reminder'

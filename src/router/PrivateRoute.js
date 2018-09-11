@@ -60,9 +60,9 @@ const StyledMain = styled.main`
   flex-direction: column;
   flex-wrap: wrap;
   justify-content: space-between;
-  max-width: 600px;
+  max-width: 800px;
   padding: 10px;
-  margin: 30px auto 0;
+  margin: 0 auto;
   @media (max-width: 768px) {
     margin: 0 auto;
   }

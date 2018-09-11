@@ -22,7 +22,7 @@ class ChatWrapper extends Component {
 
   escapeFunction = (e) => {
     const { show, toggleChat } = this.props
-    if (e.keyCode === 27) {
+    if (e.keyCode === 27 && e.ctrlKey) {
       toggleChat(show)
     }
   }

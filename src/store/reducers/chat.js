@@ -7,6 +7,7 @@ const initialState = {
     socket: null,
     showChat: false,
     activeUsers: [],
+    allRoomUsers: [],
     messages: [],
     message: null,
     flashMessage: ''
@@ -16,6 +17,13 @@ const initialState = {
 const socketInit = (state, action) => {
     return updateObject( state, {
         socket: action.socket
+    })
+}
+
+// SOCKET INIT
+const getRoomUsers = (state, action) => {
+    return updateObject( state, {
+        allRoomUsers: action.users
     })
 }
 
@@ -29,7 +37,7 @@ const toggleChat = (state, action) => {
 // ACTIVE USERS 
 const setActiveUsers = (state, action) => {
   return updateObject( state, {
-      activeUsers: action.users
+      activeUsers: action.activeUsers
   })
 }
 
@@ -57,6 +65,7 @@ const setFlashMessage = (state, action) => {
 const reducer = ( state = initialState, action ) => {
     switch ( action.type ) {
         case actionTypes.SOCKET_INIT: return socketInit(state, action)
+        case actionTypes.GET_ROOM_USERS: return getRoomUsers(state, action)
         case actionTypes.TOGGLE_CHAT: return toggleChat(state, action)
         case actionTypes.SET_USERS: return setActiveUsers(state, action)
         case actionTypes.GET_MESSAGES: return getMessages(state, action)

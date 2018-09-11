@@ -5,7 +5,6 @@ import LoginForm from '../components/Login/LoginForm'
 import styled from 'styled-components'
 import * as colors from '../styles/variables'
 
-
 import MDArrowUp from 'react-icons/lib/md/keyboard-arrow-up'
 import MDArrowDown from 'react-icons/lib/md/keyboard-arrow-down'
 
@@ -32,18 +31,17 @@ class Login extends Component {
     // Dispatch login
     login(email.value, password.value)
       .then((res) => {
-      this.clearForm(payload)
     })
   }
 
   // CLEAR THE FORM
-  clearForm = (payload) => {
-    const { email, password } = payload
-    if (email && password) {
-      email.value = ''
-      password.value = ''
-    }
-  }
+  // clearForm = (payload) => {
+  //   const { email, password } = payload
+  //   if (email && password) {
+  //     email.value = ''
+  //     password.value = ''
+  //   }
+  // }
 
   onFocusHandler = () => {
     this.props.setErrors({ error: null })
@@ -124,13 +122,13 @@ const mapDispatchToProps = dispatch => {
  */
 
 const LoginFormWrapper = styled.div`
-  width: 300px;
+  width: 350px;
   position: fixed;
-  bottom: 0;
-  right: 20px;
+  bottom: 10px;
+  right: 10px;
   border: 1px solid WhiteSmoke;
   border-top-left-radius: 10px;
-  background-color: transparent;
+  background-color: ${colors.overlay};
   overflow: hidden;
   box-shadow: 0 0 5px #000000;
   font-family: 'Cardo', serif;

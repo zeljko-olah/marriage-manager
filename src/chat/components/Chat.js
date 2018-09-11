@@ -33,6 +33,7 @@ class Chat extends Component {
   state = {
     socket: null,
     users: [],
+    activeUsers: [],
     messages: [],
     width: 0,
     height: 0,
@@ -49,8 +50,10 @@ class Chat extends Component {
 
   // LIFECYCLE HOOKS
   componentDidMount = () => {
+    const { user, getMessages, getDefaultRoomUsers } = this.props
+    getDefaultRoomUsers(user.id)
     this.initSocket()
-    this.props.getMessages().then(() => {
+    getMessages().then(() => {
       this.setState({messages: this.props.loadedMessages})
     })
     this.updateWindowDimensions();
@@ -96,23 +99,17 @@ class Chat extends Component {
     // Events
     socket.emit(events.JOIN, `${user.name} logged in`, {...user, id: socket.id} )
 
-    // socket.on(events.USER_CONNECTED, (users)=>{
-		// 	this.setState({ users })
-    // })
-
     socket.on(events.CHAT_STAT, (open)=>{
 			this.chatOpened = open
     })
 
-    socket.on(events.UPDATE_USER_LIST, (users) => {
+    socket.on(events.UPDATE_USER_LIST, (activeUsers) => {
       const { setUsers } = this.props
-      this.setState({users})
-      setUsers(users)
-      
+      this.setState({activeUsers})
+      setUsers(activeUsers)
     })
 
     socket.on(events.NEW_MESSAGE, (message) => {
-      console.log('NEW MESSAGE', message)
       const { messages } = this.state
       const { user, setFlashMessage } = this.props
       if (message.location === true) {
@@ -218,7 +215,7 @@ class Chat extends Component {
   // HANDLERS
   // Send message
   handleSendMessage = (message) => {
-    const { socket, users} = this.state
+    const { socket, activeUsers} = this.state
     const { saveMessage, setFlashMessage, user, getUserCoords, setLocation } = this.props
 
     // Skip messages from admin
@@ -244,7 +241,7 @@ class Chat extends Component {
       }
 
       // Set unread messages 
-      const unread = !important ? ((users && users.length === 1) || !this.chatOpened ? 'true' : 'false') : 'false'
+      const unread = !important ? ((activeUsers && activeUsers.length === 1) || !this.chatOpened ? 'true' : 'false') : 'false'
 
       // Link
       const link = patterns.link.test(message)
@@ -266,7 +263,6 @@ class Chat extends Component {
         })
         return
       }
-
       // Persist message to db
       saveMessage({
         text: message.replace('!!!', ''),
@@ -304,9 +300,9 @@ class Chat extends Component {
   
   // Delete all chat messages
   handleDeleteChat = (user) => {
-    const { socket, users } = this.state
+    const { socket, activeUsers } = this.state
     const { setFlashMessage } = this.props
-    if (users.length < 2) {
+    if (activeUsers.length < 2) {
       setFlashMessage({
         type: 'error',
         flashMessage: `Not possible if your partner is offline`
@@ -375,7 +371,7 @@ class Chat extends Component {
 
   // RENDER  
   render () {
-    const { users, socket, messages, width, height, typingUser, isTyping } = this.state
+    const { activeUsers, socket, messages, width, height, typingUser, isTyping } = this.state
     const { user, info, showChat } = this.props
 
     return (
@@ -384,7 +380,7 @@ class Chat extends Component {
         { /* CHAT HEADING */ }
         <ChatHeading
           user={user}
-          users={users}
+          users={activeUsers}
           socket={socket}
           close={this.handleCloseChat}
           info={info}
@@ -426,8 +422,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => ({
   socketInit: (socket) => dispatch(actions.socketInit(socket)),
+  getDefaultRoomUsers: (userId) => dispatch(actions.getDefaultRoomUsers(userId)),
   getMessages: () => dispatch(actions.getMessages()),
-  setUsers: (users) => dispatch(actions.setUsers(users)),
+  setUsers: (activeUsers) => dispatch(actions.setUsers(activeUsers)),
   saveMessage: (message) => dispatch(actions.saveMessage(message)),
   toggleChat: (showChat) => dispatch( actions.toggleChat(showChat) ),
   emailChatHistory: (messages, user) => dispatch( actions.emailChatHistory(messages, user) ),
@@ -449,9 +446,9 @@ const StyledSection = styled.section`
   border: 2px solid ${colors.prim_color};
   border-top-left-radius: 20px;
   box-shadow: ${colors.box_shadow};
-  max-width: 600px;
+  max-width: 768px;
   overflow: hidden;
-  margin: 30px auto 0;
+  margin: 80px auto 0;
   @media (max-width: 768px) {
     display: flex;
     flex-direction: column;

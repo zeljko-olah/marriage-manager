@@ -15,10 +15,12 @@ export const disabled = '#ddd'
 export const ter_yellow = '#fefeee'
 export const prim_white = '#fff'
 export const border_color = 'grey'
+export const success = '#66ff99'
+export const success_light = '#b3ffcc'
 export const boy_color = 'CornflowerBlue'
 export const girl_color = 'Violet'
 export const backdrop = 'rgba(1,1,1, 0.1)'
-export const overlay = 'rgba(0, 0, 0, 0.5)'
+export const overlay = 'rgba(0, 0, 0, 0.7)'
 
 
 // TEXT SHADOW

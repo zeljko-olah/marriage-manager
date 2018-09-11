@@ -55,7 +55,7 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(Notification)
 
 const StyledNotify = styled.div`
-  position: absolute;
+  position: fixed;
   z-index: 10000;
   top: 0;
   left: 50%;

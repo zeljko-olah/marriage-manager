@@ -8,6 +8,8 @@ import * as colors from '../../styles/variables'
 import CheckIcon from 'react-icons/lib/md/visibility'
 import ImportantIcon from 'react-icons/lib/md/warning'
 import LocationIcon from 'react-icons/lib/md/location-on'
+import TodoIcon from 'react-icons/lib/md/directions-run'
+
 
 class Message extends Component {
 
@@ -22,6 +24,13 @@ class Message extends Component {
     const { close } = this.props
     e.preventDefault()
     history.push('/location')
+    close()
+  }
+
+  goToTodoPage = (e) => {
+    const { close } = this.props
+    e.preventDefault()
+    history.push('/todos')
     close()
   }
   
@@ -59,11 +68,14 @@ class Message extends Component {
                 {message.location ? (
                   <a onClick={this.goToLocationPage}>{formattedMessage}</a>
                 ) : null}
+                {message.todo ? (
+                  <a onClick={this.goToTodoPage}>{formattedMessage}</a>
+                ) : null}
                 {message.link ? (
                   <a href={message.text}>{formattedMessage}</a>
                 ) : null}
-                {!message.link && !message.location ? formattedMessage : null}
-                {message.unread && !message.location ? (
+                {!message.link && !message.location && !message.todo ? formattedMessage : null}
+                {message.unread && !message.location && !message.todo ? (
                   <span className='unread' >
                     <CheckIcon />
                   </span>) : null}
@@ -77,6 +89,11 @@ class Message extends Component {
                   <span
                     className={message.unread ? 'unread-location location' : 'location'} >
                     <LocationIcon />
+                  </span>) : null}
+                {message.todo ? (
+                  <span
+                    className={message.unread ? 'unread-todo todo' : 'todo'} >
+                    <TodoIcon />
                   </span>) : null}
             </div>
           </div>
@@ -147,6 +164,10 @@ const StyledMessage = styled.div`
   }
 }
 
+& div.message-inner a {
+  cursor: pointer;
+}
+
 & div.left .message-inner {
   order: 1;
   background: ${colors.sec_light};
@@ -203,7 +224,8 @@ const StyledMessage = styled.div`
 & .unread,
 & .marked,
 & .important,
-& .location {
+& .location,
+& .todo {
   display: inline-block;
   position: absolute;
   font-size: 15px;
@@ -219,7 +241,8 @@ const StyledMessage = styled.div`
 & .unread,
 & .marked,
 & .important,
-& .location {
+& .location,
+& .todo {
   top: 50%;
   transform: translateY(-50%);
 }
@@ -227,20 +250,28 @@ const StyledMessage = styled.div`
 & .left .unread,
 & .left .marked,
 & .left .important,
-& .left .location {
+& .left .location,
+& .left .todo {
   left: -40px;
 }
 
 & .right .unread,
 & .right .marked,
 & .right .important,
-& .right .location {
+& .right .location,
+& .right .todo {
   right: -40px;
 }
 
 & .important {
   color: ${colors.sec_color}; 
   background-color: black; 
+  font-size: 20px;
+}
+
+& .todo {
+  color: ${colors.boy_color}; 
+  background-color: aquamarine; 
   font-size: 20px;
 }
 
@@ -251,12 +282,15 @@ const StyledMessage = styled.div`
   cursor: pointer;
 }
 
-& .unread-location::after {
+& .unread-location::after,
+& .unread-todo::after {
    content: 'new';
    position: absolute;
    transform: rotate(45deg);
    font-size: 12px;
+   top: 0;
    right: -10px;
+   z-index: 1200;
 }
 
 & .unread {
