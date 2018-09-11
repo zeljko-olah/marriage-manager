@@ -30,3 +30,34 @@ export const addReminder = (reminder) => {
     })
   }
 }
+
+// SUCCESS
+export const getRemindersSuccess = (reminders) => {
+  return {
+      type: actionTypes.GET_REMINDERS,
+      reminders
+  }
+}
+
+// FAIL
+export const getRemindersFail = (error) => {
+  return {
+      type: actionTypes.GET_REMINDERS,
+      error
+  }
+}
+
+// GET REMINDER
+export const getReminders = () => {
+  return dispatch => {
+    return axios.get('api/reminders/index')
+    .then(response => {
+      console.log(response.data)
+      dispatch(getRemindersSuccess(response.data))
+      return response.data
+    })
+    .catch(err => {
+      dispatch(getRemindersFail(err))
+    })
+  }
+}

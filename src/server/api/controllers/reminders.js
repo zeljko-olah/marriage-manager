@@ -57,11 +57,11 @@ exports.getReminders = (req, res, next) => {
     .exec()
     .then(docs => {
       res.status(200).json({
-        todos: docs.map(doc => {
+        reminders: docs.map(doc => {
           const time = moment(doc.created_at)
           return {
             id: doc._id,
-            title: doc.text,
+            title: doc.title,
             description: doc.description,
             who: doc.who,
             completed: doc.completed,

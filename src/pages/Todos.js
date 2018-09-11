@@ -248,7 +248,6 @@ const StyledTodos = styled.div`
   & .active {
     color: ${colors.prim_color};
   }
-  
 `
 
 const StyledNoTodos = styled.div`

@@ -47,5 +47,6 @@ export {
 
 // REMINDER RELATED ACTIONS
 export {
-  addReminder
+  addReminder,
+  getReminders
 } from './reminder'
