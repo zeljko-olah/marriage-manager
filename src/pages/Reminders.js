@@ -1,17 +1,28 @@
 import React, { Component } from 'react'
 
+// Moment
+import moment from 'moment'
+
 // Redux
 import { connect } from 'react-redux'
 import * as actions from '../store/actions'
 
 // Styled components
 import styled from 'styled-components'
-// import * as colors from '../styles/variables'
+import * as colors from '../styles/variables'
 import {
   StyledSection, StyledMainHeading, StyledMainContent, StyledShadow
 } from '../styles/section'
 
 import { selectAllRoomUsers } from '../store/selectors/chat'
+
+const formatReminderDate = (timestamp) => {
+  return moment(timestamp).format('MMM Do')
+}
+
+const formatReminderTime = (timestamp) => {
+  return moment(timestamp).format('HH:mm')
+}
 
 class Reminders extends Component {
 
@@ -32,20 +43,30 @@ class Reminders extends Component {
         </StyledMainHeading>
   
         <StyledMainContent>
-          <StyledTodos>
-            <StyledShadow>
+          <StyledShadow>
+            <StyledReminders>
 
               { /* REMINDERS */ }
               { reminders && reminders.map(reminder => {
                 return (
-                  <div key={reminder.id}>
-                    <span>{reminder.title}</span>
+                  <div
+                  className="reminder-box"
+                  key={reminder.id}>
+                    <div>
+                      <StyledShadow>
+                        <p className="reminder-title">{reminder.title}</p>
+                      </StyledShadow>
+                        <p className="reminder-time">{formatReminderTime(reminder.date)}</p>
+                      <StyledShadow>
+                        <p className="reminder-date">{formatReminderDate(reminder.date)}</p>
+                      </StyledShadow>
+                    </div>
                   </div>
                 )
               }) }
-              
-            </StyledShadow>      
-          </StyledTodos>      
+                
+            </StyledReminders> 
+          </StyledShadow>
         </StyledMainContent>
       </StyledSection>
     )
@@ -69,6 +90,52 @@ const mapDispatchToProps = (dispatch) => ({
 // EXPORT
 export default connect( mapStateToProps, mapDispatchToProps )( Reminders )
 
-const StyledTodos = styled.div`
-  color: orange;
+const StyledReminders = styled.div`
+  width: 100%;
+  padding: 30px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+
+  & .reminder-box { 
+    padding: 10px;
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    & > div {
+      flex: 1;
+      border: 1px solid ${colors.prim_color};
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  & .reminder-title {
+    color: ${colors.prim_color};
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  & .reminder-time {
+    color: ${colors.sec_light};
+    font-size: 40px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 5px;
+  }
+
+  & .reminder-date {
+    color: ${colors.prim_light};
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+  }
 `
