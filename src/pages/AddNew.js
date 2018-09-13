@@ -41,11 +41,11 @@ class AddNew extends Component {
     }) 
   }
 
-  handleSubmit = (inputs, time) => {
+  handleSubmit = (inputs, date, time) => {
     // Define variables
     const { activeTab } = this.state
     const { user, addTodo, addReminder, setFlashMessage, roomUsers, history, socket } = this.props
-    const {title, description, priority } = inputs
+    const {title, description, priority} = inputs
     let desc
     let who
     let task = activeTab === 'todo' ? 'todo' : 'reminder'
@@ -82,6 +82,19 @@ class AddNew extends Component {
     } else {
       desc = description.value
     }
+
+    if (task === 'reminder' && time && time === '') {
+      setFlashMessage({
+        type: 'error',
+        flashMessage: `Hey ${user.name}, define a time for a reminder!`
+      })
+      this.setState({error: 'time'})
+      return
+    } else {
+      const pattern = /^([0-1]?\d|2[0-3])(?::([0-5]?\d))?(?::([0-5]?\d))?$/
+      console.log(pattern.test(time))
+      return   
+    }
     
     // Prepare payload
     const payload = {
@@ -90,7 +103,7 @@ class AddNew extends Component {
       description: desc,
       who,
       priority: priority.value,
-      date: time.valueOf()
+      date: date.valueOf()
     }
     
     // Persist to database and to store
@@ -164,6 +177,7 @@ class AddNew extends Component {
                     <AddItem
                       title="Set a reminder for"
                       who="Who to remind?"
+                      time
                       roomUsers={roomUsers}
                       error={error}
                       clearError={this.handleClearError}

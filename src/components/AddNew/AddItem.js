@@ -25,7 +25,8 @@ class AddItem extends Component {
     showDescriptionInput: false,
     createdAt: moment(),
     calendarFocused: false,
-    time: moment()
+    date: moment(),
+    time: ''
   }
 
    // REFS
@@ -34,11 +35,11 @@ class AddItem extends Component {
   // HANDLERS
 
   submit = (e) => {
-    const { time } = this.state
+    const { date, time } = this.state
     const { submit } = this.props
     e.preventDefault()
-    submit(this.inputs, time)
-    this.setState({ time: moment() })
+    submit(this.inputs, date, time)
+    this.setState({ date: moment() })
   }
 
   toggleDescription = () => {
@@ -48,8 +49,18 @@ class AddItem extends Component {
   }
 
    // Capture createdAt date
-  onDateChange = (time) => {
-    if (time) {
+  onDateChange = (date) => {
+    if (date) {
+      this.setState(() => ({ date }))
+    }
+  }
+
+   // Capture createdAt date
+  onTimeChange = ({target}) => {
+    const time = target.value
+    const pattern = /^([0-1]?\d|2[0-3])(?::([0-5]?\d)|:?)?$/
+    console.log(time, pattern.test(time))
+    if (!time || pattern.test(time)) {
       this.setState(() => ({ time }))
     }
   }
@@ -61,7 +72,7 @@ class AddItem extends Component {
 
   render() {
     const { showDescriptionInput } = this.state
-    const { title, who, error, clearError, roomUsers } = this.props
+    const { title, who, error, clearError, roomUsers, time } = this.props
     
     return (
       <StyledForm
@@ -79,43 +90,60 @@ class AddItem extends Component {
             </p>
           </StyledShadow>
           <StyledShadow>
-          <label><p>{who}</p></label>
-          <StyledShadow className={error === 'checkboxes' ? 'error-checkbox': ''}>
-            <div className="contain-checkboxes">
-              <div className="checkboxes" >
-                <label htmlFor="">{roomUsers[0]}</label>
-                  <input
-                    className="checkbox"
-                    type="checkbox"
-                    value="marina"
-                    ref={input => {this.inputs[roomUsers[0]] = input}}  />
-                <span className="checkmark"></span>
+            <label><p>{who}</p></label>
+            <StyledShadow className={error === 'checkboxes' ? 'error-checkbox': ''}>
+              <div className="contain-checkboxes">
+                <div className="checkboxes" >
+                  <label htmlFor="">{roomUsers[0]}</label>
+                    <input
+                      className="checkbox"
+                      type="checkbox"
+                      value="marina"
+                      ref={input => {this.inputs[roomUsers[0]] = input}}  />
+                  <span className="checkmark"></span>
+                </div>
+                <div className="checkboxes" >
+                  <label htmlFor="">{roomUsers[1]}</label>
+                    <input
+                      className="checkbox"
+                      type="checkbox"
+                      value='zeljko'
+                      ref={input => {this.inputs[roomUsers[1]] = input}} />
+                  <span className="checkmark"></span>
+                </div>
               </div>
-              <div className="checkboxes" >
-                <label htmlFor="">{roomUsers[1]}</label>
-                  <input
-                    className="checkbox"
-                    type="checkbox"
-                    value='zeljko'
-                    ref={input => {this.inputs[roomUsers[1]] = input}} />
-                <span className="checkmark"></span>
-              </div>
-            </div>
+            </StyledShadow>
           </StyledShadow>
-        </StyledShadow>
+
+          { /* DATE PICKER COMPONENT */ }
           <StyledShadow>
-            <label><p>Pick a date</p></label>
-            { /* DATE PICKER COMPONENT */ }
-            <StyledDatePicker>
-              <SingleDatePicker
-                date={this.state.time}
-                onDateChange={this.onDateChange}
-                focused={this.state.calendarFocused}
-                onFocusChange={this.onFocusChange}
-                numberOfMonths={1}
-                isOutsideRange={day => moment().subtract(1, 'days').isSameOrAfter(day, 'day')}
-              />
-            </StyledDatePicker>
+            <div className="date-wrapper">
+              <div className="date-picker">
+                <label><p>Pick a date</p></label>
+                <StyledDatePicker>
+                  <SingleDatePicker
+                    date={this.state.date}
+                    onDateChange={this.onDateChange}
+                    focused={this.state.calendarFocused}
+                    onFocusChange={this.onFocusChange}
+                    numberOfMonths={1}
+                    isOutsideRange={day => moment().subtract(1, 'days').isSameOrAfter(day, 'day')}
+                  />
+                </StyledDatePicker>
+              </div>            
+              { /* TIME INPUT */ }
+              { time && (
+                <div className="time-picker">
+                  <label><p>Set a time</p></label>
+                  <input
+                    className={error === 'time' ? 'time-input error-time': 'time-input'}
+                    type="text"
+                    placeholder={moment().format('HH:mm')}
+                    value={this.state.time}
+                    onChange={this.onTimeChange}/>
+                </div>
+              ) }
+              </div>            
           </StyledShadow>
           <StyledShadow>
             <label

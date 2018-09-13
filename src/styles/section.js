@@ -79,7 +79,27 @@ export const StyledForm = styled.div`
     border: 2px solid Aquamarine;
   }
 
-  & input.error-title {
+  & .date-wrapper {
+    display: flex;
+  }
+
+  & .date-picker {
+    flex-basis: 70%;
+  }
+
+  & .time-picker {
+    flex-basis: 20%;
+    & input {
+      margin-top: 3px;
+      padding: 6px;
+      font-size: 19px;
+      line-height: 24px;
+      text-align: center;
+    }
+  }
+
+  & input.error-title,
+  & input.error-time {
     border: 2px solid ${colors.sec_color};
   }
 
