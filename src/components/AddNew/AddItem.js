@@ -58,7 +58,7 @@ class AddItem extends Component {
    // Capture createdAt date
   onTimeChange = ({target}) => {
     const time = target.value
-    const pattern = /^([0-1]?\d|2[0-3])(?::([0-5]?\d)|:?)?$/
+    const pattern = /^([0-1]?\d|2[0-3])(:([0-5]?\d)|:?)$/
     console.log(time, pattern.test(time))
     if (!time || pattern.test(time)) {
       this.setState(() => ({ time }))

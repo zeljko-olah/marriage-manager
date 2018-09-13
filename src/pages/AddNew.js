@@ -76,14 +76,16 @@ class AddNew extends Component {
     } else {
       who = 'both'
     }
-
+    
+    // Set no description
     if (!description) {
       desc = 'No description'
     } else {
       desc = description.value
     }
-
-    if (task === 'reminder' && time && time === '') {
+    
+    // Time for reminder task
+    if (task === 'reminder' && time === '') {
       setFlashMessage({
         type: 'error',
         flashMessage: `Hey ${user.name}, define a time for a reminder!`
@@ -91,9 +93,28 @@ class AddNew extends Component {
       this.setState({error: 'time'})
       return
     } else {
-      const pattern = /^([0-1]?\d|2[0-3])(?::([0-5]?\d))?(?::([0-5]?\d))?$/
-      console.log(pattern.test(time))
-      return   
+      const pattern = /^([0-1]?\d|2[0-3])(:([0-5]?\d)|:?)$/
+      if (pattern.test(time)) {
+        if ((time.length === 3 && time.indexOf(':') === 1) || (time.length === 4 && time.indexOf(':') === 2)) {
+          setFlashMessage({
+            type: 'error',
+            flashMessage: `Hey ${user.name}, invalid minutes format!`
+          })
+          this.setState({error: 'time'})
+          return
+        }
+        if (time.length <=3 || (time.length === 3 && time.indexOf(':') === 2)) {
+          setFlashMessage({
+            type: 'error',
+            flashMessage: `Hey ${user.name}, invalid time format!`
+          })
+          this.setState({error: 'time'})
+          return
+        }
+        
+        const timeParts = time.split(':')
+        date.set({h: timeParts[0], m: timeParts[1]})
+      }
     }
     
     // Prepare payload
@@ -129,6 +150,7 @@ class AddNew extends Component {
         })
         // Clear form
         clearForm(inputs, roomUsers)
+        history.push('/reminder')
       })
     }
   }
