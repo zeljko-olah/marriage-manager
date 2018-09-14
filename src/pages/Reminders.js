@@ -14,15 +14,13 @@ import {
   StyledSection, StyledMainHeading, StyledMainContent, StyledShadow
 } from '../styles/section'
 
+// Icons
+import AddIcon from  'react-icons/lib/md/add'
+
+import ListReminders from '../components/Reminders/ListReminders'
+
 import { selectAllRoomUsers } from '../store/selectors/chat'
-
-const formatReminderDate = (timestamp) => {
-  return moment(timestamp).format('MMM Do')
-}
-
-const formatReminderTime = (timestamp) => {
-  return moment(timestamp).format('HH:mm')
-}
+import { selectRelevantRemindersFirst, selectTodaysReminders, selectExpiredReminders } from '../store/selectors/reminders'
 
 class Reminders extends Component {
 
@@ -35,7 +33,7 @@ class Reminders extends Component {
   }
 
   render () {
-    const { reminders } = this.props
+    const { reminders, todayReminders, expiredReminders, history, users } = this.props
     return (
       <StyledSection>
         <StyledMainHeading>
@@ -43,30 +41,48 @@ class Reminders extends Component {
         </StyledMainHeading>
   
         <StyledMainContent>
-          <StyledShadow>
-            <StyledReminders>
+            <StyledShadow>
+              <StyledHeadlines>For Today</StyledHeadlines>
 
-              { /* REMINDERS */ }
-              { reminders && reminders.map(reminder => {
-                return (
-                  <div
-                  className="reminder-box"
-                  key={reminder.id}>
-                    <div>
-                      <StyledShadow>
-                        <p className="reminder-title">{reminder.title}</p>
-                      </StyledShadow>
-                        <p className="reminder-time">{formatReminderTime(reminder.date)}</p>
-                      <StyledShadow>
-                        <p className="reminder-date">{formatReminderDate(reminder.date)}</p>
-                      </StyledShadow>
-                    </div>
-                  </div>
-                )
-              }) }
+              { /* TODAY REMINDERS */ }
+              <ListReminders
+                reminderClass='today'
+                reminders={todayReminders}
+                users={users} />
+              
+            </StyledShadow>
+
+
+            { /* REMINDERS */ }
+            { reminders ? (
+            <StyledShadow>
+              <StyledHeadlines>Yet to arrive</StyledHeadlines>
+              <ListReminders
+                reminderClass='next'
+                reminders={reminders}
+                users={users} />
+            </StyledShadow>
+            ) : (
+              <StyledNoReminders>
+                <h3>No pending reminders.</h3>
+                <h3>Add new</h3>
+                <div
+                  className="icon"
+                  onClick={() => {history.push('/add')}}
+                ><AddIcon /></div>
+              </StyledNoReminders>
+              ) }
+
+            { /* EXPIRED REMINDERS */ }
+            <StyledShadow>
+              <StyledHeadlines>Expired</StyledHeadlines>
+
+              <ListReminders
+                reminderClass='expired'
+                reminders={expiredReminders}
+                users={users} />
                 
-            </StyledReminders> 
-          </StyledShadow>
+            </StyledShadow>
         </StyledMainContent>
       </StyledSection>
     )
@@ -78,7 +94,9 @@ const mapStateToProps = state => {
   return {
     user: state.auth.user,
     socket: state.chat.socket,
-    reminders: state.reminder.reminders,
+    reminders: selectRelevantRemindersFirst(state),
+    todayReminders: selectTodaysReminders(state),
+    expiredReminders: selectExpiredReminders(state),
     users: selectAllRoomUsers(state)
   }
 }
@@ -90,52 +108,41 @@ const mapDispatchToProps = (dispatch) => ({
 // EXPORT
 export default connect( mapStateToProps, mapDispatchToProps )( Reminders )
 
-const StyledReminders = styled.div`
-  width: 100%;
+const StyledHeadlines = styled.h2`
+  margin: 0;
+  color: #fff;
+  font-style: italic;
+`
+
+const StyledNoReminders = styled.div`
+  text-align: center;
+  font-weight: 100;
+  color: ${colors.prim_font};
   padding: 30px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
 
-  & .reminder-box { 
-    padding: 10px;
-    flex-basis: 50%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    margin-bottom: 20px;
-
-    & > div {
-      flex: 1;
-      border: 1px solid ${colors.prim_color};
-      display: flex;
-      justify-content: space-between;
-    }
-  }
-
-  & .reminder-title {
-    color: ${colors.prim_color};
-    font-size: 15px;
-    font-weight: bold;
-    text-transform: uppercase;
-    text-align: center;
-  }
-
-  & .reminder-time {
-    color: ${colors.sec_light};
-    font-size: 40px;
-    font-weight: bold;
-    text-transform: uppercase;
-    text-align: center;
-    padding: 5px;
-  }
-
-  & .reminder-date {
+  & h3 {
     color: ${colors.prim_light};
-    font-size: 20px;
-    font-weight: bold;
-    text-transform: uppercase;
-    text-align: center;
+  }
+
+  & .icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    border: 2px solid ${colors.prim_color};
+    border-radius: 40px;
+    font-size: 40px;
+    margin: 0 auto;
+    cursor: pointer;
+    background: ${colors.prim_light}
+    box-shadow: 0px 0px 10px 10px rgba(255, 255, 255, 0.7);
+    transition: all .1s ease-in;
+    transform: scale(1);
+
+    &:hover {
+      transform: scale(1.1);
+    }
   }
 `

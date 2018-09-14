@@ -26,7 +26,7 @@ class AddItem extends Component {
     createdAt: moment(),
     calendarFocused: false,
     date: moment(),
-    time: ''
+    time: moment().format('HH:mm')
   }
 
    // REFS
@@ -59,7 +59,6 @@ class AddItem extends Component {
   onTimeChange = ({target}) => {
     const time = target.value
     const pattern = /^([0-1]?\d|2[0-3])(:([0-5]?\d)|:?)$/
-    console.log(time, pattern.test(time))
     if (!time || pattern.test(time)) {
       this.setState(() => ({ time }))
     }
@@ -71,8 +70,8 @@ class AddItem extends Component {
   }
 
   render() {
-    const { showDescriptionInput } = this.state
-    const { title, who, error, clearError, roomUsers, time } = this.props
+    const { showDescriptionInput, time } = this.state
+    const { title, who, error, clearError, roomUsers, timeInput } = this.props
     
     return (
       <StyledForm
@@ -132,14 +131,13 @@ class AddItem extends Component {
                 </StyledDatePicker>
               </div>            
               { /* TIME INPUT */ }
-              { time && (
+              { timeInput && (
                 <div className="time-picker">
                   <label><p>Set a time</p></label>
                   <input
                     className={error === 'time' ? 'time-input error-time': 'time-input'}
                     type="text"
-                    placeholder={moment().format('HH:mm')}
-                    value={this.state.time}
+                    value={time}
                     onChange={this.onTimeChange}/>
                 </div>
               ) }

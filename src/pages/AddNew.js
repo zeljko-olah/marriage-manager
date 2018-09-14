@@ -199,7 +199,7 @@ class AddNew extends Component {
                     <AddItem
                       title="Set a reminder for"
                       who="Who to remind?"
-                      time
+                      timeInput
                       roomUsers={roomUsers}
                       error={error}
                       clearError={this.handleClearError}

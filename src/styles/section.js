@@ -252,7 +252,7 @@ export const StyledShadow = styled.div`
   justify-content: center;
   padding: 10px;
   background-color: ${colors.backdrop};
-  margin-top: 5px;
+  // margin-top: 5px;
   @media (max-width: 768px) {
     padding: 5px 0;
   }
