@@ -82,3 +82,26 @@ exports.getReminders = (req, res, next) => {
     })
 }
 
+// DELETE REMINDER
+exports.deleteReminder = (req, res, next) =>  {
+const { id } = req.query
+
+console.log('ID:::', id)
+
+Reminder.deleteOne({ _id: id })
+  .exec()
+  .then(doc => {
+    console.log(doc)
+    res.status(200).json({
+      type: 'success',
+      flashMessage: 'Great. Reminder deleted'
+    })
+  })
+  .catch(err => {
+    res.status(500).json({
+      type: 'error',
+      flashMessage: 'Something went wrong'
+    })
+  })
+}
+

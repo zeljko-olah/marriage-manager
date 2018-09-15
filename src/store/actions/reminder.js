@@ -1,6 +1,8 @@
 import axios from '../../http'
 import * as actionTypes from './actionTypes'
 
+import { setFlashMessage } from './index'
+
 // SUCCESS
 export const addReminderSuccess = (reminder) => {
   return {
@@ -59,5 +61,20 @@ export const getReminders = () => {
     .catch(err => {
       dispatch(getRemindersFail(err))
     })
+  }
+}
+
+// DELETE REMINDER
+export const deleteReminder = (id) => {
+  return dispatch => {
+    return axios.delete('api/reminders/delete/', {params: {id: id}})
+      .then(response => {
+        dispatch(setFlashMessage(response.data))
+        return response.data
+      })
+      .catch(err => {
+        console.log(err)
+        dispatch(setFlashMessage(err.data))
+      })
   }
 }

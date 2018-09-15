@@ -1,8 +1,5 @@
 import React, { Component } from 'react'
 
-// Moment
-import moment from 'moment'
-
 // Redux
 import { connect } from 'react-redux'
 import * as actions from '../store/actions'
@@ -32,6 +29,14 @@ class Reminders extends Component {
     })
   }
 
+  handleRemoveReminder = (id) => {
+    const { deleteReminder, getReminders } = this.props
+    console.log(id)
+    deleteReminder(id).then(() => {
+      getReminders()
+    })
+  }
+
   render () {
     const { reminders, todayReminders, expiredReminders, history, users } = this.props
     return (
@@ -41,48 +46,67 @@ class Reminders extends Component {
         </StyledMainHeading>
   
         <StyledMainContent>
-            <StyledShadow>
-              <StyledHeadlines>For Today</StyledHeadlines>
 
-              { /* TODAY REMINDERS */ }
-              <ListReminders
-                reminderClass='today'
-                reminders={todayReminders}
-                users={users} />
-              
+            { /* TODAY REMINDERS */ }
+            {todayReminders ? (
+              <StyledShadow>
+                <StyledHeadlines>For Today</StyledHeadlines>
+                <ListReminders
+                  reminderClass='today'
+                  reminders={todayReminders}
+                  users={users}
+                  removeReminder={this.handleRemoveReminder} />
+              </StyledShadow>
+            ) : (
+              <StyledShadow>
+              <StyledNoReminders>
+                <StyledShadow>
+                  <h3>No reminders for today. Add new?</h3>
+                  <div
+                    className="icon"
+                    onClick={() => {history.push('/add')}}
+                  ><AddIcon /></div>
+                </StyledShadow>
+              </StyledNoReminders>
             </StyledShadow>
+            )}
 
-
-            { /* REMINDERS */ }
+            { /* NEXT REMINDERS */ }
             { reminders ? (
             <StyledShadow>
               <StyledHeadlines>Yet to arrive</StyledHeadlines>
               <ListReminders
                 reminderClass='next'
                 reminders={reminders}
-                users={users} />
+                users={users}
+                removeReminder={this.handleRemoveReminder} />
             </StyledShadow>
             ) : (
-              <StyledNoReminders>
-                <h3>No pending reminders.</h3>
-                <h3>Add new</h3>
-                <div
-                  className="icon"
-                  onClick={() => {history.push('/add')}}
-                ><AddIcon /></div>
-              </StyledNoReminders>
+              <StyledShadow>
+                <StyledNoReminders>
+                  <StyledShadow>
+                    <h3>No pending reminders. Add new?</h3>
+                    <div
+                      className="icon"
+                      onClick={() => {history.push('/add')}}
+                    ><AddIcon /></div>
+                  </StyledShadow>
+                </StyledNoReminders>
+              </StyledShadow>
               ) }
 
             { /* EXPIRED REMINDERS */ }
+            { expiredReminders ? (
             <StyledShadow>
               <StyledHeadlines>Expired</StyledHeadlines>
-
               <ListReminders
                 reminderClass='expired'
                 reminders={expiredReminders}
-                users={users} />
-                
+                users={users}
+                removeReminder={this.handleRemoveReminder} />
             </StyledShadow>
+            ) : null }
+
         </StyledMainContent>
       </StyledSection>
     )
@@ -102,7 +126,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  getReminders: () => dispatch(actions.getReminders())
+  getReminders: () => dispatch(actions.getReminders()),
+  deleteReminder: (id) => dispatch(actions.deleteReminder(id))
 })
 
 // EXPORT
@@ -110,8 +135,10 @@ export default connect( mapStateToProps, mapDispatchToProps )( Reminders )
 
 const StyledHeadlines = styled.h2`
   margin: 0;
-  color: #fff;
+  color: ${colors.ter_yellow};
   font-style: italic;
+  font-size: 18px;
+  margin-bottom: 10px;
 `
 
 const StyledNoReminders = styled.div`
