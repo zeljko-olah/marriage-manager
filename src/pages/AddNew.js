@@ -28,6 +28,20 @@ class AddNew extends Component {
     error: ''
   }
 
+  componentDidMount () {
+    const { history } = this.props
+    console.log(history.location.pathname)
+    if (history.location.pathname.includes('reminder')) {
+      this.setState({
+        activeTab: 'reminder',
+      }) 
+    } else {
+      this.setState({
+        activeTab: 'todo',
+      }) 
+    }
+  }
+
   // HANDLERS
   setActiveTab = (tab) => {
     this.setState({

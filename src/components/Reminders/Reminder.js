@@ -12,6 +12,7 @@ import { StyledShadow } from '../../styles/section'
 // ICONS
 import InfoIcon from 'react-icons/lib/md/info'
 import RemoveIcon from 'react-icons/lib/md/remove-circle'
+import TimerIcon from 'react-icons/lib/md/timer'
 
 const formatReminderDate = (timestamp) => {
   return moment(timestamp).format('MMM Do')
@@ -42,7 +43,7 @@ const handleAvatars = (reminder, users) => {
   }
 }
 
-export default ({reminder, reminderClass, users, removeReminder}) => {
+export default ({reminder, reminderClass, users, removeReminder, setTimer}) => {
   return (
     <StyledReminder>
       <div className={reminderClass}>
@@ -60,7 +61,14 @@ export default ({reminder, reminderClass, users, removeReminder}) => {
         </StyledShadow>
         <p className="reminder-date">{formatReminderDate(reminder.date)}</p>
         <StyledShadow>
-          <p className="reminder-time">{formatReminderTime(reminder.date)}</p>
+        <p className="reminder-time">{formatReminderTime(reminder.date)}</p>
+        { reminderClass !== 'expired' ? (
+          <div className="reminder-timer-wrapper">
+            <span
+              className="reminder-timer-icon"
+              onClick={() => {setTimer(reminder)}}><TimerIcon/></span>
+          </div>
+        ) : null }
         </StyledShadow>
       </div>
       <span
@@ -77,6 +85,7 @@ const StyledReminder = styled.div`
   padding: 15px 10px;
   display: flex;
   flex: 0 0 auto;
+  width: 45%;
   flex-direction: column;
   justify-content: space-between;
     
@@ -123,12 +132,27 @@ const StyledReminder = styled.div`
     display: flex;
   }
 
-  & .reminder-info-icon {
+  & .reminder-info-icon,
+  & .reminder-timer-icon {
     display: inline-block;
-    color: ${colors.prim_light};
-    font-size: 20px;
     text-align: center;
     cursor: pointer;
+  }
+
+  & .reminder-info-icon {
+    color: ${colors.prim_light};
+    font-size: 20px;
+  }
+
+  & .reminder-timer-icon {
+    color: ${colors.ter_yellow};
+    font-size: 30px;
+  }
+
+  & .reminder-timer-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   & .reminder-info {

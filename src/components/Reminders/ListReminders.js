@@ -6,9 +6,9 @@ import Reminder from '../../components/Reminders/Reminder'
 import styled from 'styled-components'
 import * as colors from '../../styles/variables'
 
-const ListReminders = ({reminderClass, reminders, users, removeReminder}) => {
+const ListReminders = ({reminderClass, reminders, users, removeReminder, show, setTimer}) => {
   return (
-    <StyledReminders> 
+    <StyledReminders className={show === true ? 'show' : 'hide'}> 
           
       { reminders.map(reminder => {
         return (
@@ -17,7 +17,8 @@ const ListReminders = ({reminderClass, reminders, users, removeReminder}) => {
             reminder={reminder}
             reminderClass={reminderClass}
             users={users}
-            removeReminder={removeReminder} />
+            removeReminder={removeReminder}
+            setTimer={setTimer} />
         )
       }) }
     </StyledReminders> 
@@ -36,5 +37,18 @@ const StyledReminders = styled.div`
   overflow-x: auto;
   ::-webkit-scrollbar { 
     display: none;
+  }
+  transition: all .3s ease-in;
+
+  &.hide {
+    opacity: 0;
+    height: 0;
+    transform: translateX(-10%);
+  }
+  
+  &.show {
+    opacity: 1;
+    height: 200px;
+    transform: translateX(0);
   }
 `
