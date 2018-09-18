@@ -247,6 +247,7 @@ export const StyledButton = styled.button`
 `
 // BUTTON
 export const StyledShadow = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;

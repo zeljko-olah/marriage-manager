@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+import moment from 'moment'
+
 // Redux
 import { connect } from 'react-redux'
 import * as actions from '../store/actions'
@@ -26,29 +28,37 @@ class Reminders extends Component {
 
   state = {
     showExpired: false,
-    currentReminder: null
+    currentReminder: {}
   }
 
   // LIFECYCLE HOOKS
   componentDidMount = () => {
     const { getReminders } = this.props
-    getReminders().then(() => {
+    getReminders().then((reminders) => {
+      console.log(reminders[0])
+      const current = reminders.find(r => r.date > moment().valueOf() && moment().isSame(moment(r.date), 'days'))
+      // console.log(current)
+      this.setState({currentReminder: current})
     })
   }
 
   componentDidUpdate(prevProps, prevState) {
     const { todayReminders } = this.props
     if (!prevProps.todayReminders.length && todayReminders !== prevProps.todayReminders) {
-      this.setState({currentReminder: todayReminders[0]})
+      const current = todayReminders.find(r => r.date > moment().valueOf())
+      this.setState({currentReminder: current})
     }
   }
 
   // HANDLERS
   handleRemoveReminder = (id) => {
     const { deleteReminder, getReminders } = this.props
-    console.log(id)
     deleteReminder(id).then(() => {
-      getReminders()
+      // this.setState({currentReminder: null}) 
+      getReminders().then(reminders => {
+        const current = reminders.find(r => r.date > moment().valueOf())
+        this.setState({currentReminder: current})
+      })
     })
   }
 
@@ -73,12 +83,30 @@ class Reminders extends Component {
         </StyledMainHeading>
   
         <StyledMainContent>
-            <StyledShadow>
+            { currentReminder && !currentReminder.length ? (
               <StyledShadow>
-               <ReminderTimer
-               reminder={currentReminder} />
-              </StyledShadow>
+                <StyledHeadlines>
+                  Current
+                </StyledHeadlines>
+                <StyledShadow>
+                  { currentReminder.id ? (
+                    <ListReminders
+                    show={true}
+                    reminderClass='today'
+                    reminders={[currentReminder]}
+                    users={users}
+                    removeReminder={this.handleRemoveReminder}
+                    setTimer={this.handleSetTimer} />
+                  ) : (
+                    <div>Loading ...</div>
+                  ) }
+                  <ReminderTimer
+                    reminder={currentReminder} />
+                </StyledShadow>
             </StyledShadow>
+            ) : (
+              <div>No current Reminders ... </div>
+            )}
 
             { /* TODAY REMINDERS */ }
             {todayReminders.length ? (
@@ -212,8 +240,8 @@ const StyledNoReminders = styled.div`
     font-size: 40px;
     margin: 0 auto;
     cursor: pointer;
-    background: ${colors.prim_light}
-    box-shadow: 0px 0px 10px 10px rgba(255, 255, 255, 0.7);
+    background: ${colors.prim_light};
+    box-shadow:0px 0px 10px 10px rgba(255, 255, 255, 0.7);
     transition: all .1s ease-in;
     transform: scale(1);
   }

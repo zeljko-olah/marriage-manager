@@ -36,7 +36,7 @@ export const selectExpiredReminders = createSelector(
     if (allReminders) {
       return allReminders
       .filter(r => {
-        return moment(r.date).add(1, 'days').isSameOrBefore(moment(), 'day')
+        return moment(r.date).add(1, 'days').isSameOrBefore(moment(), 'day') || r.date < moment().valueOf()
       } )
       .sort((a,b) => moment(b.date).valueOf() - moment(a.date).valueOf())
     } else {

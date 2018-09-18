@@ -49,14 +49,14 @@ export const getRemindersFail = (error) => {
   }
 }
 
-// GET REMINDER
+// GET REMINDERS
 export const getReminders = () => {
   return dispatch => {
     return axios.get('api/reminders/index')
     .then(response => {
       console.log(response.data)
       dispatch(getRemindersSuccess(response.data))
-      return response.data
+      return response.data.reminders
     })
     .catch(err => {
       dispatch(getRemindersFail(err))

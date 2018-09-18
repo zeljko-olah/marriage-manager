@@ -46,7 +46,7 @@ const handleAvatars = (reminder, users) => {
 export default ({reminder, reminderClass, users, removeReminder, setTimer}) => {
   return (
     <StyledReminder>
-      <div className={reminderClass}>
+      <div className={reminder.date < moment().valueOf() ? 'expired' : reminderClass}>
         <div className="reminder-avatar">
           {handleAvatars(reminder, users )}
         </div>
@@ -62,7 +62,7 @@ export default ({reminder, reminderClass, users, removeReminder, setTimer}) => {
         <p className="reminder-date">{formatReminderDate(reminder.date)}</p>
         <StyledShadow>
         <p className="reminder-time">{formatReminderTime(reminder.date)}</p>
-        { reminderClass !== 'expired' ? (
+        { reminderClass !== 'expired' && reminder.date > moment().valueOf() ? (
           <div className="reminder-timer-wrapper">
             <span
               className="reminder-timer-icon"
