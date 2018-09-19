@@ -13,7 +13,7 @@ let countDown
 class ReminderTimer extends Component {
 
   state = {
-    // timer: 0,
+    months: 0,
     days: 0,
     hours: 0,
     minutes: 0,
@@ -21,9 +21,15 @@ class ReminderTimer extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
-    // clearInterval(countDown)
+    let indicate = false
     const { reminder } = this.props
-    if (prevProps.reminder === null && reminder) {
+    if (prevProps.reminder.id === reminder.id && !indicate) {
+      clearInterval(countDown)
+      this.handleStartTimer(reminder)
+      indicate = true
+    }
+    if (prevProps.reminder.id !== reminder.id) {
+      clearInterval(countDown)
       this.handleStartTimer(reminder)
     }
     if (prevProps.reminder && reminder && prevProps.reminder.id !== reminder.id ) {
@@ -37,6 +43,7 @@ class ReminderTimer extends Component {
   }
 
   handleStartTimer = (reminder) => {
+    const { reloadReminders } = this.props
     const eventTime = reminder.date
     const currentTime = moment().valueOf()
     const diffTime = eventTime - currentTime
@@ -45,17 +52,13 @@ class ReminderTimer extends Component {
 
     countDown = setInterval(() => {
       if (duration._milliseconds < 0) {
+        console.log('Here')
         clearInterval(countDown)
-        this.setState({timer: 'expired' })
+        // this.setState({timer: 'expired' })
+        reloadReminders()
+        return
       } else {
         duration = moment.duration(duration - interval, 'milliseconds')
-        let timerString = `
-        ${duration.months()} months : 
-        ${duration.days()} days : 
-        ${duration.hours()} hours : 
-        ${duration.minutes()} minutes : 
-        ${duration.seconds()} seconds
-        `
         this.setState({
           months: duration.months(),
           days: duration.days(),
@@ -74,11 +77,19 @@ class ReminderTimer extends Component {
       <StyledTimer>
         {reminder && (
           <div className="timer-wrapper">
-           { months !== 0 &&  <p>{months} months</p>}
-           { days !== 0 &&  <p>{days} days</p>}
-           { hours !== 0 &&  <p>{hours} hours</p>}
-           { minutes !== 0 &&  <p>{minutes} minutes</p>}
-           { seconds !== 0 && <p>{seconds} seconds</p>}
+            <div className="timer-headline">
+            <h3>Time remains</h3>
+            </div>
+            <div>
+            <StyledShadow>
+            { months === 0 && days === 0 && hours === 0 && hours === 0 && minutes === 0 && seconds === 0 && <p>Loading...</p> }
+            { months !== 0 ?  <p className="month"><span className="count-number">{months}</span> months</p> : null}
+            { days !== 0 &&  <p className="days"><span className="count-number">{days}</span> days</p>}
+            { months === 0 && hours !== 0 &&  <p className="hours"><span className="count-number">{hours}</span> hours</p>}
+            { days === 0 && minutes !== 0 &&  <p className="minutes"><span className="count-number">{minutes}</span> minutes</p>}
+            { days === 0 && seconds !== 0 && <p className="seconds"><span className="count-number">{seconds}</span> seconds</p>}
+            </StyledShadow>
+            </div>
           </div>
         )}        
       </StyledTimer>
@@ -99,12 +110,46 @@ const StyledTimer = styled.div`
 
   & .timer-wrapper {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
 
+    & .timer-headline h3 {
+      color: ${colors.prim_color};
+      margin-right: 30px;
+      text-transform: uppercase;
+      font-size: 20px;
+      padding: 10px;
+      background-color: ${colors.backdrop};
+    }
+
     & p {
       flex: 0 100px auto;
+      margin: 3px 0;
+
+      &.month {
+        color: ${colors.sec_light};
+      }
+      &.days {
+        color: ${colors.sec_color};
+      }
+      &.hours {
+        color: ${colors.sec_light};
+      }
+      &.minutes {
+        color: ${colors.girl_color};
+      }
+      &.seconds {
+        color: ${colors.boy_color};
+      }
+
+      & .count-number {
+        position: relative;
+        display: inline-block;
+        top: 7px;
+        font-size: 25px;
+        margin-right: 3px;
+      }
     }
   }
 `

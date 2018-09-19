@@ -4,7 +4,6 @@ import Reminder from '../../components/Reminders/Reminder'
 
 // Styled components
 import styled from 'styled-components'
-import * as colors from '../../styles/variables'
 
 const ListReminders = ({reminderClass, reminders, users, removeReminder, show, setTimer}) => {
   return (
@@ -38,7 +37,9 @@ const StyledReminders = styled.div`
   ::-webkit-scrollbar { 
     display: none;
   }
-  transition: all .3s ease-in;
+  // transition: opacity .1s ease-in;
+  // transition: transform .3s ease-in;
+  transition: height .1s ease-in, opacity .1s ease-in, transform .3s ease-in;
 
   &.hide {
     opacity: 0;

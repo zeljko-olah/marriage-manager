@@ -59,10 +59,14 @@ export default ({reminder, reminderClass, users, removeReminder, setTimer}) => {
             </div>
           </div>
         </StyledShadow>
-        <p className="reminder-date">{formatReminderDate(reminder.date)}</p>
+        <div>
+          <p className="reminder-date">{formatReminderDate(reminder.date)}</p>
+        </div>
         <StyledShadow>
         <p className="reminder-time">{formatReminderTime(reminder.date)}</p>
-        { reminderClass !== 'expired' && reminder.date > moment().valueOf() ? (
+        { reminderClass !== 'expired' &&
+          reminderClass !== 'current' &&
+          reminder.date > moment().valueOf() ? (
           <div className="reminder-timer-wrapper">
             <span
               className="reminder-timer-icon"
@@ -96,10 +100,15 @@ const StyledReminder = styled.div`
     border: 1px solid ${colors.prim_color};
     display: flex;
     justify-content: space-between;
+    align-items: stretch;
 
-    & > div {
-      flex-basis: 40%;
+    & div:first-child {
+      flex: 1;
     }
+  }
+
+  & .current {
+    background: ${colors.overlay};
   }
 
   & .today {
@@ -170,16 +179,16 @@ const StyledReminder = styled.div`
 
   & .reminder-date {
     color: ${colors.sec_light};
-    font-size: 30px;
+    font-size: 25px;
     font-weight: bold;
     text-transform: uppercase;
     text-align: center;
-    padding: 5px;
+    padding-top: 20%;
   }
 
   & .reminder-time {
     color: ${colors.prim_light};
-    font-size: 25px;
+    font-size: 20px;
     font-weight: bold;
     text-transform: uppercase;
     text-align: center;

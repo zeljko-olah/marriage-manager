@@ -28,6 +28,8 @@ class Reminders extends Component {
 
   state = {
     showExpired: false,
+    showToday: false,
+    showNext: false,
     currentReminder: {}
   }
 
@@ -35,18 +37,25 @@ class Reminders extends Component {
   componentDidMount = () => {
     const { getReminders } = this.props
     getReminders().then((reminders) => {
-      console.log(reminders[0])
-      const current = reminders.find(r => r.date > moment().valueOf() && moment().isSame(moment(r.date), 'days'))
+      // const current = reminders.find(r => r.date > moment().valueOf() && moment().isSame(moment(r.date), 'days'))
+      const current = reminders.find(r => r.date > moment().valueOf())
       // console.log(current)
       this.setState({currentReminder: current})
     })
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const { todayReminders } = this.props
-    if (!prevProps.todayReminders.length && todayReminders !== prevProps.todayReminders) {
-      const current = todayReminders.find(r => r.date > moment().valueOf())
-      this.setState({currentReminder: current})
+  componentDidUpdate(prevProps) {
+    const { todayReminders, reminders } = this.props
+    if (todayReminders.length) {
+      if (!prevProps.todayReminders.length && todayReminders !== prevProps.todayReminders) {
+        const current = todayReminders.find(r => r.date > moment().valueOf())
+        this.setState({currentReminder: current})
+      } 
+    } else if (reminders.length) {
+      if (!prevProps.reminders.length && reminders !== prevProps.reminders) {
+        const current = reminders.find(r => r.date > moment().valueOf())
+        this.setState({currentReminder: current})
+      } 
     }
   }
 
@@ -68,14 +77,26 @@ class Reminders extends Component {
     })
   }
 
+  handleShowToday = () => {
+    this.setState( (prevState) => {
+      return { showToday: !prevState.showToday }
+    })
+  }
+
+  handleShowNext = () => {
+    this.setState( (prevState) => {
+      return { showNext: !prevState.showNext }
+    })
+  }
+
   handleSetTimer = (reminder) => {
     this.setState({currentReminder: reminder}) 
   }
   
 
   render () {
-    const { reminders, todayReminders, expiredReminders, history, users } = this.props
-    const { showExpired, currentReminder } = this.state
+    const { reminders, todayReminders, expiredReminders, history, users, getReminders } = this.props
+    const { showExpired, showToday, showNext, currentReminder } = this.state
     return (
       <StyledSection>
         <StyledMainHeading>
@@ -85,35 +106,40 @@ class Reminders extends Component {
         <StyledMainContent>
             { currentReminder && !currentReminder.length ? (
               <StyledShadow>
-                <StyledHeadlines>
-                  Current
-                </StyledHeadlines>
                 <StyledShadow>
-                  { currentReminder.id ? (
-                    <ListReminders
-                    show={true}
-                    reminderClass='today'
-                    reminders={[currentReminder]}
-                    users={users}
-                    removeReminder={this.handleRemoveReminder}
-                    setTimer={this.handleSetTimer} />
-                  ) : (
-                    <div>Loading ...</div>
-                  ) }
-                  <ReminderTimer
-                    reminder={currentReminder} />
+                  <StyledHeadlines>
+                    Current
+                  </StyledHeadlines>
                 </StyledShadow>
+                { currentReminder.id ? (
+                  <ListReminders
+                  show={true}
+                  reminderClass='current'
+                  reminders={[currentReminder]}
+                  users={users}
+                  removeReminder={this.handleRemoveReminder}
+                  setTimer={this.handleSetTimer} />
+                ) : (
+                  <div>Loading ...</div>
+                ) }
+                  <ReminderTimer
+                  reminder={currentReminder}
+                  reloadReminders={getReminders} />
             </StyledShadow>
-            ) : (
-              <div>No current Reminders ... </div>
-            )}
+            ) : null}
 
             { /* TODAY REMINDERS */ }
             {todayReminders.length ? (
               <StyledShadow>
-                <StyledHeadlines>For Today</StyledHeadlines>
+                <StyledShadow>
+                  <StyledHeadlines
+                    onClick={this.handleShowToday}>
+                    For Today
+                    { showToday ? <ArrowUpIcon/> : <ArrowDownIcon/> }
+                  </StyledHeadlines>
+                </StyledShadow>
                 <ListReminders
-                  show={true}
+                  show={showToday}
                   reminderClass='today'
                   reminders={todayReminders}
                   users={users}
@@ -137,9 +163,15 @@ class Reminders extends Component {
             { /* NEXT REMINDERS */ }
             { reminders ? (
             <StyledShadow>
-              <StyledHeadlines>Yet to arrive</StyledHeadlines>
+              <StyledShadow>
+                <StyledHeadlines
+                  onClick={this.handleShowNext}>
+                  Yet to arrive
+                  { showNext ? <ArrowUpIcon/> : <ArrowDownIcon/> }
+                </StyledHeadlines>
+              </StyledShadow>
               <ListReminders
-                show
+                show={showNext}
                 reminderClass='next'
                 reminders={reminders}
                 users={users}
@@ -163,11 +195,13 @@ class Reminders extends Component {
             { /* EXPIRED REMINDERS */ }
             { expiredReminders ? (
             <StyledShadow>
-              <StyledHeadlines
-                onClick={this.handleShowExpired}>
-                Show Expired
-                { showExpired ? <ArrowUpIcon/> : <ArrowDownIcon/> }
-              </StyledHeadlines>
+              <StyledShadow>
+                <StyledHeadlines
+                  onClick={this.handleShowExpired}>
+                  Show Expired
+                  { showExpired ? <ArrowUpIcon/> : <ArrowDownIcon/> }
+                </StyledHeadlines>
+              </StyledShadow>
              
               <ListReminders
                 show={showExpired}
@@ -205,13 +239,15 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect( mapStateToProps, mapDispatchToProps )( Reminders )
 
 const StyledHeadlines = styled.h2`
-  margin: 0;
-  color: ${colors.ter_yellow};
   font-style: italic;
-  font-size: 20px;
-  margin-bottom: 10px;
+  text-transform: uppercase;
+  font-size: 15px;
+  margin: 0;
+  color: ${colors.prim_light};
 
   & svg {
+    position: relative;
+    top: -2px;
     font-size: 30px;
     cursor: pointer;
   }
@@ -225,6 +261,8 @@ const StyledNoReminders = styled.div`
   transition: all .3s ease-in;
 
   & h3 {
+    font-size: 15px;
+    font-style: italic;
     color: ${colors.prim_light};
   }
 
@@ -232,21 +270,21 @@ const StyledNoReminders = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     line-height: 40px;
     border: 2px solid ${colors.prim_color};
     border-radius: 40px;
     font-size: 40px;
-    margin: 0 auto;
+    margin: 0 auto 10px;
     cursor: pointer;
     background: ${colors.prim_light};
     box-shadow:0px 0px 10px 10px rgba(255, 255, 255, 0.7);
     transition: all .1s ease-in;
     transform: scale(1);
-  }
 
-  &:hover {
-    transform: scale(1.1);
+    &:hover {
+      transform: scale(1.1);
+    }
   }
 `

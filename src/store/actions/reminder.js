@@ -54,7 +54,6 @@ export const getReminders = () => {
   return dispatch => {
     return axios.get('api/reminders/index')
     .then(response => {
-      console.log(response.data)
       dispatch(getRemindersSuccess(response.data))
       return response.data.reminders
     })
