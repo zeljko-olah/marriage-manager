@@ -9,7 +9,7 @@ export const StyledSection = styled.section`
   border: 3px solid ${colors.prim_color};
   border-top-left-radius: 20px;
   overflow: hidden;
-  // max-height: 80vh;
+  max-height: 80vh;
   overflow-y: scroll;
   ::-webkit-scrollbar { 
     display: none;

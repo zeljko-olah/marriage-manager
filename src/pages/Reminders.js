@@ -20,6 +20,7 @@ import ArrowUpIcon from 'react-icons/lib/md/arrow-drop-up'
 
 import ListReminders from '../components/Reminders/ListReminders'
 import ReminderTimer from '../components/Reminders/ReminderTimer'
+import Loading from '../components/UI/Loading'
 
 import { selectAllRoomUsers } from '../store/selectors/chat'
 import { selectRelevantRemindersFirst, selectTodaysReminders, selectExpiredReminders } from '../store/selectors/reminders'
@@ -30,7 +31,8 @@ class Reminders extends Component {
     showExpired: false,
     showToday: false,
     showNext: false,
-    currentReminder: {}
+    currentReminder: {},
+    loading: true
   }
 
   // LIFECYCLE HOOKS
@@ -40,7 +42,10 @@ class Reminders extends Component {
       // const current = reminders.find(r => r.date > moment().valueOf() && moment().isSame(moment(r.date), 'days'))
       const current = reminders.find(r => r.date > moment().valueOf())
       // console.log(current)
-      this.setState({currentReminder: current})
+      this.setState({
+        currentReminder: current,
+        loading: false
+    })
     })
   }
 
@@ -62,8 +67,9 @@ class Reminders extends Component {
   // HANDLERS
   handleRemoveReminder = (id) => {
     const { deleteReminder, getReminders } = this.props
+    this.setState({loading: true}) 
     deleteReminder(id).then(() => {
-      // this.setState({currentReminder: null}) 
+      this.setState({loading: false}) 
       getReminders().then(reminders => {
         const current = reminders.find(r => r.date > moment().valueOf())
         this.setState({currentReminder: current})
@@ -95,15 +101,75 @@ class Reminders extends Component {
   
 
   render () {
-    const { reminders, todayReminders, expiredReminders, history, users, getReminders } = this.props
-    const { showExpired, showToday, showNext, currentReminder } = this.state
+    const { 
+      reminders, 
+      todayReminders, 
+      expiredReminders, 
+      history, 
+      users, 
+      getReminders
+    } = this.props
+    const {
+      showExpired, 
+      showToday, 
+      showNext, 
+      currentReminder, 
+      loading } = this.state
+    
+    // Show spinner innitially
+    let forToday = <Loading />
+    
+    // Show reminders for today
+    if (todayReminders.length && !loading) {
+      forToday = (
+        <StyledShadow>
+          <StyledShadow>
+            <StyledHeadlines
+              onClick={this.handleShowToday}>
+              For Today
+              { showToday ? <ArrowUpIcon/> : <ArrowDownIcon/> }
+            </StyledHeadlines>
+          </StyledShadow>
+          <ListReminders
+            show={showToday}
+            reminderClass='today'
+            reminders={todayReminders}
+            users={users}
+            removeReminder={this.handleRemoveReminder}
+            setTimer={this.handleSetTimer} />
+        </StyledShadow>
+      )
+    }
+    
+    // No reminders for today
+    if (!todayReminders.length && !loading) {
+      forToday = (
+          <StyledShadow>
+          <StyledNoReminders>
+            <StyledShadow>
+              <h3>No reminders for today. Add new?</h3>
+              <div
+                className="icon"
+                onClick={() => {history.push('/add/reminder')}}
+              ><AddIcon /></div>
+            </StyledShadow>
+          </StyledNoReminders>
+        </StyledShadow>
+      )
+    }
+
     return (
       <StyledSection>
+
+        { /* SECTION HEADING */ }
         <StyledMainHeading>
           <h1>Reminders</h1>
         </StyledMainHeading>
-  
+        
+        { /* CONTENT */ }
         <StyledMainContent>
+
+            { /* CURRENT REMINDER BOX */ }
             { currentReminder && !currentReminder.length ? (
               <StyledShadow>
                 <StyledShadow>
@@ -111,6 +177,8 @@ class Reminders extends Component {
                     Current
                   </StyledHeadlines>
                 </StyledShadow>
+
+                { /* SELECTED CURRENT REMINDER */ }
                 { currentReminder.id ? (
                   <ListReminders
                   show={true}
@@ -119,48 +187,19 @@ class Reminders extends Component {
                   users={users}
                   removeReminder={this.handleRemoveReminder}
                   setTimer={this.handleSetTimer} />
-                ) : (
-                  <div>Loading ...</div>
-                ) }
-                  <ReminderTimer
+                ) : <Loading /> }
+
+                { /* REMIDER TIMER */ }
+                <ReminderTimer
                   reminder={currentReminder}
                   reloadReminders={getReminders} />
             </StyledShadow>
             ) : null}
 
             { /* TODAY REMINDERS */ }
-            {todayReminders.length ? (
-              <StyledShadow>
-                <StyledShadow>
-                  <StyledHeadlines
-                    onClick={this.handleShowToday}>
-                    For Today
-                    { showToday ? <ArrowUpIcon/> : <ArrowDownIcon/> }
-                  </StyledHeadlines>
-                </StyledShadow>
-                <ListReminders
-                  show={showToday}
-                  reminderClass='today'
-                  reminders={todayReminders}
-                  users={users}
-                  removeReminder={this.handleRemoveReminder}
-                  setTimer={this.handleSetTimer} />
-              </StyledShadow>
-            ) : (
-              <StyledShadow>
-              <StyledNoReminders>
-                <StyledShadow>
-                  <h3>No reminders for today. Add new?</h3>
-                  <div
-                    className="icon"
-                    onClick={() => {history.push('/add/reminder')}}
-                  ><AddIcon /></div>
-                </StyledShadow>
-              </StyledNoReminders>
-            </StyledShadow>
-            )}
+            { !todayReminders ? (<Loading/>) : forToday }
 
-            { /* NEXT REMINDERS */ }
+            { /* NEXT PENDING REMINDERS */ }
             { reminders ? (
             <StyledShadow>
               <StyledShadow>
@@ -170,6 +209,7 @@ class Reminders extends Component {
                   { showNext ? <ArrowUpIcon/> : <ArrowDownIcon/> }
                 </StyledHeadlines>
               </StyledShadow>
+
               <ListReminders
                 show={showNext}
                 reminderClass='next'
@@ -180,6 +220,8 @@ class Reminders extends Component {
             </StyledShadow>
             ) : (
               <StyledShadow>
+
+                { /* NO PENDING REMINDERS */ }
                 <StyledNoReminders>
                   <StyledShadow>
                     <h3>No pending reminders. Add new?</h3>
@@ -202,7 +244,7 @@ class Reminders extends Component {
                   { showExpired ? <ArrowUpIcon/> : <ArrowDownIcon/> }
                 </StyledHeadlines>
               </StyledShadow>
-             
+              
               <ListReminders
                 show={showExpired}
                 reminderClass='expired'

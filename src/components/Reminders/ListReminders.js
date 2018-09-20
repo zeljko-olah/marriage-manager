@@ -37,8 +37,6 @@ const StyledReminders = styled.div`
   ::-webkit-scrollbar { 
     display: none;
   }
-  // transition: opacity .1s ease-in;
-  // transition: transform .3s ease-in;
   transition: height .1s ease-in, opacity .1s ease-in, transform .3s ease-in;
 
   &.hide {

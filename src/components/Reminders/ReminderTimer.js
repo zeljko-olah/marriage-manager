@@ -8,6 +8,8 @@ import styled from 'styled-components'
 import { StyledShadow } from '../../styles/section'
 import * as colors from '../../styles/variables'
 
+import Loading from '../../components/UI/Loading'
+
 let countDown
 
 class ReminderTimer extends Component {
@@ -82,7 +84,7 @@ class ReminderTimer extends Component {
             </div>
             <div>
             <StyledShadow>
-            { months === 0 && days === 0 && hours === 0 && hours === 0 && minutes === 0 && seconds === 0 && <p>Loading...</p> }
+            { months === 0 && days === 0 && hours === 0 && hours === 0 && minutes === 0 && seconds === 0 && <Loading /> }
             { months !== 0 ?  <p className="month"><span className="count-number">{months}</span> months</p> : null}
             { days !== 0 &&  <p className="days"><span className="count-number">{days}</span> days</p>}
             { months === 0 && hours !== 0 &&  <p className="hours"><span className="count-number">{hours}</span> hours</p>}
