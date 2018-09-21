@@ -191,15 +191,16 @@ class Reminders extends Component {
 
                 { /* REMIDER TIMER */ }
                 <ReminderTimer
-                  reminder={currentReminder}
-                  reloadReminders={getReminders} />
+                  reminder={currentReminder} />
             </StyledShadow>
             ) : null}
 
             { /* TODAY REMINDERS */ }
+            { loading ? (<Loading/>) : null }
             { !todayReminders ? (<Loading/>) : forToday }
 
             { /* NEXT PENDING REMINDERS */ }
+            { loading ? (<Loading/>) : null }
             { reminders ? (
             <StyledShadow>
               <StyledShadow>
@@ -235,6 +236,7 @@ class Reminders extends Component {
               ) }
 
             { /* EXPIRED REMINDERS */ }
+            { loading ? (<Loading/>) : null }
             { expiredReminders ? (
             <StyledShadow>
               <StyledShadow>

@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router'
+
 
 // Moment
 import moment from 'moment'
@@ -19,12 +21,19 @@ class ReminderTimer extends Component {
     days: 0,
     hours: 0,
     minutes: 0,
-    seconds: 0
+    seconds: 0,
+    timerExpired: false
   }
 
   componentDidUpdate (prevProps, prevState) {
     let indicate = false
     const { reminder } = this.props
+    const { timerExpired } = this.state
+    if (timerExpired === true && prevState.timerExpired !== timerExpired) {
+      clearInterval(countDown)
+      countDown = 0
+      return
+    }
     if (prevProps.reminder.id === reminder.id && !indicate) {
       clearInterval(countDown)
       this.handleStartTimer(reminder)
@@ -45,21 +54,21 @@ class ReminderTimer extends Component {
   }
 
   handleStartTimer = (reminder) => {
-    const { reloadReminders } = this.props
+    const { timerExpired } = this.state
+    if (timerExpired) {
+      alert('Timer Expired!')
+    }
     const eventTime = reminder.date
     const currentTime = moment().valueOf()
     const diffTime = eventTime - currentTime
     let duration = moment.duration(diffTime, 'milliseconds')
     const interval = 1000
 
-    countDown = setInterval(() => {
-      if (duration._milliseconds < 0) {
-        console.log('Here')
-        clearInterval(countDown)
-        // this.setState({timer: 'expired' })
-        reloadReminders()
-        return
-      } else {
+    if (duration._milliseconds < 0) {
+      this.setState({timerExpired: true})
+      return
+    } else {
+      countDown = setInterval(() => {
         duration = moment.duration(duration - interval, 'milliseconds')
         this.setState({
           months: duration.months(),
@@ -68,13 +77,13 @@ class ReminderTimer extends Component {
           minutes: duration.minutes(),
           seconds: duration.seconds()
         })        
-      }
-    }, interval)
+      }, interval)
+    }
   }
 
   render() {
     const { reminder } = this.props
-    const { months, days, hours, minutes, seconds } = this.state
+    const { months, days, hours, minutes, seconds, timerExpired } = this.state
     return (
       <StyledTimer>
         {reminder && (
@@ -83,14 +92,14 @@ class ReminderTimer extends Component {
             <h3>Time remains</h3>
             </div>
             <div>
-            <StyledShadow>
-            { months === 0 && days === 0 && hours === 0 && hours === 0 && minutes === 0 && seconds === 0 && <Loading /> }
-            { months !== 0 ?  <p className="month"><span className="count-number">{months}</span> months</p> : null}
-            { days !== 0 &&  <p className="days"><span className="count-number">{days}</span> days</p>}
-            { months === 0 && hours !== 0 &&  <p className="hours"><span className="count-number">{hours}</span> hours</p>}
-            { days === 0 && minutes !== 0 &&  <p className="minutes"><span className="count-number">{minutes}</span> minutes</p>}
-            { days === 0 && seconds !== 0 && <p className="seconds"><span className="count-number">{seconds}</span> seconds</p>}
-            </StyledShadow>
+              { !timerExpired ? (<StyledShadow>
+                { months === 0 && days === 0 && hours === 0 && hours === 0 && minutes === 0 && seconds === 0 && <Loading /> }
+                { months !== 0 ?  <p className="month"><span className="count-number">{months}</span> months</p> : null}
+                { days !== 0 &&  <p className="days"><span className="count-number">{days}</span> days</p>}
+                { months === 0 && hours !== 0 &&  <p className="hours"><span className="count-number">{hours}</span> hours</p>}
+                { days === 0 && minutes !== 0 &&  <p className="minutes"><span className="count-number">{minutes}</span> minutes</p>}
+                { days === 0 && seconds !== 0 && <p className="seconds"><span className="count-number">{seconds}</span> seconds</p>}
+                </StyledShadow>) : (<Redirect to='/reminder' />) }
             </div>
           </div>
         )}        

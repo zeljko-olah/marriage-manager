@@ -50,7 +50,7 @@ export default ({reminder, reminderClass, users, removeReminder, setTimer}) => {
         <div className="reminder-avatar">
           {handleAvatars(reminder, users )}
         </div>
-        <StyledShadow>
+        <StyledShadow className="reminder-title-wrapper">
           <p className="reminder-title">{reminder.title}</p>
           <div className="reminder-info-wrapper">
             <span className="reminder-info-icon"><InfoIcon/></span>
@@ -59,7 +59,7 @@ export default ({reminder, reminderClass, users, removeReminder, setTimer}) => {
             </div>
           </div>
         </StyledShadow>
-        <div>
+        <div className="reminder-date-wrapper">
           <p className="reminder-date">{formatReminderDate(reminder.date)}</p>
         </div>
         <StyledShadow>
@@ -124,6 +124,10 @@ const StyledReminder = styled.div`
     color: ${colors.prim_font};
   }
 
+  & .reminder-title-wrapper {
+    flex-grow: 1;
+  }
+
   & .reminder-title {
     color: ${colors.prim_color};
     font-size: 13px;
@@ -175,6 +179,10 @@ const StyledReminder = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
+  }
+
+  & .reminder-date-wrapper {
+    flex: 0 100px;
   }
 
   & .reminder-date {
