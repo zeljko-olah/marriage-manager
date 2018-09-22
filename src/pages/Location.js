@@ -1,6 +1,8 @@
 // IMPORTS
 import React, {Component} from 'react'
 
+import WithOutsideClick from '../hoc/WithOutsideClick'
+
 import styled from 'styled-components'
 import {StyledSection, StyledMainHeading, StyledMainContent, StyledButton, StyledShadow} from '../styles/section'
 import * as colors from '../styles/variables'
@@ -74,6 +76,10 @@ class Location extends Component {
     })
   }
 
+  closeLocations = () => {
+    this.setState({recentLocationsOpen: false})
+  }
+
   loadLocation = (location, index) => {
     console.log(location)
     this.setState({...location, overide: true})
@@ -131,6 +137,7 @@ class Location extends Component {
             <StyledShadow>
               <StyledContainer>
                 { recentLocationsOpen ? (
+                  <WithOutsideClick executeMethod={this.closeLocations}>
                   <StyledLocations>
                   <ul>
                     { locations.length ? locations.map((location, index) => {
@@ -161,6 +168,7 @@ class Location extends Component {
                   </ul>            
                 
                 </StyledLocations>
+                  </WithOutsideClick>
                 ) : null }
                 <StyledMap>
                   <StyledShadow>
@@ -277,15 +285,15 @@ const StyledMap = styled.div`
 
 const StyledLocations = styled.div`
   flex-basis: 30%;
+  position: absolute;
+  z-index: 100;
+  left: 50%;
+  transform: translate(-50%);
 
   & ul {
     background-color:${colors.backdrop};
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
     max-height: 70vh;
-    z-index: 100;
-    width: 80%;
+    width: 100%;
     padding: 0;
     margin: 0;
     overflow: auto;

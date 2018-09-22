@@ -12,6 +12,7 @@ import authReducer from './store/reducers/auth'
 import chatReducer from './store/reducers/chat'
 import locationReducer from './store/reducers/location'
 import todoReducer from './store/reducers/todo'
+import reminderReducer from './store/reducers/reminder'
 
 // ACTION CREATORS
 // import {authCheckState, socketInit} from './store/actions/index'
@@ -25,7 +26,8 @@ const rootReducer = combineReducers({
     auth: authReducer,
     chat: chatReducer,
     location: locationReducer,
-    todo: todoReducer
+    todo: todoReducer,
+    reminder: reminderReducer
 })
 
 // Define store

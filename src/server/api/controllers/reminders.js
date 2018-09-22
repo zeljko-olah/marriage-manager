@@ -57,11 +57,11 @@ exports.getReminders = (req, res, next) => {
     .exec()
     .then(docs => {
       res.status(200).json({
-        todos: docs.map(doc => {
+        reminders: docs.map(doc => {
           const time = moment(doc.created_at)
           return {
             id: doc._id,
-            title: doc.text,
+            title: doc.title,
             description: doc.description,
             who: doc.who,
             completed: doc.completed,
@@ -80,5 +80,28 @@ exports.getReminders = (req, res, next) => {
         error: err
       })
     })
+}
+
+// DELETE REMINDER
+exports.deleteReminder = (req, res, next) =>  {
+const { id } = req.query
+
+console.log('ID:::', id)
+
+Reminder.deleteOne({ _id: id })
+  .exec()
+  .then(doc => {
+    console.log(doc)
+    res.status(200).json({
+      type: 'success',
+      flashMessage: 'Great. Reminder deleted'
+    })
+  })
+  .catch(err => {
+    res.status(500).json({
+      type: 'error',
+      flashMessage: 'Something went wrong'
+    })
+  })
 }
 

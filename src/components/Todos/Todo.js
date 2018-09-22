@@ -19,21 +19,24 @@ import EditIcon from  'react-icons/lib/md/edit'
 import RenewIcon from  'react-icons/lib/md/refresh'
 
 const handleAvatars = (todo, users) => {
-  const user = todo.who
-
-  let avatar
-  if (user === 'both') {
-    avatar = [users[0], users[1]]
+  if (!users.length) {
+    return null
   } else {
-    avatar = [users.find(u => u.name === user)]
-  }
+    const user = todo.who
+    let avatar
+    if (user === 'both') {
+      avatar = [users[0], users[1]]
+    } else {
+      avatar = [users.find(u => u.name === user)]
+    }
 
-  return avatar.map(a => (
-    <Avatar
-      key={a.id}
-      name={a.name}
-      src={a.avatar} />
-  ))
+    return avatar.map(a => (
+      <Avatar
+        key={a.id}
+        name={a.name}
+        src={a.avatar} />
+    ))
+  }
 }
 
 // COMPONENT
@@ -130,13 +133,7 @@ class Todo extends Component {
     const {todo, user, users, isToday} = this.props
 
     // Display avatar which task is it
-    let avatarForUser;
-    
-    if (!users.length) {
-      avatarForUser = null
-    } else {
-      avatarForUser = handleAvatars(todo, users)
-    }
+    const avatarForUser = handleAvatars(todo, users)
   
     const formatDate = moment(todo.date).format('MMM D')
   

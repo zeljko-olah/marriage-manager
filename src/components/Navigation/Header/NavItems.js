@@ -10,7 +10,7 @@ import * as actions from '../../../store/actions';
 import { history } from '../../../router/AppRouter' 
 
 import HomeIcon from  'react-icons/lib/md/home'
-import HeartIcon from  'react-icons/lib/md/favorite-border'
+import ReminderIcon from  'react-icons/lib/md/alarm'
 import TodoIcon from  'react-icons/lib/md/playlist-add-check'
 import AddIcon from  'react-icons/lib/md/add'
 import LocationIcon from  'react-icons/lib/md/location-on'
@@ -74,7 +74,7 @@ class NavItems extends Component {
               activeClassName='active'
             >
               <i>
-                <HeartIcon />
+                <ReminderIcon />
               </i>
               { showText && <span>Reminder</span> }
             </NavLink>

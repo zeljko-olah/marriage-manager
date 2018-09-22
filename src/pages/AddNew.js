@@ -28,6 +28,20 @@ class AddNew extends Component {
     error: ''
   }
 
+  componentDidMount () {
+    const { history } = this.props
+    console.log(history.location.pathname)
+    if (history.location.pathname.includes('reminder')) {
+      this.setState({
+        activeTab: 'reminder',
+      }) 
+    } else {
+      this.setState({
+        activeTab: 'todo',
+      }) 
+    }
+  }
+
   // HANDLERS
   setActiveTab = (tab) => {
     this.setState({
@@ -41,11 +55,11 @@ class AddNew extends Component {
     }) 
   }
 
-  handleSubmit = (inputs, time) => {
+  handleSubmit = (inputs, date, time) => {
     // Define variables
     const { activeTab } = this.state
     const { user, addTodo, addReminder, setFlashMessage, roomUsers, history, socket } = this.props
-    const {title, description, priority } = inputs
+    const {title, description, priority} = inputs
     let desc
     let who
     let task = activeTab === 'todo' ? 'todo' : 'reminder'
@@ -76,11 +90,45 @@ class AddNew extends Component {
     } else {
       who = 'both'
     }
-
+    
+    // Set no description
     if (!description) {
       desc = 'No description'
     } else {
       desc = description.value
+    }
+    
+    // Time for reminder task
+    if (task === 'reminder' && time === '') {
+      setFlashMessage({
+        type: 'error',
+        flashMessage: `Hey ${user.name}, define a time for a reminder!`
+      })
+      this.setState({error: 'time'})
+      return
+    } else {
+      const pattern = /^([0-1]?\d|2[0-3])(:([0-5]?\d)|:?)$/
+      if (pattern.test(time)) {
+        if ((time.length === 3 && time.indexOf(':') === 1) || (time.length === 4 && time.indexOf(':') === 2)) {
+          setFlashMessage({
+            type: 'error',
+            flashMessage: `Hey ${user.name}, invalid minutes format!`
+          })
+          this.setState({error: 'time'})
+          return
+        }
+        if (time.length <=3 || (time.length === 3 && time.indexOf(':') === 2)) {
+          setFlashMessage({
+            type: 'error',
+            flashMessage: `Hey ${user.name}, invalid time format!`
+          })
+          this.setState({error: 'time'})
+          return
+        }
+        
+        const timeParts = time.split(':')
+        date.set({h: timeParts[0], m: timeParts[1]})
+      }
     }
     
     // Prepare payload
@@ -89,8 +137,8 @@ class AddNew extends Component {
       title: title.value,
       description: desc,
       who,
-      priority: priority.value,
-      date: time.valueOf()
+      priority: priority ? priority.value : 'normal',
+      date: date.valueOf()
     }
     
     // Persist to database and to store
@@ -116,6 +164,7 @@ class AddNew extends Component {
         })
         // Clear form
         clearForm(inputs, roomUsers)
+        history.push('/reminder')
       })
     }
   }
@@ -154,6 +203,7 @@ class AddNew extends Component {
                 <StyledTabs>
                   { activeTab === 'todo' ? (
                     <AddItem
+                      todo
                       title="Define"
                       who="Who's gonna do it?"
                       roomUsers={roomUsers}
@@ -162,8 +212,10 @@ class AddNew extends Component {
                       submit={this.handleSubmit} />
                   ) : (
                     <AddItem
+                      reminder
                       title="Set a reminder for"
                       who="Who to remind?"
+                      timeInput
                       roomUsers={roomUsers}
                       error={error}
                       clearError={this.handleClearError}
