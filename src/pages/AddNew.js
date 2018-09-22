@@ -3,7 +3,7 @@ import React, {Component} from 'react'
 // REDUX
 import { connect } from 'react-redux'
 import * as actions from '../store/actions'
-import { selectAllRoomUsernames } from '../store/selectors/chat'
+import { selectAllRoomUserNames } from '../store/selectors/chat'
 
 import AddItem from '../components/AddNew/AddItem'
 
@@ -235,7 +235,7 @@ const mapStateToProps = state => {
   return {
     user: state.auth.user,
     socket: state.chat.socket,
-    roomUsers: selectAllRoomUsernames(state)
+    roomUsers: selectAllRoomUserNames(state)
   }
 }
 

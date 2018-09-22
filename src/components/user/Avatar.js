@@ -9,7 +9,7 @@ class Avatar extends Component {
 
   render () {
     const { noSource } = this.state
-    const { src, name } = this.props
+    const { src, name, width, height } = this.props
 
     const firstLetter = name ? name.substr(0, 1) : ""
 
@@ -17,6 +17,7 @@ class Avatar extends Component {
       <Fragment>
        <StyledAvatar>
         <img
+          style={{width, height}}
           src={src}
           alt={"user avatar"}
           onError={({target}) => {

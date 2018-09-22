@@ -43,7 +43,7 @@ class Chat extends Component {
   
   // List of selected message ids
   ids = []
-  chatOpened = false
+  chatPartnerOpened = false
 
   audioDefault = new Audio(default_sound)
   audioImportant = new Audio(important_sound)
@@ -100,13 +100,17 @@ class Chat extends Component {
     socket.emit(events.JOIN, `${user.name} logged in`, {...user, id: socket.id} )
 
     socket.on(events.CHAT_STAT, (open)=>{
-			this.chatOpened = open
+      const { setUsers } = this.props
+      const { activeUsers } = this.state
+      this.chatPartnerOpened = open
+      setUsers(activeUsers, open)
+      console.log(this.chatPartnerOpened)
     })
 
     socket.on(events.UPDATE_USER_LIST, (activeUsers) => {
       const { setUsers } = this.props
       this.setState({activeUsers})
-      setUsers(activeUsers)
+      setUsers(activeUsers, false)
     })
 
     socket.on(events.NEW_MESSAGE, (message) => {
@@ -241,7 +245,7 @@ class Chat extends Component {
       }
 
       // Set unread messages 
-      const unread = !important ? ((activeUsers && activeUsers.length === 1) || !this.chatOpened ? 'true' : 'false') : 'false'
+      const unread = !important ? ((activeUsers && activeUsers.length === 1) || !this.chatPartnerOpened ? 'true' : 'false') : 'false'
 
       // Link
       const link = patterns.link.test(message)
@@ -424,7 +428,7 @@ const mapDispatchToProps = (dispatch) => ({
   socketInit: (socket) => dispatch(actions.socketInit(socket)),
   getDefaultRoomUsers: (userId) => dispatch(actions.getDefaultRoomUsers(userId)),
   getMessages: () => dispatch(actions.getMessages()),
-  setUsers: (activeUsers) => dispatch(actions.setUsers(activeUsers)),
+  setUsers: (activeUsers, open) => dispatch(actions.setUsers(activeUsers, open)),
   saveMessage: (message) => dispatch(actions.saveMessage(message)),
   toggleChat: (showChat) => dispatch( actions.toggleChat(showChat) ),
   emailChatHistory: (messages, user) => dispatch( actions.emailChatHistory(messages, user) ),

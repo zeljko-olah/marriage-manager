@@ -7,6 +7,7 @@ const initialState = {
     socket: null,
     showChat: false,
     activeUsers: [],
+    partnerChatOpen: false,
     allRoomUsers: [],
     messages: [],
     message: null,
@@ -37,7 +38,8 @@ const toggleChat = (state, action) => {
 // ACTIVE USERS 
 const setActiveUsers = (state, action) => {
   return updateObject( state, {
-      activeUsers: action.activeUsers
+      activeUsers: action.activeUsers,
+      partnerChatOpen: action.partnerChatOpened
   })
 }
 

@@ -71,10 +71,11 @@ export const getMessages = () => {
   }
 }
 
-export const setUsers = (activeUsers) => {
+export const setUsers = (activeUsers, partnerChatOpened) => {
   return {
     type: actionTypes.SET_USERS,
-    activeUsers
+    activeUsers,
+    partnerChatOpened
   }
 }
 

@@ -63,7 +63,7 @@ class Message extends Component {
       <StyledMessage pointer={pointer} typingClass={stylingClass}>
         <div className={messageClass}>
           <div className="message-outer">
-            <div className="time">{message.createdAt}</div>
+            <div className="time">{message.createdAtFormatted}</div>
             <div className="message-inner">
                 {message.location ? (
                   <a onClick={this.goToLocationPage}>{formattedMessage}</a>

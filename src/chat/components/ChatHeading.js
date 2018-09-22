@@ -161,6 +161,7 @@ padding: 10px;
 
   & div.user img {
     width: 60px;
+    height: 60px;
   }
 
   & span.on {

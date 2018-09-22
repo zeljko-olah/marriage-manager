@@ -82,7 +82,8 @@ exports.get_messages = (req, res) => {
           return {
             _id: doc._id,
             text: doc.text,
-            createdAt: time,
+            createdAt: doc.created_at,
+            createdAtFormatted: time,
             unread: doc.unread,
             important: doc.important,
             link: doc.link,
