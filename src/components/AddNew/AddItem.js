@@ -71,7 +71,7 @@ class AddItem extends Component {
 
   render() {
     const { showDescriptionInput, time } = this.state
-    const { title, who, error, clearError, roomUsers, timeInput } = this.props
+    const { reminder, title, who, error, clearError, roomUsers, timeInput } = this.props
     
     return (
       <StyledForm
@@ -156,19 +156,24 @@ class AddItem extends Component {
               </p>
             ) : null}
           </StyledShadow>
-          <StyledShadow>
-            <label><p>Priority...</p></label>
-            <p>
-              <select
-                defaultValue="normal"
-                ref={input => {this.inputs.priority = input}} >
-                <option value="low">Low</option>
-                <option value="high">High</option>
-                <option value="normal">Normal</option>
-                <option value="special">Special</option>
-              </select>
-            </p>
-          </StyledShadow>
+
+          { /* PRIORITY */ }
+          { !reminder && (
+            <StyledShadow>
+              <label><p>Priority...</p></label>
+              <p>
+                <select
+                  defaultValue="normal"
+                  ref={input => {this.inputs.priority = input}} >
+                  <option value="low">Low</option>
+                  <option value="high">High</option>
+                  <option value="normal">Normal</option>
+                  <option value="special">Special</option>
+                </select>
+              </p>
+            </StyledShadow>
+          ) }
+          
           <StyledButton type="submit">
             Add
           </StyledButton>

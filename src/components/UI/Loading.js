@@ -8,7 +8,7 @@ import styled from 'styled-components'
 const Loading = () => (
   <StyledLoader>
     { /* USE GIF IMAGE LOADER */ }
-    <img className="loader__image" src="images/loader.gif" />
+    <img className="loader__image" src="images/loader.gif" alt="loader" />
   </StyledLoader>
 )
 

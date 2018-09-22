@@ -328,3 +328,40 @@ export const StyledDatePicker = styled.div`
   }
 `
 
+// NO ITEMS ADD NEW
+export const StyledNoItems = styled.div`
+  text-align: center;
+  font-weight: 100;
+  color: ${colors.prim_font};
+  padding: 20px;
+  transition: all .3s ease-in;
+
+  & h3 {
+    font-size: 15px;
+    font-style: italic;
+    color: ${colors.prim_light};
+  }
+
+  & .icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    line-height: 40px;
+    border: 2px solid ${colors.prim_color};
+    border-radius: 40px;
+    font-size: 40px;
+    margin: 0 auto 10px;
+    cursor: pointer;
+    background: ${colors.prim_light};
+    box-shadow:0px 0px 10px 10px rgba(255, 255, 255, 0.7);
+    transition: all .1s ease-in;
+    transform: scale(1);
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+`
+

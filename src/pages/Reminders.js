@@ -10,7 +10,7 @@ import * as actions from '../store/actions'
 import styled from 'styled-components'
 import * as colors from '../styles/variables'
 import {
-  StyledSection, StyledMainHeading, StyledMainContent, StyledShadow
+  StyledSection, StyledMainHeading, StyledMainContent, StyledShadow, StyledNoItems
 } from '../styles/section'
 
 // Icons
@@ -107,7 +107,6 @@ class Reminders extends Component {
       expiredReminders, 
       history, 
       users, 
-      getReminders
     } = this.props
     const {
       showExpired, 
@@ -145,7 +144,7 @@ class Reminders extends Component {
     if (!todayReminders.length && !loading) {
       forToday = (
           <StyledShadow>
-          <StyledNoReminders>
+          <StyledNoItems>
             <StyledShadow>
               <h3>No reminders for today. Add new?</h3>
               <div
@@ -153,7 +152,7 @@ class Reminders extends Component {
                 onClick={() => {history.push('/add/reminder')}}
               ><AddIcon /></div>
             </StyledShadow>
-          </StyledNoReminders>
+          </StyledNoItems>
         </StyledShadow>
       )
     }
@@ -223,7 +222,7 @@ class Reminders extends Component {
               <StyledShadow>
 
                 { /* NO PENDING REMINDERS */ }
-                <StyledNoReminders>
+                <StyledNoItems>
                   <StyledShadow>
                     <h3>No pending reminders. Add new?</h3>
                     <div
@@ -231,7 +230,7 @@ class Reminders extends Component {
                       onClick={() => {history.push('/add/reminder')}}
                     ><AddIcon /></div>
                   </StyledShadow>
-                </StyledNoReminders>
+                </StyledNoItems>
               </StyledShadow>
               ) }
 
@@ -294,41 +293,5 @@ const StyledHeadlines = styled.h2`
     top: -2px;
     font-size: 30px;
     cursor: pointer;
-  }
-`
-
-const StyledNoReminders = styled.div`
-  text-align: center;
-  font-weight: 100;
-  color: ${colors.prim_font};
-  padding: 30px;
-  transition: all .3s ease-in;
-
-  & h3 {
-    font-size: 15px;
-    font-style: italic;
-    color: ${colors.prim_light};
-  }
-
-  & .icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 30px;
-    height: 30px;
-    line-height: 40px;
-    border: 2px solid ${colors.prim_color};
-    border-radius: 40px;
-    font-size: 40px;
-    margin: 0 auto 10px;
-    cursor: pointer;
-    background: ${colors.prim_light};
-    box-shadow:0px 0px 10px 10px rgba(255, 255, 255, 0.7);
-    transition: all .1s ease-in;
-    transform: scale(1);
-
-    &:hover {
-      transform: scale(1.1);
-    }
   }
 `

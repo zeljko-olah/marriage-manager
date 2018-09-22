@@ -137,7 +137,7 @@ class AddNew extends Component {
       title: title.value,
       description: desc,
       who,
-      priority: priority.value,
+      priority: priority ? priority.value : 'normal',
       date: date.valueOf()
     }
     
@@ -203,6 +203,7 @@ class AddNew extends Component {
                 <StyledTabs>
                   { activeTab === 'todo' ? (
                     <AddItem
+                      todo
                       title="Define"
                       who="Who's gonna do it?"
                       roomUsers={roomUsers}
@@ -211,6 +212,7 @@ class AddNew extends Component {
                       submit={this.handleSubmit} />
                   ) : (
                     <AddItem
+                      reminder
                       title="Set a reminder for"
                       who="Who to remind?"
                       timeInput

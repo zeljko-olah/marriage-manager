@@ -323,7 +323,7 @@ const StyledTodosMenu = styled.div`
   & .todo-calendar .calendar-icon {
     position: absolute;
     font-size: 30px;
-    top: 22px;
+    top: 18px;
     right: 14px;
   }
 

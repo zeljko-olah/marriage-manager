@@ -16,8 +16,11 @@ import TodosMenu from '../components/Todos/TodosMenu'
 import styled from 'styled-components'
 import * as colors from '../styles/variables'
 import {
-  StyledSection, StyledMainHeading, StyledMainContent, StyledShadow
+  StyledSection, StyledMainHeading, StyledMainContent, StyledShadow, StyledNoItems
 } from '../styles/section'
+
+// ICONS
+import AddIcon from  'react-icons/lib/md/add'
 
 // Events
 import * as events from '../events'
@@ -130,7 +133,7 @@ class Todos extends Component {
   // RENDER METHOD
   render () {
     const { 
-      todos, user, users, isToday, todosDate, percentage, filterByUser, filterByStatus, filterByPriority, statusCount
+      todos, user, users, isToday, todosDate, percentage, filterByUser, filterByStatus, filterByPriority, statusCount, history
     } = this.props
 
     let listTodos = null
@@ -192,11 +195,22 @@ class Todos extends Component {
                   filterByStatus={filterByStatus}
                   filterByPriority={filterByPriority}
                   congratulations={this.handleCongratulations} />
-                  
                 {listTodos}
                 
               </StyledShadow>      
-            </StyledTodos>      
+            </StyledTodos> 
+            
+            <StyledShadow>
+              <StyledNoItems>
+                <StyledShadow>
+                  <h3>{ todos.length ? 'Add More?' : 'Add New?' }</h3>
+                  <div
+                    className="icon"
+                    onClick={() => {history.push('/add/todo')}}
+                  ><AddIcon /></div>
+                </StyledShadow>
+              </StyledNoItems>
+            </StyledShadow>
           </StyledMainContent>
         </StyledSection>
     )
