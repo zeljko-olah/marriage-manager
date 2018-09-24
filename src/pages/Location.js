@@ -9,7 +9,7 @@ import * as colors from '../styles/variables'
 
 import { connect } from 'react-redux'
 import * as actions from '../store/actions'
-import {selectSortedLocations} from '../store/selectors/location'
+import {selectSortedLocations, selectLastLocation} from '../store/selectors/location'
 
 import * as events from '../events'
 
@@ -189,14 +189,13 @@ class Location extends Component {
 
 // MAP REDUX STATE TO PROPS
 const mapStateToProps = state => {
-  const allLocations =  selectSortedLocations(state)
   return {
     user: state.auth.user,
     activeUsers: state.chat.activeUsers,
     socket: state.chat.socket,
     location: state.location,
-    locations: allLocations,
-    lastLocation: allLocations[0]
+    locations: selectSortedLocations(state),
+    lastLocation: selectLastLocation(state)
   }
 }
 
@@ -205,7 +204,6 @@ const mapDispatchToProps = (dispatch) => ({
   getUserCoords: (userId) => dispatch(actions.getUserCoords(userId)),
   getLocations: () => dispatch(actions.getLocations()),
   setFlashMessage: (flash) => dispatch(actions.setFlashMessage(flash))
-
 })
 
 // EXPORT

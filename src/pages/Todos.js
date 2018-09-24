@@ -41,7 +41,9 @@ class Todos extends Component {
     const { socket, setFlashMessage, getTodosForDate } = this.props
     if (socket !== null && prevProps.socket !== socket) {
       socket.on(events.TODO_ADDED, (todo, user) => {
-        getTodosForDate(todo.date)
+        getTodosForDate(todo.date).then(() => {
+          socket.emit('TODOS_UPDATED')
+        })
         setFlashMessage({
           type: 'success',
           flashMessage: `${user.name} added new task!`
@@ -66,31 +68,37 @@ class Todos extends Component {
   }
 
   handleUpdateStatus = (id, status) => {
-    const { updateTodoStatus, getTodosForDate, todosDate } = this.props
+    const { updateTodoStatus, getTodosForDate, todosDate, socket } = this.props
     updateTodoStatus(id, status).then(() => {
-      getTodosForDate(todosDate)
+      getTodosForDate(todosDate).then(() => {
+        socket.emit('TODOS_UPDATED')
+      })
     })
   }
 
   handleDeleteTodo = (id) => {
-    const { deleteTodo, getTodosForDate, todosDate } = this.props
+    const { deleteTodo, getTodosForDate, todosDate, socket } = this.props
     deleteTodo(id).then(() => {
       getTodosForDate(todosDate)
+      socket.emit('TODOS_UPDATED')
     })
   }
 
   handleRenewTodo = (id) => {
-    const { renewTodo, getTodosForDate, todosDate, setCurrentDate } = this.props
+    const { renewTodo, getTodosForDate, todosDate, setCurrentDate, socket } = this.props
     renewTodo(id, todosDate).then(() => {
       getTodosForDate(moment().valueOf())
       setCurrentDate(moment())
+      socket.emit('TODOS_UPDATED')
     })
   }
 
   handleEditTodoTitle = (id, title) => {
-    const { editTodoTitle, getTodosForDate, todosDate } = this.props
+    const { editTodoTitle, getTodosForDate, todosDate, socket } = this.props
     editTodoTitle(id, title).then(() => {
-      getTodosForDate(todosDate)
+      getTodosForDate(todosDate).then(() => {
+        socket.emit('TODOS_UPDATED')
+      })
     })
   }
 

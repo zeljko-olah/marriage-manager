@@ -6,7 +6,8 @@ export const selectAllLocations = (state) => state.location.locations
 
 export const selectSortedLocations = createSelector(
   selectUserName, selectAllLocations, (userName, locations) => {
-    const sortedLocations = locations
+    if (locations) {
+      const sortedLocations = locations
       .filter(l => l.user !== userName)
       .sort((a,b) => {
         return moment(b.createdAt).valueOf() - moment(a.createdAt).valueOf()
@@ -18,5 +19,15 @@ export const selectSortedLocations = createSelector(
       .slice(0, 10)
 
     return sortedLocations
+    } else {
+      return []
+    }
   }
 )
+
+export const selectLastLocation = createSelector(
+  selectSortedLocations, (sortedLocations) => {
+    return sortedLocations[0]
+  }
+)
+

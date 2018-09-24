@@ -35,7 +35,7 @@ export const selectPartnerLastMessage = createSelector(
       .filter(m => m.from === partner.name )
       .sort((a,b) => {
         return moment(b.createdAt).valueOf() - moment(a.createdAt).valueOf()
-      })[0]   
+      })[0]  
     } else {
       return 'Something went wrong'
     }

@@ -53,11 +53,15 @@ export const selectFilteredTodos = createSelector(
 export const selectTodoStatusCount = createSelector(
   selectFilteredTodos, (filteredTodos) => {
     if (filteredTodos) {
+      const all = filteredTodos.length
       const completed = filteredTodos.filter(t => t.completed === 'completed').length
       const active = filteredTodos.filter(t => t.completed === 'active').length
       const failed = filteredTodos.filter(t => t.completed === 'failed').length
+      const remain = all - completed
 
       return {
+        all,
+        remain,
         completed,
         active,
         failed
@@ -73,6 +77,19 @@ export const selectNewTodosFirst = createSelector(
       .sort((a,b) => moment(b.createdAt).valueOf() - moment(a.createdAt).valueOf())
     } else {
       return []
+    }
+  }
+)
+
+export const selectLastTodayTodo = createSelector(
+  selectNewTodosFirst, (sortedTodos) => {
+    if (sortedTodos) {
+      const lastTodo = sortedTodos[0]
+      if (lastTodo && moment(lastTodo.date).isSame(moment(), 'day')) {
+        return lastTodo 
+      } else return null
+    } else {
+      return null
     }
   }
 )

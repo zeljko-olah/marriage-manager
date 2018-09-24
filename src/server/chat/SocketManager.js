@@ -218,6 +218,17 @@ module.exports = (socket) => {
     */
     
     /*
+    * ON TODOS_UPDATED
+    * 
+    */
+
+   socket.on(events.TODOS_UPDATED, () => {
+     console.log('TODOS UPDATED')
+    io.to(room).emit(events.TODOS_UPDATE)
+   })
+
+
+    /*
     * ON TODO_ADD
     * 
     */
@@ -262,6 +273,7 @@ module.exports = (socket) => {
       io.to(room).emit(events.TODO_ADDED, todo, user)
       io.to(room).emit(events.NEW_MESSAGE, todoMessage)
       socket.broadcast.to(room).emit(events.UNREAD_COUNT_UPDATED) 
+      io.to(room).emit(events.TODOS_UPDATE)
       // callback(doc)        
     })
     .catch(err => {
