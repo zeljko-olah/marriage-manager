@@ -1,6 +1,7 @@
 import axios from '../../http'
 import * as actionTypes from './actionTypes'
 import {getCoordsPromise} from '../../shared/utility'
+import { setLoading } from './index'
 
 // AUTH SUCCESS - pass token and user id in action object payload
 export const setLocationSuccess = (location) => {
@@ -61,9 +62,11 @@ export const getLocationsFail = (error) => {
 
 export const getLocations = () => {
   return dispatch => {
+    // dispatch(setLoading(1))
     return axios.get('api/location/all')
       .then(response => {
         dispatch(getLocationsSuccess(response.data.locations))
+        // dispatch(setLoading(-1))
         return response.data
       })
       .catch(err => {

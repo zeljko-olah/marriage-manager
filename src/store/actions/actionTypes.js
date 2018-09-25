@@ -30,11 +30,13 @@ export const SORT_USER_TODOS = 'SORT_USER_TODOS'
 export const SORT_STATUS_TODOS = 'SORT_STATUS_TODOS'
 export const SORT_PRIORITY_TODOS = 'SORT_PRIORITY_TODOS'
 
-
-
 // REMINDER
 export const ADD_REMINDER = 'ADD_REMINDER'
 export const GET_REMINDERS = 'GET_REMINDERS'
+
+// LOADING
+export const LOADING = 'LOADING'
+
 
 
 

@@ -1,7 +1,7 @@
 import axios from '../../http'
 import * as actionTypes from './actionTypes'
 
-import { setFlashMessage } from './index'
+import { setFlashMessage, setLoading } from './index'
 
 // SUCCESS
 export const addTodoSuccess = (todo) => {
@@ -62,11 +62,14 @@ export const getTodosFail = (error) => {
 
 export const getTodosForDate = (date) => {
   return dispatch => {
+    dispatch(setLoading(1))
     return axios.get('api/todos/index', {
       params: {date: date}
     })
       .then(response => {
         dispatch(getTodosSuccess(response.data))
+        dispatch(setLoading(-1))
+
         return response.data
       })
       .catch(err => {

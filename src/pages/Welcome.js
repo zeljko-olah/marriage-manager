@@ -17,6 +17,7 @@ import {StyledSection, StyledMainHeading, StyledMainContent, StyledShadow} from 
 import LocationIcon from  'react-icons/lib/md/location-on'
 import ChatIcon from 'react-icons/lib/md/forum'
 import TodoIcon from  'react-icons/lib/md/playlist-add-check'
+import ReminderIcon from  'react-icons/lib/md/alarm'
 
 // Redux
 import { connect } from 'react-redux'
@@ -43,7 +44,6 @@ class Welcome extends Component {
     const { socket, getTodosForDate, setFlashMessage } = this.props
     if (socket !== null && prevProps.socket !== socket) {
       socket.on(events.TODOS_UPDATE, () => {
-        alert('Triggered')
         getTodosForDate(moment().valueOf())
         setFlashMessage({
           type: 'success',
@@ -72,7 +72,8 @@ class Welcome extends Component {
       newImportantMessages,
       partnerLastLocation,
       todoCount,
-      userLastTodo
+      userLastTodo,
+      loading
     } = this.props
 
     let partnerOnline = false
@@ -91,6 +92,7 @@ class Welcome extends Component {
               <StyledShadow>
 
                 { /* CHAT INFO */ }
+                { /* ********* */ }
                 <StyledInfo className="chat-info">
 
                   { /* CHAT ICON */ }
@@ -120,7 +122,7 @@ class Welcome extends Component {
                         { /* NEW MESSAGES */ }
                         { newMessages > 0 ? (
                           <h4>You have
-                           <span className="new-messages">
+                          <span className="new-messages">
                             {' ' + newMessages + ' new '} 
                           </span>
                             { newMessages === 1 && 'message'}
@@ -134,10 +136,10 @@ class Welcome extends Component {
                         { newImportantMessages > 0 ? (
                           <h4>And
                           <span className="important-messages">
-                           {'  ' + newImportantMessages + ' important '} 
-                         </span>
-                           { newImportantMessages === 1 && 'message'}
-                           { newImportantMessages > 1 && 'messages'}</h4>
+                          {'  ' + newImportantMessages + ' important '} 
+                        </span>
+                          { newImportantMessages === 1 && 'message'}
+                          { newImportantMessages > 1 && 'messages'}</h4>
                         ) : null }
                       </div>
                       
@@ -152,129 +154,183 @@ class Welcome extends Component {
                     </Fragment>  
                   ) }
 
-                  { /* LAST MESSAGE */ }
-                  <div className="last-message">
-                    <h4>Last message to you</h4>
+                  { /* LAST PARTNER MESSAGE */ }
+                  { loading ? <Loading/> : (
+                    <div className="last-message">
+                    <h4>
+                      Last message to you:
+                      { partnerLastMessage && partnerLastMessage.createdAtFormatted ? (
+                        <span className="last-message-time">
+                          {partnerLastMessage.createdAtFormatted}                        
+                        </span>
+                      ) : (
+                        null
+                      )}
+                    </h4>
                     <StyledShadow>
                       { partnerLastMessage ? (
-                      <p>{partnerLastMessage.text && partnerLastMessage.text.substr(0, 150) + '...' }</p>
+                      <p>{partnerLastMessage.text && ('"' + partnerLastMessage.text.substr(0, 150) + '..."') }</p>
                       ) : (
                         <p>No meesages.</p>
                       ) }
 
                     </StyledShadow>
                   </div>
+                  ) }
                 </StyledInfo>
               
               { /* LOCATION INFO */ }
+              { /* ************* */ }
               <StyledInfo className="location-info">
                 { !users.length ? (<Loading/>) : (
                 <Fragment>
-                <StyledShadow>
-                  <StyledShadow onClick={() => {history.push('/location')}}>
-                    <h2><LocationIcon/></h2>  
-                  </StyledShadow>
-                </StyledShadow>
-                <StyledShadow>
-                  <h3>{partner.name}'s last known location was:</h3>
-                  <h4>{partnerLastLocation ? (
-                    <span className="last-location">
-                      { partnerLastLocation.address }
-                    </span>
-
-                  ) : (
-                    <span>{'Unknown'}</span>
-                  ) }</h4>
-                </StyledShadow>
-                </Fragment>
-                ) }          
-                </StyledInfo>
-                
-                { /* TODO INFO */ }
-                <StyledInfo className="todos-info">
-
-                  { /* TODO ICON */ }
                   <StyledShadow>
-                    <StyledShadow onClick={() => {history.push('/todos')}}>
-                      <h2><TodoIcon/></h2>  
+                    <StyledShadow onClick={() => {history.push('/location')}}>
+                      <h2><LocationIcon/></h2>  
                     </StyledShadow>
                   </StyledShadow>
-                  { !todoCount && !userLastTodo ? (<Loading/>) : (
-                    <Fragment>
-                      { todoCount.all > 0 ? (
-                        <div>
-                        { /* TODOS COUNT */ }
+                  <StyledShadow>
+                    <h3>{partner.name}'s last known location was:</h3>
+                    <h4>{partnerLastLocation ? (
+                      <span className="last-location">
+                        { partnerLastLocation.address }
+                      </span>
+
+                    ) : (
+                      <span>{'Unknown'}</span>
+                    ) }</h4>
+                  </StyledShadow>
+                  </Fragment>
+                  ) }          
+                  </StyledInfo>
+                  
+                  { /* TODO INFO */ }
+                  { /* ********* */ }
+                  <StyledInfo className="todos-info">
+
+                    { /* TODO ICON */ }
+                    <StyledShadow>
+                      <StyledShadow onClick={() => {history.push('/todos')}}>
+                        <h2><TodoIcon/></h2>  
+                      </StyledShadow>
+                    </StyledShadow>
+
+                    { /* TODOS STATUS */ }
+                    { !todoCount && !userLastTodo ? (<Loading/>) : (
+                      <Fragment>
                         { todoCount.all > 0 ? (
-                          <h4>You have
-                          <span className="all-todos">
-                            {' ' + todoCount.all + ' '} 
-                            { todoCount.all === 1 && 'task '}
-                            { todoCount.all > 1 && 'tasks '}
-                          </span>
-                            for today
-                          </h4>
+                          <div>
+                          { /* TODOS COUNT ALL */ }
+                          { todoCount.all > 0 ? (
+                            <h4>You have
+                            <span className="all-todos">
+                              {' ' + todoCount.all + ' '} 
+                              { todoCount.all === 1 && 'task '}
+                              { todoCount.all > 1 && 'tasks '}
+                            </span>
+                              for today
+                            </h4>
+                          ) : (
+                            <h4>No tasks for today.</h4>
+                          ) }
+
+                          { /* TODOS COUNT COMPLETED */ }
+                          { todoCount.completed !== todoCount.all ? (
+                            <Fragment>
+                              { todoCount.completed !== 0 ? (
+                                <h4>There
+                                { todoCount.completed === 1 && ' is '}
+                                { todoCount.completed > 1 && ' are '}
+                                <span className="completed-todos">
+                                  {' ' + todoCount.completed + ' completed '} 
+                                  { todoCount.completed === 1 && 'task '}
+                                  { todoCount.completed > 1 && 'tasks '}
+                                </span>
+                              </h4>
+                              ) : (
+                                <h4>There are no completed tasks yet.</h4>
+                              ) }
+                              { todoCount.remain !== 0 ? (
+                                <h4>
+                                To complete the day
+                                <span className="remain-todos">
+                                  {' ' + todoCount.remain + ' '} 
+                                  { todoCount.remain === 1 && 'task remains '}
+                                  { todoCount.remain > 1 && 'tasks remain '}
+                                </span>
+                              </h4>
+                              ) : null }
+                              { todoCount.failed !== 0 ? (
+                                <h4 className="under-remain-todos">
+                                  <span className="failed-todos">
+                                    { todoCount.failed !== 0 && ' ' + todoCount.failed + ' '} 
+                                    { todoCount.failed === 1 && 'failed task '}
+                                    { todoCount.failed > 1 && 'failed tasks '}
+                                  </span>
+                                </h4>
+                              ) : null }
+                              { todoCount.active !== 0 ? (
+                                <h4 className="under-remain-todos">
+                                <span className="active-todos">
+                                  { todoCount.active !== 0 && ' ' + todoCount.active + ' '} 
+                                  { todoCount.active === 1 && 'active task '}
+                                  { todoCount.active > 1 && 'active tasks '}
+                                </span>
+                              </h4>
+                              ) : null }
+                            </Fragment>
+                            ) : (
+                              <h4>All tasks are &nbsp;<span className="completed-todos">completed</span></h4>
+                            )
+                          }
+                        </div>
                         ) : (
                           <h4>No tasks for today.</h4>
-                        ) }
-                        { todoCount.completed > 0 ? (
-                          todoCount.completed !== todoCount.all ? (
-                           <Fragment>
-                            <h4>There
-                              { todoCount.completed === 1 && ' is '}
-                              { todoCount.completed > 1 && ' are '}
-                              <span className="completed-todos">
-                                {' ' + todoCount.completed + ' completed '} 
-                                { todoCount.completed === 1 && 'task '}
-                                { todoCount.completed > 1 && 'tasks '}
+                        )  }
+                        { user && partner && userLastTodo ? (
+                          <div className="new-todo">
+                          <h4>{userLastTodo.user !== partner.name ? 'You ' : partner.name + ' ' }
+                            added new todo:
+                            { userLastTodo && userLastTodo.createdAtFormatted ? (
+                              <span className="last-todo-time">
+                                {userLastTodo.createdAtFormatted}                        
                               </span>
-                            </h4>
-                            <h4>
-                              Just
-                              <span className="remain-todos">
-                                {' ' + todoCount.remain + ' '} 
-                                { todoCount.remain === 1 && 'task remains '}
-                                { todoCount.remain > 1 && 'tasks remain '}
-                              </span>
-                            </h4>
-                            <h4>
-                              <span className="failed-todos">
-                                { todoCount.failed !== 0 && ' ' + todoCount.failed + ' '} 
-                                { todoCount.failed === 1 && 'failed task '}
-                                { todoCount.failed > 1 && 'failed tasks '}
-                              </span>
-                            </h4>
-                           </Fragment>
-                          ) : (
-                            <h4>All tasks <span className="completed-todos">completed</span></h4>
-                          )
-                        ) : (
-                          <h4>There are no completed tasks yet.</h4>
-                        ) }
-                      </div>
-                      ) : (
-                        <h4>No tasks for today.</h4>
-                      )  }
-                      { user && partner && userLastTodo ? (
-                        <div className="new-todo">
-                        <h4>{userLastTodo.user !== partner.name ? 'You ' : partner.name + ' ' }
-                          added new todo:
-                        </h4>
-                        <StyledShadow>
-                            {userLastTodo.title ? (
-                              <p>{userLastTodo.title}</p>
                             ) : (
-                              <p>No data</p>
+                              null
                             )}
-                          <p></p>                        
-                        </StyledShadow>
-                      </div>
-                      ) : <h4>No new tasks for today yet</h4>}
-                    </Fragment>  
-                  ) }
-              </StyledInfo>
+                          </h4>
+                          <StyledShadow>
+                              {userLastTodo.title ? (
+                                <p>{userLastTodo.title}</p>
+                              ) : (
+                                <p>No data</p>
+                              )}
+                            <p></p>                        
+                          </StyledShadow>
+                        </div>
+                        ) : <h4>No new tasks for today yet</h4>}
+                      </Fragment>  
+                    ) }
+                </StyledInfo>
+
+                 { /* REMINDER INFO */ }
+                { /* ********* */ }
+                <StyledInfo className="todos-info">
+
+                    { /* REMINDER ICON */ }
+                    <StyledShadow>
+                      <StyledShadow onClick={() => {history.push('/reminder')}}>
+                        <h2><ReminderIcon/></h2>  
+                      </StyledShadow>
+                    </StyledShadow>
+                </StyledInfo>
+
+
+
+
               </StyledShadow>
             </StyledShadow>
-           
+          
             
           </StyledWelcome>
         </StyledMainContent>
@@ -297,7 +353,8 @@ const mapStateToProps = state => {
     newImportantMessages: selectImportantCount(state),
     partnerLastLocation: selectLastLocation(state),
     todoCount: selectTodoStatusCount(state),
-    userLastTodo: selectLastTodayTodo(state)
+    userLastTodo: selectLastTodayTodo(state),
+    loading: state.loading.loading
   }
 }
 
@@ -384,6 +441,12 @@ const StyledInfo = styled.div`
   border-right: 10px solid transparent;
 }
 
+& span {
+  display: inline-block;
+  background-color: ${colors.overlay};
+  padding: 1px 5px;
+  margin: 0 5px;
+}
 & .chat-status.online {
   font-size: 20px;
   color: ${colors.success};
@@ -392,7 +455,6 @@ const StyledInfo = styled.div`
   font-size: 18px;
   color: ${colors.sec_color};
 }
-
 & .partner-chat.open {
   font-size: 15px;
   color: ${colors.boy_color};
@@ -401,29 +463,45 @@ const StyledInfo = styled.div`
   font-size: 15px;
   color: ${colors.girl_color};
 }
-
 & .last-message,
 & .new-todo {
   flex-basis: 300px;
-  color: ${colors.prim_color};
-  font-style: italic;
-  font-weight: bold;
+  color: ${colors.ter_yellow};
+  & p {
+    font-size: 15px;
+    font-style: italic;
+    font-weight: 100;
+    letter-spacing: 3px;
+  }
 }
 
-& .new-messages {
-  color: ${colors.sec_color};
-  font-size: 20px;
-}
-
-& .important-messages {
-  color: ${colors.sec_color};
-  background-color: ${colors.overlay};
+& .last-message-time,
+& .last-todo-time {
+  display: inline block;
   font-size: 15px;
-  display: inline-block;
+  color: ${colors.sec_light};
+  background-color: ${colors.overlay};
   margin-left: 5px;
   margin-right: 5px;
   padding-left: 5px;
   padding-right: 5px;
+  text-transform: lowercase;
+}
+
+
+& .new-messages {
+  font-size: 15px;
+  color: ${colors.prim_color};
+  background-color: ${colors.sec_color};
+  margin-left: 5px;
+  margin-right: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+& .important-messages {
+  color: ${colors.sec_color};
+  background-color: ${colors.overlay};
+  font-size: 15px;
 }
 
 & .last-location {
@@ -432,7 +510,7 @@ const StyledInfo = styled.div`
 }
 
 & .all-todos {
-  color: ${colors.boy_color};
+  color: ${colors.girl_color};
   font-size: 15px;
 }
 
@@ -441,11 +519,23 @@ const StyledInfo = styled.div`
   font-size: 15px;
 }
 & .remain-todos {
-  color: ${colors.prim_color};
+  color: ${colors.boy_color};
   font-size: 15px;
+}
+& .under-remain-todos {
+  text-align: right;
+  margin: 0;
+  margin-bottom: 5px;
+}
+& .failed-todos,
+& .active-todos {
+  font-size: 10px;
+  background-color: ${colors.overlay};
 }
 & .failed-todos {
   color: ${colors.sec_color};
-  font-size: 15px;
+}
+& .active-todos {
+  color: ${colors.prim_color};
 }
 `

@@ -79,6 +79,7 @@ exports.getTodos = (req, res, next) => {
       res.status(200).json({
         todos: docs.map(doc => {
           const time = moment(doc.created_at)
+          const formattedTime = time.fromNow()
           return {
             id: doc._id,
             title: doc.title,
@@ -88,6 +89,7 @@ exports.getTodos = (req, res, next) => {
             priority: doc.priority,
             date: doc.date,
             createdAt: time,
+            createdAtFormatted: formattedTime,
             userId: doc.user._id,
             user: doc.user.name,
             avatar: doc.user.avatar

@@ -51,3 +51,8 @@ export {
   getReminders,
   deleteReminder
 } from './reminder'
+
+// LOADING RELATED ACTIONS
+export {
+  setLoading
+} from './loading'

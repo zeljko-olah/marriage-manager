@@ -45,14 +45,8 @@ class Navigation extends Component {
         <Sidebar
           open={showMobileMenu}
           close={this.sideDrawerCloseHandler}
-          width="280px"
+          width="220px"
         >
-        
-          { /* LOGO */ }
-          <StyledLogo>
-            MM
-          </StyledLogo>
-
           { /* NAV ITEMS */ }
           <StyledAsideNav>
             <NavItems showText />
@@ -66,17 +60,8 @@ class Navigation extends Component {
 
 export default Navigation
 
-const StyledLogo = styled.h1`
-  font-size: 50px;
-  text-align: center;
-  padding-bottom: 0px;
-  margin-top: 0px;
-  text-shadow: ${text_shadow};
-  color: ${danger};
-  border-bottom: 1px solid ${prim_color};
-`
-
 const StyledAsideNav = styled.div`
+margin-top: 100px;
 & nav ul {
   list-style-type: none;
   margin: 0;

@@ -37,7 +37,7 @@ export const selectPartnerLastMessage = createSelector(
         return moment(b.createdAt).valueOf() - moment(a.createdAt).valueOf()
       })[0]  
     } else {
-      return 'Something went wrong'
+      return null
     }
   }
 )
