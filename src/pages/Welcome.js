@@ -7,6 +7,7 @@ import moment from 'moment'
 // Components
 import Loading from '../components/UI/Loading'
 import Avatar from '../components/user/Avatar'
+import ReminderTimer from '../components/Reminders/ReminderTimer'
 
 // Styled components
 import styled from 'styled-components'
@@ -27,6 +28,7 @@ import * as actions from '../store/actions'
 import { selectAllRoomUsers, selectPartner, selectPartnerLastMessage, selectUnreadCount, selectImportantCount } from '../store/selectors/chat'
 import {selectLastLocation} from '../store/selectors/location'
 import {selectLastTodayTodo, selectTodoStatusCount} from '../store/selectors/todos'
+import {selectCurrentReminder} from '../store/selectors/reminders'
 
 // Events
 import * as events from '../events'
@@ -35,13 +37,14 @@ import * as events from '../events'
 class Welcome extends Component {
 
   componentDidMount () {
-    const { getLocations, getTodosForDate } = this.props
+    const { getLocations, getTodosForDate, getReminders } = this.props
     getLocations()
     getTodosForDate(moment().valueOf())
+    getReminders()
   }
 
   componentDidUpdate = (prevProps) => {
-    const { socket, getTodosForDate, setFlashMessage } = this.props
+    const { socket, getTodosForDate, setFlashMessage, getReminders } = this.props
     if (socket !== null && prevProps.socket !== socket) {
       socket.on(events.TODOS_UPDATE, () => {
         getTodosForDate(moment().valueOf())
@@ -50,12 +53,20 @@ class Welcome extends Component {
           flashMessage: `Todos updated!`
         })
       })
+      socket.on(events.REMINDERS_UPDATED, () => {
+        getReminders()
+        setFlashMessage({
+          type: 'success',
+          flashMessage: `Reminders updated!`
+        })
+      })
     }
   }
 
   componentWillUnmount() {
     const { socket } = this.props
-    socket.off(events.TODOS_UPDATE)
+    socket.off(events.TODOS_UPDATED)
+    socket.off(events.REMINDERS_UPDATE)
   }
 
   render () {
@@ -73,6 +84,7 @@ class Welcome extends Component {
       partnerLastLocation,
       todoCount,
       userLastTodo,
+      userLastReminder,
       loading
     } = this.props
 
@@ -313,20 +325,43 @@ class Welcome extends Component {
                     ) }
                 </StyledInfo>
 
-                 { /* REMINDER INFO */ }
-                { /* ********* */ }
-                <StyledInfo className="todos-info">
 
-                    { /* REMINDER ICON */ }
+                { /* REMINDER INFO */ }
+                { /* ************* */ }
+                { !userLastReminder || loading ? (<Loading/>) : (
+                <StyledInfo className="reminder-info">
+                  <Fragment>
                     <StyledShadow>
                       <StyledShadow onClick={() => {history.push('/reminder')}}>
                         <h2><ReminderIcon/></h2>  
                       </StyledShadow>
                     </StyledShadow>
+                    <div>
+                    <StyledShadow>
+                      <StyledShadow>
+                        <h3>
+                        Reminder for <span className="reminder-who">{userLastReminder.who}</span>
+                        </h3>
+                        <h4>
+                          <span className="last-reminder">
+                            { userLastReminder.title }
+                          </span>
+                        </h4>
+                        <h4 className="last-reminder-time">
+                          <span>
+                            { moment(userLastReminder.date).format('MMM Do') }
+                          </span>
+                        </h4>
+                      </StyledShadow>
+                    </StyledShadow>
+                    </div>
+                    { /* REMIDER TIMER */ }
+                    <ReminderTimer
+                      reminder={userLastReminder}
+                      redirectTo="/welcome" />
+                  </Fragment>
                 </StyledInfo>
-
-
-
+                ) }          
 
               </StyledShadow>
             </StyledShadow>
@@ -354,6 +389,7 @@ const mapStateToProps = state => {
     partnerLastLocation: selectLastLocation(state),
     todoCount: selectTodoStatusCount(state),
     userLastTodo: selectLastTodayTodo(state),
+    userLastReminder: selectCurrentReminder(state),
     loading: state.loading.loading
   }
 }
@@ -362,7 +398,8 @@ const mapDispatchToProps = (dispatch) => ({
   setFlashMessage: (flash) => dispatch(actions.setFlashMessage(flash)),
   toggleChat: (showChat) => dispatch( actions.toggleChat(showChat) ),  
   getLocations: () => dispatch(actions.getLocations()),
-  getTodosForDate: (date) => dispatch(actions.getTodosForDate(date))
+  getTodosForDate: (date) => dispatch(actions.getTodosForDate(date)),
+  getReminders: () => dispatch(actions.getReminders()),
 })
 
 // EXPORT
@@ -398,6 +435,7 @@ const StyledInfo = styled.div`
 }
 
 &.location-info,
+&.reminder-info,
 &.todos-info {
   justify-content: center;
   align-items: stretch;
@@ -417,6 +455,11 @@ const StyledInfo = styled.div`
 
 &.todos-info {
   justify-content: space-between;
+  align-items: center;
+}
+
+&.reminder-info {
+  justify-content: space-around;
   align-items: center;
 }
 
@@ -504,7 +547,8 @@ const StyledInfo = styled.div`
   font-size: 15px;
 }
 
-& .last-location {
+& .last-location,
+& .last-reminder {
   color: ${colors.prim_color};
   font-size: 15px;
 }
@@ -531,11 +575,25 @@ const StyledInfo = styled.div`
 & .active-todos {
   font-size: 10px;
   background-color: ${colors.overlay};
+  -color: ${colors.overlay};
 }
 & .failed-todos {
   color: ${colors.sec_color};
 }
 & .active-todos {
   color: ${colors.prim_color};
+}
+& .reminder-who {
+  color: ${colors.sec_color};
+  background-color: ${colors.overlay};    
+  font-size: 15px;
+}
+& .last-reminder-time {
+  margin: 0;
+  text-align: right;
+  & span {
+    color: ${colors.sec_light};
+    font-size: 12px;
+  }
 }
 `

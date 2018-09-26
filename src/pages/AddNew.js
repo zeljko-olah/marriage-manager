@@ -157,7 +157,9 @@ class AddNew extends Component {
       })
     } else {
       addReminder(payload)
-      .then(() => {
+      .then((reminder) => {
+        socket.emit(events.REMINDER_ADD, reminder, user)
+        socket.emit(events.REMINDERS_UPDATE)
         setFlashMessage({
           type: 'success',
           flashMessage: `Reminder successfully added :)`

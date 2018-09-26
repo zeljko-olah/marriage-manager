@@ -40,7 +40,7 @@ class Location extends Component {
         address: 'Home'
       })
     } catch (error) {
-      alert(error)
+      console.log(error)
     }
   }
   

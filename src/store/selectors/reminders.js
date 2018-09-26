@@ -18,6 +18,21 @@ export const selectRelevantRemindersFirst = createSelector(
   }
 )
 
+export const selectCurrentReminder = createSelector(
+  selectAllReminders, (allReminders) => {
+    if (allReminders) {
+      const current = allReminders
+        .sort((a,b) => moment(a.date).valueOf() - moment(b.date).valueOf())
+        .filter(r => {
+          return moment(r.date) > moment().valueOf()
+        } )[0]
+      return current
+    } else {
+      return null
+    }
+  }
+)
+
 export const selectTodaysReminders = createSelector(
   selectAllReminders, (allReminders) => {
     if (allReminders) {

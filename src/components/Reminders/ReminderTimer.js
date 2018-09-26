@@ -82,10 +82,10 @@ class ReminderTimer extends Component {
   }
 
   render() {
-    const { reminder } = this.props
+    const { reminder, redirectTo } = this.props
     const { months, days, hours, minutes, seconds, timerExpired } = this.state
     return (
-      <StyledTimer>
+      <StyledTimer redirectTo={redirectTo}>
         {reminder && (
           <div className="timer-wrapper">
             <div className="timer-headline">
@@ -99,7 +99,7 @@ class ReminderTimer extends Component {
                 { months === 0 && hours !== 0 &&  <p className="hours"><span className="count-number">{hours}</span> hours</p>}
                 { days === 0 && minutes !== 0 &&  <p className="minutes"><span className="count-number">{minutes}</span> minutes</p>}
                 { days === 0 && seconds !== 0 && <p className="seconds"><span className="count-number">{seconds}</span> seconds</p>}
-                </StyledShadow>) : (<Redirect to='/reminder' />) }
+                </StyledShadow>) : (<Redirect to={ redirectTo } />) }
             </div>
           </div>
         )}        
@@ -111,7 +111,9 @@ class ReminderTimer extends Component {
 export default ReminderTimer
 
 const StyledTimer = styled.div`
-  position: absolute;
+  ${props => {
+    return props.redirectTo === '/reminder' && 'position: absolute'
+  }}
   display: inline-block;
   right: 50px;
   color: #fff;

@@ -281,6 +281,27 @@ module.exports = (socket) => {
     })
   })
 
+    /*
+  * ON REMINDER_ADD
+  * 
+  */
+  socket.on(events.REMINDER_ADD, (reminder, user)=>{
+    console.log('REMINDER ADDED')
+    // Emit events to update
+    io.to(room).emit(events.REMINDER_ADDED, reminder, user) 
+    io.to(room).emit(events.REMINDERS_UPDATE)
+  })
+
+    /*
+  * ON TODOS_UPDATED
+  * 
+  */
+
+  socket.on(events.REMINDERS_UPDATE, () => {
+    console.log('TODOS UPDATED')
+    io.to(room).emit(events.REMINDERS_UPDATED)
+  })
+
 
     /*
     * ON DISCONNECT

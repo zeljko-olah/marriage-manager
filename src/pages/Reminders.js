@@ -25,6 +25,9 @@ import Loading from '../components/UI/Loading'
 import { selectAllRoomUsers } from '../store/selectors/chat'
 import { selectRelevantRemindersFirst, selectTodaysReminders, selectExpiredReminders } from '../store/selectors/reminders'
 
+// Events
+import * as events from '../events'
+
 class Reminders extends Component {
 
   state = {
@@ -50,7 +53,14 @@ class Reminders extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { todayReminders, reminders } = this.props
+    const { socket, todayReminders, reminders, getReminders } = this.props
+    if (socket !== null && prevProps.socket !== socket) {
+      socket.on(events.REMINDER_ADDED, (reminder, user) => {
+        getReminders().then(() => {
+          socket.emit('REMINDERS_UPDATE')
+        })
+      })
+    }
     if (todayReminders.length) {
       if (!prevProps.todayReminders.length && todayReminders !== prevProps.todayReminders) {
         const current = todayReminders.find(r => r.date > moment().valueOf())
@@ -66,10 +76,11 @@ class Reminders extends Component {
 
   // HANDLERS
   handleRemoveReminder = (id) => {
-    const { deleteReminder, getReminders } = this.props
+    const { socket, deleteReminder, getReminders } = this.props
     this.setState({loading: true}) 
     deleteReminder(id).then(() => {
       this.setState({loading: false}) 
+      socket.emit('REMINDERS_UPDATE')
       getReminders().then(reminders => {
         const current = reminders.find(r => r.date > moment().valueOf())
         this.setState({currentReminder: current})
@@ -190,7 +201,8 @@ class Reminders extends Component {
 
                 { /* REMIDER TIMER */ }
                 <ReminderTimer
-                  reminder={currentReminder} />
+                  reminder={currentReminder}
+                  redirectTo="/reminder" />
             </StyledShadow>
             ) : null}
 
@@ -275,7 +287,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => ({
   getReminders: () => dispatch(actions.getReminders()),
+  setFlashMessage: () => dispatch(actions.setFlashMessage()),
   deleteReminder: (id) => dispatch(actions.deleteReminder(id))
+
 })
 
 // EXPORT
