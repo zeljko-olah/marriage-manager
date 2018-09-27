@@ -8,8 +8,7 @@ import Sidebar from './Navigation/Sidebar'
 import styled from 'styled-components'
 import {
   prim_color,
-  danger,
-  text_shadow
+  danger
 } from '../styles/variables'
 
 class Navigation extends Component {

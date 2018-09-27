@@ -1,24 +1,19 @@
 // IMPORTS
-import React, {Component, Fragment} from 'react'
+import React, { Component } from 'react'
 
 // Moment
 import moment from 'moment'
 
 // Components
-import Loading from '../components/UI/Loading'
-import Avatar from '../components/user/Avatar'
-import ReminderTimer from '../components/Reminders/ReminderTimer'
+import ChatInfo from '../components/Welcome/ChatInfo'
+import LocationInfo from '../components/Welcome/LocationInfo'
+import TodoInfo from '../components/Welcome/TodoInfo'
+import ReminderInfo from '../components/Welcome/ReminderInfo'
 
 // Styled components
 import styled from 'styled-components'
 import * as colors from '../styles/variables'
 import {StyledSection, StyledMainHeading, StyledMainContent, StyledShadow} from '../styles/section'
-
-// Icons
-import LocationIcon from  'react-icons/lib/md/location-on'
-import ChatIcon from 'react-icons/lib/md/forum'
-import TodoIcon from  'react-icons/lib/md/playlist-add-check'
-import ReminderIcon from  'react-icons/lib/md/alarm'
 
 // Redux
 import { connect } from 'react-redux'
@@ -92,6 +87,7 @@ class Welcome extends Component {
     if (activeUsers.length === 2) {
       partnerOnline = true
     }
+    
     return (
       <StyledSection>
         <StyledMainHeading user={ user } >
@@ -104,264 +100,47 @@ class Welcome extends Component {
               <StyledShadow>
 
                 { /* CHAT INFO */ }
-                { /* ********* */ }
                 <StyledInfo className="chat-info">
 
-                  { /* CHAT ICON */ }
-                  <StyledShadow>
-                    <StyledShadow onClick={ () => {toggleChat(partnerChatIsOpen)} }>
-                      <h2><ChatIcon/></h2>  
-                    </StyledShadow>
-                  </StyledShadow>
-                  { !users.length ? (<Loading/>) : (
-                    <Fragment>
-                      <div>
-
-                        { /* STATUS */ }
-                        <h3>{partner.name} is  
-                        <span className={partnerOnline ? 'chat-status online' :'chat-status offline'}>
-                        { partnerOnline ? ' online': ' offline' }
-                        </span></h3>
-
-                        { /* CHAT WINDOW */ }
-                        <h4>
-                          {partner.name}'s chat window is
-                          <span className={partnerChatIsOpen ? 'partner-chat open':'partner-chat closed'}>
-                            { partnerChatIsOpen ? ' opened' : ' closed' }
-                          </span>
-                        </h4>
-
-                        { /* NEW MESSAGES */ }
-                        { newMessages > 0 ? (
-                          <h4>You have
-                          <span className="new-messages">
-                            {' ' + newMessages + ' new '} 
-                          </span>
-                            { newMessages === 1 && 'message'}
-                            { newMessages > 1 && 'messages'}
-                          </h4>
-                        ) : (
-                          <h4>No new messages.</h4>
-                        ) }
-
-                        { /* IMPORTANT MESSAGES */ }
-                        { newImportantMessages > 0 ? (
-                          <h4>And
-                          <span className="important-messages">
-                          {'  ' + newImportantMessages + ' important '} 
-                        </span>
-                          { newImportantMessages === 1 && 'message'}
-                          { newImportantMessages > 1 && 'messages'}</h4>
-                        ) : null }
-                      </div>
-                      
-                      { /* PARTNER STATUS AVATAR */ }
-                      <div className={partnerOnline ? 'avatar-wrapper online' :'avatar-wrapper offline'}>
-                        <Avatar
-                          width={'40px'}
-                          height={'40px'}
-                          name={partner.name}
-                          src={partner.avatar} /> 
-                      </div>
-                    </Fragment>  
-                  ) }
-
-                  { /* LAST PARTNER MESSAGE */ }
-                  { loading ? <Loading/> : (
-                    <div className="last-message">
-                    <h4>
-                      Last message to you:
-                      { partnerLastMessage && partnerLastMessage.createdAtFormatted ? (
-                        <span className="last-message-time">
-                          {partnerLastMessage.createdAtFormatted}                        
-                        </span>
-                      ) : (
-                        null
-                      )}
-                    </h4>
-                    <StyledShadow>
-                      { partnerLastMessage ? (
-                      <p>{partnerLastMessage.text && ('"' + partnerLastMessage.text.substr(0, 150) + '..."') }</p>
-                      ) : (
-                        <p>No meesages.</p>
-                      ) }
-
-                    </StyledShadow>
-                  </div>
-                  ) }
+                  <ChatInfo
+                    users={users}
+                    partner={partner}
+                    partnerChatIsOpen={partnerChatIsOpen}
+                    partnerOnline={partnerOnline}
+                    newMessages={newMessages}
+                    toggleChat={toggleChat}
+                    loading={loading}
+                    newImportantMessages={newImportantMessages}
+                    partnerLastMessage={partnerLastMessage} />
                 </StyledInfo>
               
-              { /* LOCATION INFO */ }
-              { /* ************* */ }
-              <StyledInfo className="location-info">
-                { !users.length ? (<Loading/>) : (
-                <Fragment>
-                  <StyledShadow>
-                    <StyledShadow onClick={() => {history.push('/location')}}>
-                      <h2><LocationIcon/></h2>  
-                    </StyledShadow>
-                  </StyledShadow>
-                  <StyledShadow>
-                    <h3>{partner.name}'s last known location was:</h3>
-                    <h4>{partnerLastLocation ? (
-                      <span className="last-location">
-                        { partnerLastLocation.address }
-                      </span>
+                { /* LOCATION INFO */ }
+                <StyledInfo className="location-info">
 
-                    ) : (
-                      <span>{'Unknown'}</span>
-                    ) }</h4>
-                  </StyledShadow>
-                  </Fragment>
-                  ) }          
-                  </StyledInfo>
+                  <LocationInfo
+                    partner={partner}
+                    history={history}
+                    users={users}
+                    partnerLastLocation={partnerLastLocation}/>                       
+                </StyledInfo>
                   
-                  { /* TODO INFO */ }
-                  { /* ********* */ }
-                  <StyledInfo className="todos-info">
+                { /* TODO INFO */ }
+                <StyledInfo className="todos-info">
 
-                    { /* TODO ICON */ }
-                    <StyledShadow>
-                      <StyledShadow onClick={() => {history.push('/todos')}}>
-                        <h2><TodoIcon/></h2>  
-                      </StyledShadow>
-                    </StyledShadow>
-
-                    { /* TODOS STATUS */ }
-                    { !todoCount && !userLastTodo ? (<Loading/>) : (
-                      <Fragment>
-                        { todoCount.all > 0 ? (
-                          <div>
-                          { /* TODOS COUNT ALL */ }
-                          { todoCount.all > 0 ? (
-                            <h4>You have
-                            <span className="all-todos">
-                              {' ' + todoCount.all + ' '} 
-                              { todoCount.all === 1 && 'task '}
-                              { todoCount.all > 1 && 'tasks '}
-                            </span>
-                              for today
-                            </h4>
-                          ) : (
-                            <h4>No tasks for today.</h4>
-                          ) }
-
-                          { /* TODOS COUNT COMPLETED */ }
-                          { todoCount.completed !== todoCount.all ? (
-                            <Fragment>
-                              { todoCount.completed !== 0 ? (
-                                <h4>There
-                                { todoCount.completed === 1 && ' is '}
-                                { todoCount.completed > 1 && ' are '}
-                                <span className="completed-todos">
-                                  {' ' + todoCount.completed + ' completed '} 
-                                  { todoCount.completed === 1 && 'task '}
-                                  { todoCount.completed > 1 && 'tasks '}
-                                </span>
-                              </h4>
-                              ) : (
-                                <h4>There are no completed tasks yet.</h4>
-                              ) }
-                              { todoCount.remain !== 0 ? (
-                                <h4>
-                                To complete the day
-                                <span className="remain-todos">
-                                  {' ' + todoCount.remain + ' '} 
-                                  { todoCount.remain === 1 && 'task remains '}
-                                  { todoCount.remain > 1 && 'tasks remain '}
-                                </span>
-                              </h4>
-                              ) : null }
-                              { todoCount.failed !== 0 ? (
-                                <h4 className="under-remain-todos">
-                                  <span className="failed-todos">
-                                    { todoCount.failed !== 0 && ' ' + todoCount.failed + ' '} 
-                                    { todoCount.failed === 1 && 'failed task '}
-                                    { todoCount.failed > 1 && 'failed tasks '}
-                                  </span>
-                                </h4>
-                              ) : null }
-                              { todoCount.active !== 0 ? (
-                                <h4 className="under-remain-todos">
-                                <span className="active-todos">
-                                  { todoCount.active !== 0 && ' ' + todoCount.active + ' '} 
-                                  { todoCount.active === 1 && 'active task '}
-                                  { todoCount.active > 1 && 'active tasks '}
-                                </span>
-                              </h4>
-                              ) : null }
-                            </Fragment>
-                            ) : (
-                              <h4>All tasks are &nbsp;<span className="completed-todos">completed</span></h4>
-                            )
-                          }
-                        </div>
-                        ) : (
-                          <h4>No tasks for today.</h4>
-                        )  }
-                        { user && partner && userLastTodo ? (
-                          <div className="new-todo">
-                          <h4>{userLastTodo.user !== partner.name ? 'You ' : partner.name + ' ' }
-                            added new todo:
-                            { userLastTodo && userLastTodo.createdAtFormatted ? (
-                              <span className="last-todo-time">
-                                {userLastTodo.createdAtFormatted}                        
-                              </span>
-                            ) : (
-                              null
-                            )}
-                          </h4>
-                          <StyledShadow>
-                              {userLastTodo.title ? (
-                                <p>{userLastTodo.title}</p>
-                              ) : (
-                                <p>No data</p>
-                              )}
-                            <p></p>                        
-                          </StyledShadow>
-                        </div>
-                        ) : <h4>No new tasks for today yet</h4>}
-                      </Fragment>  
-                    ) }
+                  <TodoInfo
+                    user={user}
+                    partner={partner}
+                    todoCount={todoCount}
+                    userLastTodo={userLastTodo} />                    
                 </StyledInfo>
 
 
                 { /* REMINDER INFO */ }
-                { /* ************* */ }
-                { !userLastReminder || loading ? (<Loading/>) : (
                 <StyledInfo className="reminder-info">
-                  <Fragment>
-                    <StyledShadow>
-                      <StyledShadow onClick={() => {history.push('/reminder')}}>
-                        <h2><ReminderIcon/></h2>  
-                      </StyledShadow>
-                    </StyledShadow>
-                    <div>
-                    <StyledShadow>
-                      <StyledShadow>
-                        <h3>
-                        Reminder for <span className="reminder-who">{userLastReminder.who}</span>
-                        </h3>
-                        <h4>
-                          <span className="last-reminder">
-                            { userLastReminder.title }
-                          </span>
-                        </h4>
-                        <h4 className="last-reminder-time">
-                          <span>
-                            { moment(userLastReminder.date).format('MMM Do') }
-                          </span>
-                        </h4>
-                      </StyledShadow>
-                    </StyledShadow>
-                    </div>
-                    { /* REMIDER TIMER */ }
-                    <ReminderTimer
-                      reminder={userLastReminder}
-                      redirectTo="/welcome" />
-                  </Fragment>
-                </StyledInfo>
-                ) }          
+
+                  <ReminderInfo
+                    userLastReminder={userLastReminder} />
+                </StyledInfo>    
 
               </StyledShadow>
             </StyledShadow>

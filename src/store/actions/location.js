@@ -62,11 +62,11 @@ export const getLocationsFail = (error) => {
 
 export const getLocations = () => {
   return dispatch => {
-    // dispatch(setLoading(1))
+    dispatch(setLoading(1))
     return axios.get('api/location/all')
       .then(response => {
         dispatch(getLocationsSuccess(response.data.locations))
-        // dispatch(setLoading(-1))
+        dispatch(setLoading(-1))
         return response.data
       })
       .catch(err => {
