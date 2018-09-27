@@ -2,8 +2,10 @@ import React, { Fragment } from 'react'
 
 import Loading from '../../components/UI/Loading'
 import TodoIcon from  'react-icons/lib/md/playlist-add-check'
+import AddIcon from  'react-icons/lib/md/add'
 
-import { StyledShadow } from '../../styles/section'
+// Styles
+import { StyledShadow, StyledNoItems } from '../../styles/section'
 
 const TodoInfo = ({
   user,
@@ -91,7 +93,18 @@ const TodoInfo = ({
           }
         </div>
         ) : (
-          <h4>No tasks for today.</h4>
+          <Fragment>
+            <StyledNoItems>
+              <StyledShadow>
+                <h3>No tasks for today. Add new?</h3>
+                <div
+                  className="icon"
+                  onClick={() => {history.push('/add/todo')}}
+                ><AddIcon /></div>
+              </StyledShadow>
+            </StyledNoItems>
+            <div>&nbsp;</div>
+          </Fragment>
         )  }
         { user && partner && userLastTodo ? (
           <div className="new-todo">
@@ -114,7 +127,7 @@ const TodoInfo = ({
             <p></p>                        
           </StyledShadow>
         </div>
-        ) : <h4>No new tasks for today yet</h4>}
+        ) : null}
       </Fragment>  
       ) }
       

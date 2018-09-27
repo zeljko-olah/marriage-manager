@@ -185,8 +185,8 @@ const StyledHeader = styled.header`
   & .unread-count {
     width: 20px;
     height: 20px;
-    top: 20px;
-    left: 20px;
+    top: -5px;
+    left: 25px;
     line-height: 20px;
     border-radius: 20px;
     color: ${colors.prim_color};
@@ -196,7 +196,7 @@ const StyledHeader = styled.header`
     width: 30px;
     height: 30px;
     top: -10px;
-    right: 10px;
+    right: 20px;
     font-size: 20px;
     line-height: 30px;
     border-radius: 30px;

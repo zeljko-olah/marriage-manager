@@ -39,7 +39,7 @@ class Welcome extends Component {
   }
 
   componentDidUpdate = (prevProps) => {
-    const { socket, getTodosForDate, setFlashMessage, getReminders } = this.props
+    const { socket, getTodosForDate, setFlashMessage, getReminders, getLocations } = this.props
     if (socket !== null && prevProps.socket !== socket) {
       socket.on(events.TODOS_UPDATE, () => {
         getTodosForDate(moment().valueOf())
@@ -53,6 +53,13 @@ class Welcome extends Component {
         setFlashMessage({
           type: 'success',
           flashMessage: `Reminders updated!`
+        })
+      })
+      socket.on(events.LOCATION_SHARED, () => {
+        getLocations()
+        setFlashMessage({
+          type: 'success',
+          flashMessage: `Location shared!`
         })
       })
     }
@@ -87,7 +94,7 @@ class Welcome extends Component {
     if (activeUsers.length === 2) {
       partnerOnline = true
     }
-    
+
     return (
       <StyledSection>
         <StyledMainHeading user={ user } >
@@ -128,6 +135,7 @@ class Welcome extends Component {
                 <StyledInfo className="todos-info">
 
                   <TodoInfo
+                    history={history}
                     user={user}
                     partner={partner}
                     todoCount={todoCount}
@@ -139,6 +147,7 @@ class Welcome extends Component {
                 <StyledInfo className="reminder-info">
 
                   <ReminderInfo
+                    history={history}
                     userLastReminder={userLastReminder} />
                 </StyledInfo>    
 
@@ -238,7 +247,7 @@ const StyledInfo = styled.div`
 }
 
 &.reminder-info {
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 }
 

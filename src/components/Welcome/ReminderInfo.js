@@ -9,48 +9,65 @@ import Loading from '../../components/UI/Loading'
 
 // Icons
 import ReminderIcon from  'react-icons/lib/md/alarm'
+import AddIcon from  'react-icons/lib/md/add'
 
 // Styles
-import { StyledShadow } from '../../styles/section'
+import { StyledShadow, StyledNoItems } from '../../styles/section'
 
 // Component
 const ReminderInfo = ({
   loading,
   history,
-  userLastReminder,
+  userLastReminder
  }) => {
+
+  console.log(userLastReminder)
   return (
     <Fragment>
-      { !userLastReminder || loading ? (<Loading/>) : (
+      { userLastReminder === null || loading ? (<Loading/>) : (
       <Fragment>
         <StyledShadow>
           <StyledShadow onClick={() => {history.push('/reminder')}}>
             <h2><ReminderIcon/></h2>  
           </StyledShadow>
         </StyledShadow>
-        <div>
-        <StyledShadow>
-          <StyledShadow>
-            <h3>
-            Reminder for <span className="reminder-who">{userLastReminder.who}</span>
-            </h3>
-            <h4>
-              <span className="last-reminder">
-                { userLastReminder.title }
-              </span>
-            </h4>
-            <h4 className="last-reminder-time">
-              <span>
-                { moment(userLastReminder.date).format('MMM Do') }
-              </span>
-            </h4>
-          </StyledShadow>
-        </StyledShadow>
-        </div>
-        { /* REMIDER TIMER */ }
-        <ReminderTimer
-          reminder={userLastReminder}
-          redirectTo="/welcome" />
+        { userLastReminder ? (
+          <Fragment>
+            <StyledShadow>
+              <StyledShadow>
+                <h3>
+                Reminder for <span className="reminder-who">{userLastReminder.who}</span>
+                </h3>
+                <h4>
+                  <span className="last-reminder">
+                    { userLastReminder.title }
+                  </span>
+                </h4>
+                <h4 className="last-reminder-time">
+                  <span>
+                    { moment(userLastReminder.date).format('MMM Do') }
+                  </span>
+                </h4>
+              </StyledShadow>
+            </StyledShadow>
+            <ReminderTimer
+              reminder={userLastReminder}
+              redirectTo="/welcome" />
+          </Fragment>
+        ) : (
+          <Fragment>
+          <StyledNoItems>
+            <StyledShadow>
+              <h3>No reminders set. Add new?</h3>
+              <div
+                className="icon"
+                onClick={() => {history.push('/add/reminder')}}
+              ><AddIcon /></div>
+            </StyledShadow>
+          </StyledNoItems>
+          <div>&nbsp;</div>
+          </Fragment>
+        ) }
       </Fragment>
       )}
     </Fragment>

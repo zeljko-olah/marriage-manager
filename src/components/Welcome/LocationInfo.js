@@ -28,7 +28,7 @@ const LocationInfo = ({
               { partnerLastLocation.address }
             </span>
           ) : (
-            <span>{'Unknown'}</span>
+            <span>{'No data'}</span>
           ) }</h4>
         </StyledShadow>
       </Fragment>
