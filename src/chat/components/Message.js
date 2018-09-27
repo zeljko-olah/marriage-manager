@@ -9,6 +9,7 @@ import CheckIcon from 'react-icons/lib/md/visibility'
 import ImportantIcon from 'react-icons/lib/md/warning'
 import LocationIcon from 'react-icons/lib/md/location-on'
 import TodoIcon from 'react-icons/lib/md/directions-run'
+import ReminderIcon from  'react-icons/lib/md/alarm'
 
 
 class Message extends Component {
@@ -31,6 +32,13 @@ class Message extends Component {
     const { close } = this.props
     e.preventDefault()
     history.push('/todos')
+    close()
+  }
+
+  goToReminderPage = (e) => {
+    const { close } = this.props
+    e.preventDefault()
+    history.push('/reminder')
     close()
   }
   
@@ -65,35 +73,45 @@ class Message extends Component {
           <div className="message-outer">
             <div className="time">{message.createdAtFormatted}</div>
             <div className="message-inner">
-                {message.location ? (
+                {message.type === 'location' ? (
                   <a onClick={this.goToLocationPage}>{formattedMessage}</a>
                 ) : null}
-                {message.todo ? (
+                {message.type === 'todo' ? (
                   <a onClick={this.goToTodoPage}>{formattedMessage}</a>
+                ) : null}
+                {message.type === 'reminder' ? (
+                  <a onClick={this.goToReminderPage}>{formattedMessage}</a>
                 ) : null}
                 {message.link ? (
                   <a href={message.text}>{formattedMessage}</a>
                 ) : null}
-                {!message.link && !message.location && !message.todo ? formattedMessage : null}
-                {message.unread && !message.location && !message.todo ? (
+                {
+                  !message.link && message.type === 'message' ? formattedMessage : null}
+                {
+                  message.unread && message.type === 'message' ? (
                   <span className='unread' >
                     <CheckIcon />
                   </span>) : null}
-                {message.important ? (
+                {message.type === 'important' ? (
                   <span
                     className="important"
                     onClick={() => {this.handleImportant(message._id, message.from)}}>
                     <ImportantIcon />
                   </span>) : null}
-                {message.location ? (
+                {message.type === 'location' ? (
                   <span
                     className={message.unread ? 'unread-location location' : 'location'} >
                     <LocationIcon />
                   </span>) : null}
-                {message.todo ? (
+                {message.type === 'todo' ? (
                   <span
                     className={message.unread ? 'unread-todo todo' : 'todo'} >
                     <TodoIcon />
+                  </span>) : null}
+                {message.type === 'reminder' ? (
+                  <span
+                    className={message.unread ? 'unread-reminder reminder' : 'reminder'} >
+                    <ReminderIcon />
                   </span>) : null}
             </div>
           </div>
@@ -225,6 +243,7 @@ const StyledMessage = styled.div`
 & .marked,
 & .important,
 & .location,
+& .reminder,
 & .todo {
   display: inline-block;
   position: absolute;
@@ -242,6 +261,7 @@ const StyledMessage = styled.div`
 & .marked,
 & .important,
 & .location,
+& .reminder,
 & .todo {
   top: 50%;
   transform: translateY(-50%);
@@ -251,6 +271,7 @@ const StyledMessage = styled.div`
 & .left .marked,
 & .left .important,
 & .left .location,
+& .left .reminder,
 & .left .todo {
   left: -40px;
 }
@@ -259,6 +280,7 @@ const StyledMessage = styled.div`
 & .right .marked,
 & .right .important,
 & .right .location,
+& .right .reminder,
 & .right .todo {
   right: -40px;
 }
@@ -282,8 +304,16 @@ const StyledMessage = styled.div`
   cursor: pointer;
 }
 
+& .reminder {
+  color: ${colors.prim_font}; 
+  background-color: ${colors.girl_color}; 
+  font-size: 20px;
+  cursor: pointer;
+}
+
 & .unread-location::after,
-& .unread-todo::after {
+& .unread-todo::after,
+& .unread-reminder::after {
    content: 'new';
    position: absolute;
    transform: rotate(45deg);

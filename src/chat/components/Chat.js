@@ -114,9 +114,10 @@ class Chat extends Component {
     })
 
     socket.on(events.NEW_MESSAGE, (message) => {
+      console.log('MESSAGE', message)
       const { messages } = this.state
       const { user, setFlashMessage } = this.props
-      if (message.location === true) {
+      if (message.type === 'location') {
         socket.emit(events.UPDATE_OWN_UNREAD_COUNT )
       }
       const formatedTime = moment(message.createdAt).format('h:mm a')
@@ -131,7 +132,7 @@ class Chat extends Component {
         return     
       }
       if (user && user.name !== message.from) {
-        if (message.important === true) {
+        if (message.type === 'important') {
           this.audioImportant.play()
           return
         }
@@ -178,7 +179,7 @@ class Chat extends Component {
       const { setFlashMessage } = this.props
       const markedMessages = messages.map(m => {
         if (m.id === message.id) {
-          m.important = false
+          m.type = 'message'
         }
         return m
       })
@@ -221,6 +222,7 @@ class Chat extends Component {
   handleSendMessage = (message) => {
     const { socket, activeUsers} = this.state
     const { saveMessage, setFlashMessage, user, getUserCoords, setLocation } = this.props
+    let type = 'message'
 
     // Skip messages from admin
     if (message.from !== 'Admin') {
@@ -235,6 +237,9 @@ class Chat extends Component {
 
       // Important message
       const important = patterns.important.test(message)
+      if (important) {
+        type = 'important'
+      }
       message = message.replace('@!!!', '')
       if (!message) {
         setFlashMessage({
@@ -272,12 +277,12 @@ class Chat extends Component {
         text: message.replace('!!!', ''),
         userId: user.id,
         unread,
-        important,
+        type,
         link
       })
         .then(savedMessage => {
           socket.emit(events.MESSAGE_SENT, savedMessage)
-          if (savedMessage.important) {
+          if (savedMessage.type === 'important') {
             socket.emit(events.UPDATE_PARTNER_IMPORTANT_COUNT)
             return
           }
@@ -352,7 +357,7 @@ class Chat extends Component {
       const markedMessages = messages.map(m => {
         if (m._id === id) {
           socket.emit(events.REMOVE_IMPORTANT, m, user)
-          m.important = false
+          m.type = 'message'
         }
         return m
       })

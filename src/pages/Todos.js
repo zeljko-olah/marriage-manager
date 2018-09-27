@@ -1,4 +1,6 @@
 import React, {Component} from 'react'
+
+// Moment
 import moment from 'moment'
 
 // REDUX
@@ -9,6 +11,7 @@ import {
   selectPercentage, selectTodosDate, selectIsToday, selectNewTodosFirst, selectTodoStatusCount
  } from '../store/selectors/todos'
 
+// Components
 import Todo from '../components/Todos/Todo'
 import TodosMenu from '../components/Todos/TodosMenu'
 
@@ -26,8 +29,6 @@ import AddIcon from  'react-icons/lib/md/add'
 import * as events from '../events'
 
 class Todos extends Component {
-
-  // STATE
 
   // LIFECYCLE HOOKS
   componentDidMount = () => {

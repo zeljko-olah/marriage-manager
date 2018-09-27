@@ -28,14 +28,13 @@ exports.get_all_users = (req, res, next) => {
 // SAVE NEW MESSAGE
 exports.new_message = (req, res, next) => {
   console.log('REQ.BODY:::', req.body)
-  const { text, userId, unread, important, link } = req.body.message
+  const { text, userId, type, link } = req.body.message
   const message = new Message({
     _id: mongoose.Types.ObjectId(),
     text: text,
     user: userId,
     room: 'love',
-    unread: unread,
-    important: important,
+    type: type,
     link: link
   })
 
@@ -52,9 +51,8 @@ exports.new_message = (req, res, next) => {
             text: doc.text,
             room: 'love',
             unread: doc.unread,
-            important: doc.important,
             link: doc.link,
-            location: doc.location,
+            type: doc.type,
             createdAt: doc.created_at
           })
         })
@@ -71,7 +69,7 @@ exports.new_message = (req, res, next) => {
 exports.get_messages = (req, res) => {
 
   Message.find()
-    .select('_id text read created_at unread important link location todo')
+    .select('_id text read created_at unread type link')
     .populate('user', 'name')
     .exec()
     .then(docs => {
@@ -85,10 +83,8 @@ exports.get_messages = (req, res) => {
             createdAt: doc.created_at,
             createdAtFormatted: time,
             unread: doc.unread,
-            important: doc.important,
+            type: doc.type,
             link: doc.link,
-            location: doc.location,
-            todo: doc.todo,
             from: doc.user.name,
             user: doc.user
           }
@@ -186,8 +182,7 @@ exports.delete_chat_history = (req, res) => {
 exports.remove_important_message = (req, res) => {
   console.log('REQBODY', req.body)
   const {id} = req.body
-  console.log(id)
-  Message.findOneAndUpdate({ _id: id }, { $set: { important: false }})
+  Message.findOneAndUpdate({ _id: id }, { $set: { type: 'message' }})
   .exec()
   .then((resp) => {
     console.log(resp)

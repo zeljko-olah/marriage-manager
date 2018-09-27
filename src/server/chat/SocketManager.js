@@ -179,8 +179,7 @@ module.exports = (socket) => {
         user: user.id,
         room: room,
         unread: true,
-        important: false,
-        location: true
+        type: 'location'
       })
       message
       .save()
@@ -193,9 +192,8 @@ module.exports = (socket) => {
           from: from,
           room: 'love',
           unread: doc.unread,
-          important: doc.important,
+          type: doc.type,
           link: doc.link,
-          location: doc.location,
           createdAt: doc.created_at
         }
         
@@ -246,9 +244,7 @@ module.exports = (socket) => {
       user: user.id,
       room: room,
       unread: true,
-      important: false,
-      location: false,
-      todo: true
+      type: 'todo'
     })
 
     message
@@ -262,10 +258,8 @@ module.exports = (socket) => {
         from: user.name,
         room: room,
         unread: doc.unread,
-        important: doc.important,
+        type: doc.type,
         link: doc.link,
-        location: doc.location,
-        todo: doc.todo,
         createdAt: doc.created_at
       }
       
@@ -287,9 +281,44 @@ module.exports = (socket) => {
   */
   socket.on(events.REMINDER_ADD, (reminder, user)=>{
     console.log('REMINDER ADDED')
-    // Emit events to update
-    io.to(room).emit(events.REMINDER_ADDED, reminder, user) 
-    io.to(room).emit(events.REMINDERS_UPDATE)
+    console.log(reminder)
+
+    // Create and save message to db
+    const message = new Message({
+      _id: mongoose.Types.ObjectId(),
+      text: reminder.title,
+      user: user.id,
+      room: room,
+      unread: true,
+      type: 'reminder'
+    })
+
+    message
+    .save()
+    .then(doc => {
+
+      // Create location message
+      const reminderMessage = {
+        _id: doc._id,
+        text: doc.text,
+        from: user.name,
+        room: room,
+        unread: doc.unread,
+        type: doc.type,
+        link: doc.link,
+        createdAt: doc.created_at
+      }
+      
+      // Emit events to update
+      io.to(room).emit(events.REMINDER_ADDED, reminder, user) 
+      io.to(room).emit(events.REMINDERS_UPDATE)
+      io.to(room).emit(events.NEW_MESSAGE, reminderMessage)
+      socket.broadcast.to(room).emit(events.UNREAD_COUNT_UPDATED) 
+      // callback(doc)        
+    })
+    .catch(err => {
+      console.log(err)
+    })
   })
 
     /*

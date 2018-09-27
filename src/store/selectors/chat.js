@@ -50,6 +50,6 @@ export const selectUnreadCount = createSelector(
 
 export const selectImportantCount = createSelector(
   selectUserName, selectAllMessages, (userName, messages) => {
-    return messages.filter(m => m.important === true && m.from !== userName).length
+    return messages.filter(m => m.type === 'important' && m.from !== userName).length
   }
 )
