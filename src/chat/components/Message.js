@@ -72,7 +72,12 @@ class Message extends Component {
         <div className={messageClass}>
           <div className="message-outer">
             <div className="time">{message.createdAtFormatted}</div>
-            <div className="message-inner">
+              <div className="message-inner">
+
+                { /* MESSAGE BODY */ }
+                {message.type === 'message' || message.type === 'important' ? (
+                  <span>{formattedMessage}</span>
+                ) : null}
                 {message.type === 'location' ? (
                   <a onClick={this.goToLocationPage}>{formattedMessage}</a>
                 ) : null}
@@ -85,10 +90,9 @@ class Message extends Component {
                 {message.link ? (
                   <a href={message.text}>{formattedMessage}</a>
                 ) : null}
-                {
-                  !message.link && message.type === 'message' ? formattedMessage : null}
-                {
-                  message.unread && message.type === 'message' ? (
+
+                { /* MESSAGE ICONS */ }
+                { message.unread && message.type === 'message' ? (
                   <span className='unread' >
                     <CheckIcon />
                   </span>) : null}

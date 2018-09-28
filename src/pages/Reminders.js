@@ -109,6 +109,11 @@ class Reminders extends Component {
   handleSetTimer = (reminder) => {
     this.setState({currentReminder: reminder}) 
   }
+
+  handleReloadReminder = () => {
+    const { getReminders } = this.props
+    getReminders()
+  }
   
 
   render () {
@@ -201,6 +206,7 @@ class Reminders extends Component {
 
                 { /* REMIDER TIMER */ }
                 <ReminderTimer
+                  reloadReminder={this.handleReloadReminder}
                   reminder={currentReminder}
                   redirectTo="/reminder" />
             </StyledShadow>

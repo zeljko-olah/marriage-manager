@@ -28,13 +28,14 @@ exports.get_all_users = (req, res, next) => {
 // SAVE NEW MESSAGE
 exports.new_message = (req, res, next) => {
   console.log('REQ.BODY:::', req.body)
-  const { text, userId, type, link } = req.body.message
+  const { text, userId, type, link, unread } = req.body.message
   const message = new Message({
     _id: mongoose.Types.ObjectId(),
     text: text,
     user: userId,
     room: 'love',
     type: type,
+    unread: unread,
     link: link
   })
 

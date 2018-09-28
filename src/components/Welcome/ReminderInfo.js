@@ -18,10 +18,10 @@ import { StyledShadow, StyledNoItems } from '../../styles/section'
 const ReminderInfo = ({
   loading,
   history,
-  userLastReminder
+  userLastReminder,
+  reloadReminder
  }) => {
 
-  console.log(userLastReminder)
   return (
     <Fragment>
       { userLastReminder === null || loading ? (<Loading/>) : (
@@ -50,9 +50,12 @@ const ReminderInfo = ({
                 </h4>
               </StyledShadow>
             </StyledShadow>
-            <ReminderTimer
+            { userLastReminder ? (
+              <ReminderTimer
               reminder={userLastReminder}
-              redirectTo="/welcome" />
+              redirectTo="/welcome"
+              reloadReminder={reloadReminder} />
+            ) : null }
           </Fragment>
         ) : (
           <Fragment>

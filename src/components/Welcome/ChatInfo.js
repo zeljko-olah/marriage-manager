@@ -7,9 +7,6 @@ import ChatIcon from 'react-icons/lib/md/forum'
 
 import { StyledShadow } from '../../styles/section'
 
-
-
-
 const ChatInfo = ({
   partner,
   partnerChatIsOpen,
@@ -83,26 +80,30 @@ const ChatInfo = ({
       ) }
 
       { /* LAST PARTNER MESSAGE */ }
-      { loading ? <Loading/> : (
+      { loading ? (
         <div className="last-message">
-        <h4>
-          Last message to you:
-          { partnerLastMessage && partnerLastMessage.createdAtFormatted ? (
-            <span className="last-message-time">
-              {partnerLastMessage.createdAtFormatted}                        
-            </span>
-          ) : (
-            null
-          )}
-        </h4>
-        <StyledShadow>
-          { partnerLastMessage ? (
-          <p>{partnerLastMessage.text && ('"' + partnerLastMessage.text.substr(0, 150) + '..."') }</p>
-          ) : (
-            <p>No meesages.</p>
-          ) }
+          <Loading />
+        </div>
+        ) : (
+        <div className="last-message">
+          <h4>
+            Last message to you:
+            { partnerLastMessage && partnerLastMessage.createdAtFormatted ? (
+              <span className="last-message-time">
+                {partnerLastMessage.createdAtFormatted}                        
+              </span>
+            ) : (
+              null
+            )}
+          </h4>
+          <StyledShadow>
+            { partnerLastMessage ? (
+            <p>{partnerLastMessage.text && ('"' + partnerLastMessage.text.substr(0, 150) + '..."') }</p>
+            ) : (
+              <p>No meesages.</p>
+            ) }
 
-        </StyledShadow>
+          </StyledShadow>
       </div>
       ) }
     </Fragment>

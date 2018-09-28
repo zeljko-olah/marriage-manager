@@ -71,6 +71,11 @@ class Welcome extends Component {
     socket.off(events.REMINDERS_UPDATE)
   }
 
+  handleReloadReminder = () => {
+    const { getReminders } = this.props
+    getReminders()
+  }
+
   render () {
     const { 
       history,
@@ -148,7 +153,8 @@ class Welcome extends Component {
 
                   <ReminderInfo
                     history={history}
-                    userLastReminder={userLastReminder} />
+                    userLastReminder={userLastReminder}
+                    reloadReminder={this.handleReloadReminder} />
                 </StyledInfo>    
 
               </StyledShadow>

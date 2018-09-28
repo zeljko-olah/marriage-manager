@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { Redirect } from 'react-router'
-
 
 // Moment
 import moment from 'moment'
+import {history} from '../../router/AppRouter'
 
 // Styled components
 import styled from 'styled-components'
@@ -22,18 +21,11 @@ class ReminderTimer extends Component {
     hours: 0,
     minutes: 0,
     seconds: 0,
-    timerExpired: false
   }
 
   componentDidUpdate (prevProps, prevState) {
     let indicate = false
     const { reminder } = this.props
-    const { timerExpired } = this.state
-    if (timerExpired === true && prevState.timerExpired !== timerExpired) {
-      clearInterval(countDown)
-      countDown = 0
-      return
-    }
     if (prevProps.reminder.id === reminder.id && !indicate) {
       clearInterval(countDown)
       this.handleStartTimer(reminder)
@@ -65,7 +57,8 @@ class ReminderTimer extends Component {
     const interval = 1000
 
     if (duration._milliseconds < 0) {
-      this.setState({timerExpired: true})
+      // this.setState({timerExpired: true})
+      this.handleReloadReminder()      
       return
     } else {
       countDown = setInterval(() => {
@@ -81,9 +74,19 @@ class ReminderTimer extends Component {
     }
   }
 
+  handleReloadReminder = () => {
+    const { reloadReminder, redirectTo } = this.props
+    if (redirectTo === '/welcome') {
+      reloadReminder()
+    } else {
+      history.push('/reminder')
+    }
+  }
+
   render() {
     const { reminder, redirectTo } = this.props
-    const { months, days, hours, minutes, seconds, timerExpired } = this.state
+    const { months, days, hours, minutes, seconds } = this.state
+    
     return (
       <StyledTimer redirectTo={redirectTo}>
         {reminder && (
@@ -92,14 +95,14 @@ class ReminderTimer extends Component {
             <h3>Time remains</h3>
             </div>
             <div>
-              { !timerExpired ? (<StyledShadow>
+              <StyledShadow>
                 { months === 0 && days === 0 && hours === 0 && hours === 0 && minutes === 0 && seconds === 0 && <Loading /> }
                 { months !== 0 ?  <p className="month"><span className="count-number">{months}</span> months</p> : null}
                 { days !== 0 &&  <p className="days"><span className="count-number">{days}</span> days</p>}
                 { months === 0 && hours !== 0 &&  <p className="hours"><span className="count-number">{hours}</span> hours</p>}
                 { days === 0 && minutes !== 0 &&  <p className="minutes"><span className="count-number">{minutes}</span> minutes</p>}
                 { days === 0 && seconds !== 0 && <p className="seconds"><span className="count-number">{seconds}</span> seconds</p>}
-                </StyledShadow>) : (<Redirect to={ redirectTo } />) }
+              </StyledShadow>
             </div>
           </div>
         )}        
