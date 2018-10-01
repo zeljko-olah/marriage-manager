@@ -92,7 +92,7 @@ class ReminderTimer extends Component {
         {reminder && (
           <div className="timer-wrapper">
             <div className="timer-headline">
-            <h3>Time remains</h3>
+            <h3>Time remaining</h3>
             </div>
             <div>
               <StyledShadow>
@@ -117,6 +117,9 @@ const StyledTimer = styled.div`
   ${props => {
     return props.redirectTo === '/reminder' && 'position: absolute'
   }}
+  @media (max-width: 768px) {
+    position: static;
+  }
   display: inline-block;
   right: 50px;
   color: #fff;
@@ -129,12 +132,16 @@ const StyledTimer = styled.div`
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    
 
     & .timer-headline h3 {
       color: ${colors.prim_color};
       margin-right: 30px;
       text-transform: uppercase;
       font-size: 20px;
+      @media (max-width: 768px) {
+        font-size: 15px;
+      }
       padding: 10px;
       background-color: ${colors.backdrop};
     }

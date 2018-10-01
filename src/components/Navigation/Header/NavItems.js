@@ -52,7 +52,7 @@ class NavItems extends Component {
             </NavLink>
           </li>
           
-          { /* TODOS */ }
+          { /* ADD */ }
           <li>
             <NavLink
               to='/add'
@@ -62,7 +62,7 @@ class NavItems extends Component {
               <i>
                 <AddIcon />
               </i>
-              { showText && <span>Todos</span> }
+              { showText && <span>Add new</span> }
             </NavLink>
           </li>
           

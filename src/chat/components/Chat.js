@@ -114,7 +114,6 @@ class Chat extends Component {
     })
 
     socket.on(events.NEW_MESSAGE, (message) => {
-      console.log('MESSAGE', message)
       const { messages } = this.state
       const { user, setFlashMessage } = this.props
       if (message.type === 'location') {

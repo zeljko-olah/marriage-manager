@@ -92,6 +92,10 @@ const StyledReminder = styled.div`
   width: 45%;
   flex-direction: column;
   justify-content: space-between;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
     
   & > div {
     position: relative;
@@ -101,10 +105,18 @@ const StyledReminder = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: stretch;
+    @media (max-width: 768px) {
+      & > div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
 
     & div:first-child {
       flex: 1;
     }
+
   }
 
   & .current {
@@ -131,6 +143,10 @@ const StyledReminder = styled.div`
   & .reminder-title {
     color: ${colors.prim_color};
     font-size: 13px;
+    @media (max-width: 768px) {
+      font-size: 10px;
+      padding-top: 20px;
+    }
     font-weight: bold;
     text-transform: uppercase;
     text-align: center;
@@ -183,11 +199,17 @@ const StyledReminder = styled.div`
 
   & .reminder-date-wrapper {
     flex: 0 100px;
+    @media (max-width: 768px) {
+      flex: 0 70px;
+    }
   }
 
   & .reminder-date {
     color: ${colors.sec_light};
     font-size: 25px;
+    @media (max-width: 768px) {
+      font-size: 20px;
+    }
     font-weight: bold;
     text-transform: uppercase;
     text-align: center;
@@ -197,6 +219,10 @@ const StyledReminder = styled.div`
   & .reminder-time {
     color: ${colors.prim_light};
     font-size: 20px;
+    @media (max-width: 768px) {
+      font-size: 18px;
+      width: 50px;
+    }
     font-weight: bold;
     text-transform: uppercase;
     text-align: center;
@@ -211,7 +237,6 @@ const StyledReminder = styled.div`
       width: 50px;
       border: 2px solid ${colors.prim_color};
       border-radius: 50px;
-
     }
   }
 

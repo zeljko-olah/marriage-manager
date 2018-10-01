@@ -296,14 +296,14 @@ const StyledMessage = styled.div`
 }
 
 & .todo {
-  color: ${colors.boy_color}; 
-  background-color: aquamarine; 
+  color: ${colors.prim_font}; 
+  background-color: ${colors.boy_color}; 
   font-size: 20px;
 }
 
 & .location {
   color: ${colors.sec_color}; 
-  background-color: ${colors.backdrop}; 
+  background-color: ${colors.disabled}; 
   font-size: 20px;
   cursor: pointer;
 }
@@ -343,6 +343,11 @@ ${props => {
     position: absolute;
     bottom: 0;
     left: 50px;
+    @media (max-width: 768px) {
+      position: fixed;
+      bottom: 10%;
+      left: 10px;
+    }
     background: ${colors.sec_light};
   }
   `

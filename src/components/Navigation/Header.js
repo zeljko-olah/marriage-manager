@@ -109,6 +109,11 @@ const StyledHeader = styled.header`
   padding: 10px 30px;
   border-bottom: 2px solid ${colors.prim_color};
   background: ${colors.overlay};
+  @media (max-width: 768px) {
+    background: ${colors.prim_font};
+    flex-basis: 40%;
+    margin-left: 10px;
+  }
   display: flex;
   justify-content: space-between;
   align-items: center;

@@ -15,6 +15,8 @@ export const StyledSection = styled.section`
     display: none;
   }
   @media (max-width: 768px) {
+    margin-top: 55px;
+    max-height: 100vh;
     height: auto;
     overflow: auto;
     border: none;
@@ -85,6 +87,9 @@ export const StyledForm = styled.div`
 
   & .date-picker {
     flex-basis: 70%;
+    @media (max-width: 768px) {
+      flex-basis: 60%;
+    }
   }
 
   & .time-picker {
@@ -95,6 +100,10 @@ export const StyledForm = styled.div`
       font-size: 19px;
       line-height: 24px;
       text-align: center;
+    }
+    @media (max-width: 768px) {
+      flex-basis: 40%;
+      margin-left: 10px;
     }
   }
 
@@ -114,18 +123,18 @@ export const StyledForm = styled.div`
   }
 
   & label.drop-down {
-    position: relative;
     cursor: pointer;
-
+    & p {
+      position: relative;
+    }
     & span {
       position: absolute;
       top: 0px;
       right: 3px;
       color: ${colors.ter_yellow};
       transform: scaleY(1.8);
-
       @media (max-width: 768px) {
-        top: -3px;
+        font-size: 15px;  
       }
     }
   }
@@ -237,7 +246,12 @@ export const StyledButton = styled.button`
   width: auto;
   padding: 5px;
   font-size: 15px;
+  @media (max-width: 768px) {
+    font-size: 10px;
+    
+  }
   ` : ''}
+
 
  &:disabled {
   background: ${colors.disabled};
@@ -255,11 +269,12 @@ export const StyledShadow = styled.div`
   background-color: ${colors.backdrop};
   // margin-top: 5px;
   @media (max-width: 768px) {
+    display: block;
     padding: 5px 0;
   }
 `
 
-// DATE PICKET
+// DATE PICKER
 export const StyledDatePicker = styled.div`
   & .DateInput_1 {
     width: 100% !important;

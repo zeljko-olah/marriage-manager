@@ -207,7 +207,6 @@ const StyledWelcome = styled.div`
     font-style: italic;
     text-transform: uppercase;
     font-size: 10px;
-    // font-weight: 100;
   }
 `
 const StyledInfo = styled.div`
@@ -215,8 +214,17 @@ const StyledInfo = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding-bottom: 10px;
+    border-bottom: 2px solid ${colors.prim_light};
+    & h2 {
+      margin: 0;
+      padding: 3px 10px;
+    }
+  }
 
-&.chat-info svg {
+& svg {
   color: ${colors.sec_color};
     font-size: 30px;
     transform: scale(1) rotate(0deg);    
@@ -233,6 +241,9 @@ const StyledInfo = styled.div`
 &.todos-info {
   justify-content: center;
   align-items: stretch;
+  @media (max-width: 768px) {
+    align-items: center;
+  }
 
   & svg {
     color: ${colors.sec_color};
@@ -245,6 +256,10 @@ const StyledInfo = styled.div`
       color: ${colors.sec_light};
     }
   }
+}
+
+&.location-info {
+  text-align: center;
 }
 
 &.todos-info {
@@ -273,7 +288,7 @@ const StyledInfo = styled.div`
   border-right: 10px solid transparent;
 }
 & .avatar-wrapper.offline {
-  border: 10px solid ${colors.sec_color};
+  border: 10px solid red;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
 }
@@ -303,11 +318,15 @@ const StyledInfo = styled.div`
 & .last-message,
 & .new-todo {
   flex-basis: 300px;
+  @media (max-width: 768px) {
+    flex-basis: auto;
+    text-align: center;
+  }
   color: ${colors.ter_yellow};
   & p {
     font-size: 15px;
     font-style: italic;
-    font-weight: 100;
+    font-weight: 700;
     letter-spacing: 3px;
   }
 }

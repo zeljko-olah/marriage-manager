@@ -182,10 +182,12 @@ class Todos extends Component {
 
     return (
       <StyledSection>
+          { /* HEADLINE */ }
           <StyledMainHeading>
             <h1>Todos</h1>
           </StyledMainHeading>
-    
+          
+          { /* TODOS MENU - FILTERS, WIDGET, COUNT */ }
           <StyledMainContent>
             <StyledTodos>
               <StyledShadow>
@@ -204,11 +206,14 @@ class Todos extends Component {
                   filterByStatus={filterByStatus}
                   filterByPriority={filterByPriority}
                   congratulations={this.handleCongratulations} />
+
+                { /* TODOS LIST */ }
                 {listTodos}
                 
               </StyledShadow>      
             </StyledTodos> 
             
+            { /* ADD MORE/NEW */ }
             <StyledShadow>
               <StyledNoItems>
                 <StyledShadow>
@@ -278,10 +283,16 @@ const StyledNoTodos = styled.div`
   justify-content: center;
   align-items: center;
   height: 300px;
+  @media (max-width: 768px) {
+    height: 30vh;
+  }
 
   & div {
     color: ${colors.prim_light};
     font-size: 20px;
+    @media (max-width: 768px) {
+      font-size: 15px;
+    }
     text-transform: uppercase;
   }
 `

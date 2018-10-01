@@ -10,7 +10,7 @@ const SideBar = ({ open, close, children, width, side }) => {
   let toggleClass = open ? 'open' : 'close' 
   
   return (
-    <div onDoubleClick={close}>
+    <div onClick={close}>
 
       { /* BACKDROP - OVERLAY */ }
       <Backdrop
@@ -38,12 +38,14 @@ const StyledAside = styled.aside`
   height: 100%;
   ${props => {
     return props.side === 'right' ? 
-    'right: 0; z-index: 100;' : 'left: 0; z-index: 200;'
+    'right: 0; z-index: 20000;' : 'left: 0; z-index: 1000;'
   } };
   top: 0;
   padding: 32px 16px;
   border-right: 3px solid ${colors.prim_color};
-  background: ${colors.overlay};
+  background: ${props => {
+    return props.side === 'right' ? `${colors.overlay}` : `${colors.prim_font}`
+  }};
   transition: transform 0.3s ease-out;
 
   @media (max-width: 768px) {

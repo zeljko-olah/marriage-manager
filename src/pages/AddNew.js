@@ -290,7 +290,7 @@ const StyledTabHeader = styled.div`
     font-weight: 100;
     margin: 5px 0;
     @media (max-width: 768px) {
-      font-size: 20px;
+      font-size: 15px;
       letter-spacing: 3px;
     }
   }

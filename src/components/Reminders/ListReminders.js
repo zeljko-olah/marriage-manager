@@ -34,6 +34,9 @@ const StyledReminders = styled.div`
   flex-wrap: nowrap;
   justify-content: flex-start;
   overflow-x: auto;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
   ::-webkit-scrollbar { 
     display: none;
   }

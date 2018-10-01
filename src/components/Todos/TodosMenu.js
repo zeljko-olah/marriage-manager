@@ -143,7 +143,7 @@ class TodosMenu extends Component {
             { /* PERCENTAGE WIDGET */ }
             <div className="status-menu">
               <StyledShadow>
-                <div style={{width: '50px'}}>
+                <div style={{width: '50px', margin: '0 auto'}}>
                   {percentage ? (
                     <StyledProgressbar percentage={percentage} text={`${percentage}%`} />
                   ) : (
@@ -281,6 +281,13 @@ const StyledTodosMenu = styled.div`
   & .todo-filters {
     margin-top: 10px;
     justify-content: space-between; 
+    @media (max-width: 768px) {
+      flex-direction: column;
+
+      & > * {
+        margin-bottom: 5px;
+      }
+    }
   }
 
   & input {
@@ -295,7 +302,7 @@ const StyledTodosMenu = styled.div`
   & button {
     transition: all .3s linear;
   }
-
+    
   & .todo-calendar svg {
     top: 5px;
     right: 10px;
@@ -310,10 +317,19 @@ const StyledTodosMenu = styled.div`
   & .todo-calendar {
     position: relative;
     width: 30%;
+    @media (max-width: 768px) {
+      flex-grow: 1;
+      margin-left: 5px;
+    }
   }
   & .status-menu {
     text-align: center;
     text-transform: uppercase;
+    @media (max-width: 768px) {
+      flex-basis: 20%;
+      margin: 0 10px;
+      text-align: center;
+    }
 
     & p {
       margin: 0;
@@ -325,6 +341,10 @@ const StyledTodosMenu = styled.div`
     font-size: 30px;
     top: 18px;
     right: 14px;
+    @media (max-width: 768px) {
+      top: 13px;
+      right: 10px;
+    }
   }
 
   & .more-icon {
@@ -334,6 +354,9 @@ const StyledTodosMenu = styled.div`
 
   & .status-count {
     flex-basis: 100px;
+    @media (max-width: 768px) {
+      flex-basis: 20%;
+    }
     & p {
       margin: 0;
       font-style: italic;
@@ -381,7 +404,6 @@ const StyledTodosMenu = styled.div`
         &:hover {
           background-color: ${colors.prim_light};
         }
-
       }
     }
   }

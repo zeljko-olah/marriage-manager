@@ -145,7 +145,6 @@ const StyledInput = styled.div`
     white-space: pre-wrap;
     color: ${colors.prim_font};
 
-    
     &::placeholder {
       font-family: 'PT mono';
       font-size: 14px;

@@ -250,7 +250,7 @@ class Todo extends Component {
               <div className="schedule">
                 <span><strong>{formatDate}</strong></span>
               </div>
-              <div className="">
+              <div>
                 <span>Task for <strong>{todo.who}</strong></span>
               </div>
               <div>
@@ -272,6 +272,7 @@ export default Todo
 
 const StyledTodo = styled.div`
   position: relative;
+  padding-left: 5px;
 
   & .todo-header {
     display: flex;
@@ -294,7 +295,7 @@ const StyledTodo = styled.div`
     font-size: 15px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    padding-left: 5px;
+    margin-left: 5px;
     color: ${colors.prim_color};
     margin: 0px 5px;
     background-color: transparent;
@@ -416,15 +417,20 @@ const StyledTodo = styled.div`
     }
 
     .show-todo-actions {
-      background-color: ${colors.overlay};
+      position: absolute;
+      z-index: 1000;
+      background-color: black;
       opacity: 1;
       transform: scale(1);
       margin-right: 0;
+      width: 100px;
     }
     .hide-todo-actions {
+      position: absolute;
       margin-right: 15px;
       opacity: 0;
       transform: scale(0);
+      width: 100px;
     }
   }
 
@@ -452,7 +458,7 @@ const StyledTodo = styled.div`
     transition: all .3s ease-in;
 
     & > div {
-      font-size: 12px;
+      font-size: 8px;
       margin-left: 5px;
       font-style: italic;
     }

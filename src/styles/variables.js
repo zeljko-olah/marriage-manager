@@ -20,7 +20,7 @@ export const success_light = '#b3ffcc'
 export const boy_color = 'CornflowerBlue'
 export const girl_color = 'Violet'
 export const backdrop = 'rgba(1,1,1, 0.1)'
-export const overlay = 'rgba(0, 0, 0, 0.5)'
+export const overlay = 'rgba(0, 0, 0, 0.6)'
 
 
 // TEXT SHADOW

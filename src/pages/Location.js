@@ -251,7 +251,10 @@ const StyledLocationHeading= styled.div`
     width: 80%;
     padding: 10px;
     margin: 10px 10px 0px 10px;
-    font-size: 15px;
+    font-size: 25px;
+    @media (max-width: 768px) {
+      font-size: 15px;
+    }
     
     &:disabled {
       background-color: ${colors.disabled};

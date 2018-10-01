@@ -57,7 +57,10 @@ class Messages extends Component {
             {isTyping ? (
               <Message
                 stylingClass={"typing"}
-                message={{text: `${typingUser} is typing...`}}
+                message={{
+                  text: `${typingUser} is typing...`,
+                  type: 'message'
+                }}
                 user={{name: typingUser}}
                 pointer={true} />
             ) : null}
@@ -82,7 +85,6 @@ const StyledMessages = styled.div`
   @media (max-width: 768px) {
     flex-grow: 1;
     overflow-y: scroll;
-
   }
   & div.scroll {
     overflow-y: scroll;

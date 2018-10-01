@@ -91,26 +91,28 @@ class AddItem extends Component {
           <StyledShadow>
             <label><p>{who}</p></label>
             <StyledShadow className={error === 'checkboxes' ? 'error-checkbox': ''}>
-              <div className="contain-checkboxes">
-                <div className="checkboxes" >
-                  <label htmlFor="">{roomUsers[0]}</label>
-                    <input
-                      className="checkbox"
-                      type="checkbox"
-                      value="marina"
-                      ref={input => {this.inputs[roomUsers[0]] = input}}  />
-                  <span className="checkmark"></span>
+              <StyledShadow>
+                <div className="contain-checkboxes">
+                  <div className="checkboxes" >
+                    <label htmlFor="">{roomUsers[0]}</label>
+                      <input
+                        className="checkbox"
+                        type="checkbox"
+                        value="marina"
+                        ref={input => {this.inputs[roomUsers[0]] = input}}  />
+                    <span className="checkmark"></span>
+                  </div>
+                  <div className="checkboxes" >
+                    <label htmlFor="">{roomUsers[1]}</label>
+                      <input
+                        className="checkbox"
+                        type="checkbox"
+                        value='zeljko'
+                        ref={input => {this.inputs[roomUsers[1]] = input}} />
+                    <span className="checkmark"></span>
+                  </div>
                 </div>
-                <div className="checkboxes" >
-                  <label htmlFor="">{roomUsers[1]}</label>
-                    <input
-                      className="checkbox"
-                      type="checkbox"
-                      value='zeljko'
-                      ref={input => {this.inputs[roomUsers[1]] = input}} />
-                  <span className="checkmark"></span>
-                </div>
-              </div>
+              </StyledShadow>
             </StyledShadow>
           </StyledShadow>
 
@@ -146,7 +148,7 @@ class AddItem extends Component {
           <StyledShadow>
             <label
               className="drop-down" 
-              onClick={this.toggleDescription}><p>Describe more...</p><span><TriangleIcon /></span></label>
+              onClick={this.toggleDescription}><p>Describe more...<span><TriangleIcon /></span></p></label>
             {showDescriptionInput ? (
               <p>
                 <textarea

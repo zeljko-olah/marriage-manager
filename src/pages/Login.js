@@ -85,7 +85,7 @@ class Login extends Component {
         { /* LOGIN FORM FOOTER */ }        
         {openLogin ? 
           <StyledFormFooter>
-            This App is <strong>private :)</strong>
+            To find more about the app: <strong>zeljko.web.developer@gmail.com :)</strong>
           </StyledFormFooter> 
           : 
           null }
@@ -138,7 +138,7 @@ const LoginFormWrapper = styled.div`
   @media (max-width: 768px) {
     bottom: 0;
     right: 0;
-    width: 100vw;
+    width: 90vw;
   }
 
   & span.error {

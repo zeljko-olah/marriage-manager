@@ -305,6 +305,10 @@ const StyledHeadlines = styled.h2`
   font-style: italic;
   text-transform: uppercase;
   font-size: 15px;
+  @media (max-width: 768px) {
+    font-size: 10px;
+    margin-left: 10px;
+  }
   margin: 0;
   color: ${colors.prim_light};
 
@@ -312,6 +316,9 @@ const StyledHeadlines = styled.h2`
     position: relative;
     top: -2px;
     font-size: 30px;
+    @media (max-width: 768px) {
+      font-size: 20px;
+    }
     cursor: pointer;
   }
 `

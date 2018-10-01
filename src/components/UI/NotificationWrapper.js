@@ -56,7 +56,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(Notification)
 
 const StyledNotify = styled.div`
   position: fixed;
-  z-index: 10000;
+  z-index: 100000;
   top: 0;
   left: 50%;
   transition: all 0.5s linear;
