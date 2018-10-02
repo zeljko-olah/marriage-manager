@@ -33,7 +33,6 @@ const ReminderInfo = ({
         </StyledShadow>
         { userLastReminder ? (
           <Fragment>
-            <StyledShadow>
               <StyledShadow>
                 <h3>
                 Reminder for <span className="reminder-who">{userLastReminder.who}</span>
@@ -49,7 +48,6 @@ const ReminderInfo = ({
                   </span>
                 </h4>
               </StyledShadow>
-            </StyledShadow>
             { userLastReminder ? (
               <ReminderTimer
               reminder={userLastReminder}

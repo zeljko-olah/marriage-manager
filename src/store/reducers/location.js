@@ -3,8 +3,8 @@ import * as actionTypes from '../actions/actionTypes'
 import { updateObject } from '../../shared/utility'
 
 const initialState = {
-    lat: 44.8482181,
-    lng: 20.3548942,
+    lat: null,
+    lng: null,
     from: '',
     createdAt: null,
     locations: []

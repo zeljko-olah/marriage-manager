@@ -27,7 +27,8 @@ export {
 export {
   getUserCoords,
   setLocation,
-  getLocations
+  getLocations,
+  clearLocations
 } from './location'
 
 // TODO RELATED ACTIONS

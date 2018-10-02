@@ -1,7 +1,7 @@
 import axios from '../../http'
 import * as actionTypes from './actionTypes'
 import {getCoordsPromise} from '../../shared/utility'
-import { setLoading } from './index'
+import { setLoading, setFlashMessage } from './index'
 
 // AUTH SUCCESS - pass token and user id in action object payload
 export const setLocationSuccess = (location) => {
@@ -35,9 +35,11 @@ export const getUserCoords = (userId) => {
 
 export const setLocation = (userLocation) => {
   return dispatch => {
+    dispatch(setLoading(1))
     return axios.post('api/location/current', userLocation)
     .then(response => {
       dispatch(setLocationSuccess(response.data))
+      dispatch(setLoading(-1))
       return response.data
     })
     .catch(err => {
@@ -72,5 +74,22 @@ export const getLocations = () => {
       .catch(err => {
         dispatch(getLocationsFail(err))
       })
+  }
+}
+
+export const clearLocations = (userId) => {
+  return dispatch => {
+    dispatch(setLoading(1))
+    return axios.delete('api/location/clear', {params: {uid: userId}})
+    .then(response => {
+      // dispatch(setFlashMessage(response.data))
+      dispatch(setLoading(-1))
+      return response.data
+    })
+    .catch(err => {
+      console.log(err)
+      // dispatch(setFlashMessage(err.data))
+      dispatch(setLoading(-1))
+    })
   }
 }

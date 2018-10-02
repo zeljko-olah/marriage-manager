@@ -56,6 +56,7 @@ class Welcome extends Component {
         })
       })
       socket.on(events.LOCATION_SHARED, () => {
+        alert('LOCATION')
         getLocations()
         setFlashMessage({
           type: 'success',

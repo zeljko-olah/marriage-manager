@@ -33,6 +33,6 @@ export default class ClickOutside extends Component {
   }
 
   render() {
-    return <div ref={this.setWrapperRef}>{this.props.children}</div>;
+    return <div style={{'position': 'relative'}} ref={this.setWrapperRef}>{this.props.children}</div>;
   }
 }

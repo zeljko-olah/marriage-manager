@@ -143,7 +143,6 @@ const StyledTimer = styled.div`
         font-size: 15px;
       }
       padding: 10px;
-      background-color: ${colors.backdrop};
     }
 
     & p {
