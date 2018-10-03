@@ -27,7 +27,6 @@ exports.get_all_users = (req, res, next) => {
 
 // SAVE NEW MESSAGE
 exports.new_message = (req, res, next) => {
-  console.log('REQ.BODY:::', req.body)
   const { text, userId, type, link, unread } = req.body.message
   const message = new Message({
     _id: mongoose.Types.ObjectId(),
@@ -181,12 +180,10 @@ exports.delete_chat_history = (req, res) => {
 }
 
 exports.remove_important_message = (req, res) => {
-  console.log('REQBODY', req.body)
   const {id} = req.body
   Message.findOneAndUpdate({ _id: id }, { $set: { type: 'message' }})
   .exec()
   .then((resp) => {
-    console.log(resp)
     res.status(200).json({
       type: 'success',
       flashMessage: `Removed important flag :)`
@@ -207,9 +204,6 @@ exports.mark_as_read = (req, res) => {
     return Message.update({ _id: id }, { $set: { unread: false }})
     .exec()
   })
-
-  console.log('IDS:::', ids)
-  console.log('PROMISEES:::', promises)
 
   Promise.all(promises)
   .then(() => {

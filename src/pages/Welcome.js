@@ -43,20 +43,11 @@ class Welcome extends Component {
     if (socket !== null && prevProps.socket !== socket) {
       socket.on(events.TODOS_UPDATE, () => {
         getTodosForDate(moment().valueOf())
-        setFlashMessage({
-          type: 'success',
-          flashMessage: `Todos updated!`
-        })
       })
       socket.on(events.REMINDERS_UPDATED, () => {
         getReminders()
-        setFlashMessage({
-          type: 'success',
-          flashMessage: `Reminders updated!`
-        })
       })
       socket.on(events.LOCATION_SHARED, () => {
-        alert('LOCATION')
         getLocations()
         setFlashMessage({
           type: 'success',
@@ -409,5 +400,11 @@ const StyledInfo = styled.div`
     color: ${colors.sec_light};
     font-size: 12px;
   }
+}
+& .with-border {
+  border: 2px dotted ${colors.prim_color};
+  border-top-left-radius: 10px;
+  padding: 5px;
+  margin: 5px;
 }
 `

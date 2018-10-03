@@ -86,13 +86,9 @@ exports.getLocations = (req, res, next) => {
 exports.clearLocations = (req, res, next) => {
   const { uid } = req.query
 
-
-  console.log('UID:::', uid)
-  
   Location.deleteMany({ user: uid })
     .exec()
     .then(doc => {
-      console.log(doc)
       res.status(200).json({
         type: 'success',
         flashMessage: 'Great. Locations clered'

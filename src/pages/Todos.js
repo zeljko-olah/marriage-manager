@@ -64,7 +64,6 @@ class Todos extends Component {
     setCurrentDate(moment(date))
     getTodosForDate(date).then(() => {
       // @TODO - loading
-      console.log('Success after update date!')
     })
   }
 

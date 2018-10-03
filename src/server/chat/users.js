@@ -1,9 +1,3 @@
-[{
-  id: '/#12hjwjhwfcydg',
-  name: 'Andrew',
-  room: 'The Office Fans'
-}]
-
 // Define class Users
 class Users {
 
@@ -50,7 +44,6 @@ class Users {
     return user;
   }
   
-    
   /*
    * Get User Method
    * @param {string} id - Socket id 
@@ -67,28 +60,10 @@ class Users {
    */
   getUserList(room){
       // Get all the users from chat room
-      var users = this.users.filter((user) => user.room === room);
-      // Get just their user names into an array
-      // var namesArray = users.map((user) => user.name);
-      
-      // Return array of user names
-      // return namesArray;
+      var users = this.users.filter((user) => user.room === room)
       return users
   }
 }
 
 // Export Users class
-module.exports = {Users};
-
-// class Person{
-//   constructor(name, age){
-//     this.name = name;
-//     this.age = age;
-//   }
-//   getUserDescription(){
-//     return `${this.name} is ${this.age} year(s) old.`;
-//   }
-// }
-// var me = new Person('Andrew', 25);
-// var description = me.getUserDescription();
-// console.log(description);
+module.exports = {Users}

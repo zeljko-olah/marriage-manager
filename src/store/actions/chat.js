@@ -148,7 +148,6 @@ export const emailChatHistory = (messages, user) => {
   return dispatch => {
     return axios.post('api/chat/save', {messages, user})
       .then(response => {
-        console.log(response.data)
         dispatch(setFlashMessage(response.data))
       })
       .catch(err => {
@@ -165,7 +164,6 @@ export const deleteChatHistory = (room) => {
       }
     })
       .then(response => {
-        console.log(response.data)
         dispatch(setFlashMessage(response.data))
       })
       .catch(err => {

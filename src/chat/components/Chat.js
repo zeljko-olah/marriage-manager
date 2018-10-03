@@ -38,12 +38,23 @@ class Chat extends Component {
     width: 0,
     height: 0,
     typingUser: null,
-    isTyping: false
+    isTyping: false,
   }
   
   // List of selected message ids
   ids = []
   chatPartnerOpened = false
+  updateMessageTime = setInterval(() => {
+    const { showChat } = this.props
+    const { messages } = this.state
+    if (showChat) {
+      const newMessages = messages.map((message) => {
+        message.createdAtFormatted = moment(message.createdAt).fromNow()
+        return message
+      })
+      this.setState({ messages: newMessages })
+    }
+  }, 60 * 1000)
 
   audioDefault = new Audio(default_sound)
   audioImportant = new Audio(important_sound)
@@ -62,7 +73,7 @@ class Chat extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { socket } = this.state
-    const { showChat } = this.props
+    const { showChat, getMessages } = this.props
     if (showChat !== prevProps.showChat) {
       socket.emit(events.CHAT_STATUS, showChat)
     }
@@ -104,7 +115,6 @@ class Chat extends Component {
       const { activeUsers } = this.state
       this.chatPartnerOpened = open
       setUsers(activeUsers, open)
-      console.log(this.chatPartnerOpened)
     })
 
     socket.on(events.UPDATE_USER_LIST, (activeUsers) => {
@@ -119,8 +129,8 @@ class Chat extends Component {
       if (message.type === 'location') {
         socket.emit(events.UPDATE_OWN_UNREAD_COUNT )
       }
-      const formatedTime = moment(message.createdAt).format('h:mm a')
-      const newMessage = Object.assign({}, message, {createdAt: formatedTime})
+      const formatedTime = moment(message.createdAt).fromNow()
+      const newMessage = Object.assign({}, message, {createdAtFormatted: formatedTime})
       const newMessages = messages ? messages.concat(newMessage) : null
       this.setState({messages: newMessages})
       if (message.from === 'Admin') {
@@ -140,7 +150,6 @@ class Chat extends Component {
     })
 
     socket.on(events.CONFIRM_DELETE, (answer, user) => {
-      console.log(answer)
       const { getMessages } = this.props
       if (answer) {
         socket.emit(events.UPDATE_UNREAD_COUNT )
@@ -253,6 +262,12 @@ class Chat extends Component {
 
       // Link
       const link = patterns.link.test(message)
+
+      // Heart Icons
+      const love = patterns.heart.test(message)
+      if (love) {
+        type = 'love'
+      }
 
       // Location message
       const location = patterns.location.test(message)

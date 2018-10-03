@@ -33,7 +33,7 @@ const ReminderInfo = ({
         </StyledShadow>
         { userLastReminder ? (
           <Fragment>
-              <StyledShadow>
+              <StyledShadow className="with-border">
                 <h3>
                 Reminder for <span className="reminder-who">{userLastReminder.who}</span>
                 </h3>

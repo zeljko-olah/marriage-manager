@@ -374,7 +374,7 @@ const StyledTodosMenu = styled.div`
   & .filter-by-status,
   & .filter-by-priority {
     position: relative;
-    width: 100px;
+    width: 120px;
     margin-left: 10px;
     & span.label {
       cursor: pointer;

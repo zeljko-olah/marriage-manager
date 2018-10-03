@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 
 // Moment
 import moment from 'moment'
@@ -23,7 +23,7 @@ class ReminderTimer extends Component {
     seconds: 0,
   }
 
-  componentDidUpdate (prevProps, prevState) {
+  componentDidUpdate (prevProps) {
     let indicate = false
     const { reminder } = this.props
     if (prevProps.reminder.id === reminder.id && !indicate) {
@@ -54,7 +54,7 @@ class ReminderTimer extends Component {
     const currentTime = moment().valueOf()
     const diffTime = eventTime - currentTime
     let duration = moment.duration(diffTime, 'milliseconds')
-    const interval = 1000
+    let interval = 1000
 
     if (duration._milliseconds < 0) {
       // this.setState({timerExpired: true})
@@ -69,8 +69,13 @@ class ReminderTimer extends Component {
           hours: duration.hours(),
           minutes: duration.minutes(),
           seconds: duration.seconds()
-        })        
+        })
+        if (duration.months() !== 0 || (duration.days() !== 0 && duration.months() === 0)) {
+          clearInterval(countDown)
+        }     
       }, interval)
+      
+      
     }
   }
 
@@ -96,12 +101,16 @@ class ReminderTimer extends Component {
             </div>
             <div>
               <StyledShadow>
-                { months === 0 && days === 0 && hours === 0 && hours === 0 && minutes === 0 && seconds === 0 && <Loading /> }
-                { months !== 0 ?  <p className="month"><span className="count-number">{months}</span> months</p> : null}
-                { days !== 0 &&  <p className="days"><span className="count-number">{days}</span> days</p>}
-                { months === 0 && hours !== 0 &&  <p className="hours"><span className="count-number">{hours}</span> hours</p>}
-                { days === 0 && minutes !== 0 &&  <p className="minutes"><span className="count-number">{minutes}</span> minutes</p>}
-                { days === 0 && seconds !== 0 && <p className="seconds"><span className="count-number">{seconds}</span> seconds</p>}
+                { months === 0 && days === 0 && hours === 0 && hours === 0 && minutes === 0 && seconds === 0 ? <Loading /> : (
+                  <Fragment>
+                    { months !== 0 ?  <p className="month"><span className="count-number">{months}</span> months</p> : null}
+                    { days !== 0 &&  <p className="days"><span className="count-number">{days}</span> days</p>}
+                    { months === 0 && hours !== 0 &&  <p className="hours"><span className="count-number">{hours}</span> hours</p>}
+                    { days === 0 && minutes !== 0 &&  <p className="minutes"><span className="count-number">{minutes}</span> minutes</p>}
+                    { months === 0 && days === 0 && seconds !== 0 && <p className="seconds"><span className="count-number">{seconds}</span> seconds</p>
+                    }
+                  </Fragment>
+                ) }
               </StyledShadow>
             </div>
           </div>

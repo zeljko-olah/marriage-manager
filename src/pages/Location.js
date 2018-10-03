@@ -94,7 +94,6 @@ class Location extends Component {
   }
 
   toggleLocations = () => {
-    const { recentLocationsOpen } = this.state
     this.setState((prevState) => {
       return {recentLocationsOpen: !prevState.recentLocationsOpen}
     })
@@ -105,7 +104,6 @@ class Location extends Component {
   }
 
   loadLocation = (location) => {
-    console.log(location)
     this.setState({...location, overide: true})
     this.toggleLocations()
   }
@@ -376,7 +374,7 @@ const StyledLocations = styled.div`
   }
 
   & li {
-    width: 300px;
+    width: 280px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -433,7 +431,7 @@ const StyledLocations = styled.div`
     flex-grow: 1;
 
     @media (max-width: 768px) {
-      font-size: 10px;
+      font-size: 12px;
     }
     margin: 0;
     padding: 10px;

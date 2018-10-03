@@ -10,6 +10,7 @@ import ImportantIcon from 'react-icons/lib/md/warning'
 import LocationIcon from 'react-icons/lib/md/location-on'
 import TodoIcon from 'react-icons/lib/md/directions-run'
 import ReminderIcon from  'react-icons/lib/md/alarm'
+import HeartIcon from  'react-icons/lib/md/favorite'
 
 
 class Message extends Component {
@@ -72,11 +73,14 @@ class Message extends Component {
         <div className={messageClass}>
           <div className="message-outer">
             <div className="time">{message.createdAtFormatted}</div>
-              <div className="message-inner">
+              <div className={message.type === 'love' ? '': 'message-inner'}>
 
                 { /* MESSAGE BODY */ }
                 {message.type === 'message' || message.type === 'important' ? (
                   <span>{formattedMessage}</span>
+                ) : null}
+                {message.type === 'love' ? (
+                  <span className='love-message'><HeartIcon/></span>
                 ) : null}
                 {message.type === 'location' ? (
                   <a onClick={this.goToLocationPage}>{formattedMessage}</a>
@@ -335,6 +339,13 @@ const StyledMessage = styled.div`
 & .marked {
   color: ${colors.prim_color};  
   background-color ${colors.backdrop}; 
+}
+& .love-message {
+  color: ${colors.girl_color};  
+  font-size: 40px;
+  @media (max-width: 768px) {
+    font-size: 25px;
+  }
 }
 
 ${props => {

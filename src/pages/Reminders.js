@@ -44,11 +44,10 @@ class Reminders extends Component {
     getReminders().then((reminders) => {
       // const current = reminders.find(r => r.date > moment().valueOf() && moment().isSame(moment(r.date), 'days'))
       const current = reminders.find(r => r.date > moment().valueOf())
-      // console.log(current)
       this.setState({
         currentReminder: current,
         loading: false
-    })
+      })
     })
   }
 

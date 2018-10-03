@@ -1,7 +1,7 @@
 import axios from '../../http'
 import * as actionTypes from './actionTypes'
 import {getCoordsPromise} from '../../shared/utility'
-import { setLoading, setFlashMessage } from './index'
+import { setLoading } from './index'
 
 // AUTH SUCCESS - pass token and user id in action object payload
 export const setLocationSuccess = (location) => {

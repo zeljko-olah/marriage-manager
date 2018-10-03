@@ -172,77 +172,77 @@ class Todo extends Component {
               <div
                 className="todo-header">
 
-              { /* STATUS ICON */ }
-              <div className="check-icon">
-                { statusIcon }
-              </div>
+                { /* STATUS ICON */ }
+                <div className="check-icon">
+                  { statusIcon }
+                </div>
 
-              { /* TODO TITLE */ }
-              { !showEditMode ? (
-                <h2 onClick={this.handleShowMore}>{todo.title}</h2>
-              ) : (
-                <form className="edit-todo-form" onSubmit={this.handleSubmit}>
-                  <WithOutsideClick executeMethod={this.closeEditMode}>
-                      <input
-                        className="edit-title"
-                        type="text"
-                        ref={this.titleInput}
-                        value={editTitle}
-                        onChange={({target}) => {this.setState({
-                          editTitle: target.value
-                        })}} />
-                  </WithOutsideClick>
-                </form>
-              )}
+                { /* TODO TITLE */ }
+                { !showEditMode ? (
+                  <h2 onClick={this.handleShowMore}>{todo.title}</h2>
+                ) : (
+                  <form className="edit-todo-form" onSubmit={this.handleSubmit}>
+                    <WithOutsideClick executeMethod={this.closeEditMode}>
+                        <input
+                          className="edit-title"
+                          type="text"
+                          ref={this.titleInput}
+                          value={editTitle}
+                          onChange={({target}) => {this.setState({
+                            editTitle: target.value
+                          })}} />
+                    </WithOutsideClick>
+                  </form>
+                )}
 
-              { /* TODO AVATARS */ }
-              <div className="todo-avatar">
-                <span>{avatarForUser }</span>
-              </div>
+                { /* TODO AVATARS */ }
+                <div className="todo-avatar">
+                  <span>{avatarForUser }</span>
+                </div>
 
-               { /* TODO PRIORITY */ }
-              <div className={`todo-priority ${todo.priority}`}>
-                <span>{priorityShort}</span>
-              </div>
+                { /* TODO PRIORITY */ }
+                <div className={`todo-priority ${todo.priority}`}>
+                  <span>{priorityShort}</span>
+                </div>
 
-              { /* TODO ACTIONS */ }
-              <div className="mark-todo-icon">
-                <MoreIcon onClick={this.handleMarkTodos} />
-                  <WithOutsideClick executeMethod={this.closeMarkTodos}>
-                    <div 
-                      className={showMarkTodo ? 'show-todo-actions todo-actions': 'hide-todo-actions todo-actions'} >
-                      { todo.completed !== 'completed' ? (
-                        <CheckIcon
-                          className="done"
-                          onClick={() => {this.handleUpdateTodoStatus(todo.id, 'completed')}} />
-                      ) : null }
-                      { todo.completed !== 'active' && isToday ? (
-                        <ActiveIcon 
-                          className="active"
-                          onClick={() => {this.handleUpdateTodoStatus(todo.id, 'active')}} />
-                      ) : null }
-                      { todo.completed !== 'failed' ? (
-                        <FailIcon
-                          className="fail"
-                          onClick={() => {this.handleUpdateTodoStatus(todo.id, 'failed')}} />
-                      ) : null }
-                      { !isToday ? (
-                        <RenewIcon
-                        className="renew"
-                        onClick={() => {this.handleRenewTodo(todo.id)}} />
-                      ) : null }
-                      <EditIcon
-                        className="edit"
-                        onClick={() => {this.handleEditMode(todo)}}/>
-                      { user.name === todo.who || todo.who === 'both' ? (
-                        <DeleteIcon
-                        className="delete"
-                        onClick={() => {this.handleDeleteTodo(todo.id)}} />
-                      ) : null }
-                    </div>
-                  </WithOutsideClick>
+                { /* TODO ACTIONS */ }
+                <div className="mark-todo-icon">
+                  <MoreIcon onClick={this.handleMarkTodos} />
                 </div>
               </div>
+              <WithOutsideClick executeMethod={this.closeMarkTodos}>
+                <div 
+                  className={showMarkTodo ? 'show-todo-actions todo-actions': 'hide-todo-actions todo-actions'} >
+                  { todo.completed !== 'completed' ? (
+                    <CheckIcon
+                      className="done"
+                      onClick={() => {this.handleUpdateTodoStatus(todo.id, 'completed')}} />
+                  ) : null }
+                  { todo.completed !== 'active' && isToday ? (
+                    <ActiveIcon 
+                      className="active"
+                      onClick={() => {this.handleUpdateTodoStatus(todo.id, 'active')}} />
+                  ) : null }
+                  { todo.completed !== 'failed' ? (
+                    <FailIcon
+                      className="fail"
+                      onClick={() => {this.handleUpdateTodoStatus(todo.id, 'failed')}} />
+                  ) : null }
+                  { !isToday ? (
+                    <RenewIcon
+                    className="renew"
+                    onClick={() => {this.handleRenewTodo(todo.id)}} />
+                  ) : null }
+                  <EditIcon
+                    className="edit"
+                    onClick={() => {this.handleEditMode(todo)}}/>
+                  { user.name === todo.who || todo.who === 'both' ? (
+                    <DeleteIcon
+                    className="delete"
+                    onClick={() => {this.handleDeleteTodo(todo.id)}} />
+                  ) : null }
+                </div>
+              </WithOutsideClick>
             </StyledShadow>
             
             { /* TODO CONTENT */ }
@@ -375,63 +375,63 @@ const StyledTodo = styled.div`
     font-size: 20px;
     cursor: pointer;
     color: ${colors.prim_light};
+  }
 
-    & .todo-actions {
-      position: absolute;
-      top: -9px;
-      right: -9px;
-      padding: 9px;
-      transition: all .2s ease-in; 
-      transform-origin: top right;
+  & .todo-actions {
+    position: absolute;
+    top: -38px;
+    @media (max-width: 768px) {
+      top: -30px;
+    }
+    right: -9px;
+    padding: 9px;
+    transition: all .2s ease-in; 
+    transform-origin: top right;
 
-      & svg {
-        font-size: 15px;
-        margin-right: 5px;
-        color: grey;
-        transition: all .1s linear;
+    & svg {
+      font-size: 15px;
+      margin-right: 5px;
+      color: grey;
+      transition: all .1s linear;
 
-        &:hover {
-          transform: scale(1.3) translateX(10%);
-
-        }
-      }
-
-      & svg.done:hover {
-        color: ${colors.success};
-      }
-      & svg.active:hover {
-        color: ${colors.prim_color};
-      }
-      & svg.fail:hover {
-        color: ${colors.sec_color};
-      }
-      & svg.delete:hover {
-        color: ${colors.sec_light};
-      }
-      & svg.edit:hover {
-        color: ${colors.boy_color};
-      }
-      & svg.renew:hover {
-        color: ${colors.girl_color};
+      &:hover {
+        transform: scale(1.3) translateX(10%);
       }
     }
 
-    .show-todo-actions {
-      position: absolute;
-      z-index: 1000;
-      background-color: black;
-      opacity: 1;
-      transform: scale(1);
-      margin-right: 0;
-      width: 100px;
+    & svg.done:hover {
+      color: ${colors.success};
     }
-    .hide-todo-actions {
-      position: absolute;
-      margin-right: 15px;
-      opacity: 0;
-      transform: scale(0);
-      width: 100px;
+    & svg.active:hover {
+      color: ${colors.prim_color};
     }
+    & svg.fail:hover {
+      color: ${colors.sec_color};
+    }
+    & svg.delete:hover {
+      color: ${colors.sec_light};
+    }
+    & svg.edit:hover {
+      color: ${colors.boy_color};
+    }
+    & svg.renew:hover {
+      color: ${colors.girl_color};
+    }
+  }
+
+  .show-todo-actions {
+    position: absolute;
+    z-index: 1000;
+    background-color: black;
+    opacity: 1;
+    transform: scale(1);
+    margin-right: 0;
+  }
+  .hide-todo-actions {
+    position: absolute;
+    margin-right: 15px;
+    opacity: 0;
+    transform: scale(0);
   }
 
   & .check-icon {
@@ -499,7 +499,7 @@ const StyledTodo = styled.div`
       position: absolute;
       min-width: 200px;
       top: -10px;
-      right: 120px;
+      right: 95px;
       display: block;
       padding: 10px;
       font-size: 13px;
@@ -512,12 +512,12 @@ const StyledTodo = styled.div`
       &:after {
         content: '';
         position: absolute;
-        top: 30%;
+        top: 40%;
         left: 100%;
-        border-left: 8px solid ${colors.ter_yellow};
-        border-top: 8px solid transparent;
-        border-right: 8px solid transparent;
-        border-bottom: 8px solid transparent;
+        border-left: 4px solid ${colors.ter_yellow};
+        border-top: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-bottom: 4px solid transparent;
       }
     }
   }

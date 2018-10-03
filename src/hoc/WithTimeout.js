@@ -11,7 +11,6 @@ const withTimeout = (WrappedComponent, time) => {
     }
 
     componentDidMount () {
-      console.log('mOUNTED')
       setTimeout(() => {
         this.setState({ disappear: true })
       }, time);

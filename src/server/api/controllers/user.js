@@ -32,7 +32,6 @@ exports.user_signup = (req, res, next) => {
           // If error
           if (err) {
             // Handle error
-            console.log('HERE!!!')
             return res.status(500).json({
               error: err
             })
@@ -129,7 +128,6 @@ exports.user_login = (req, res, next) => {
         }
         // If there is a result
         if (result) {
-          console.log('USER:::', user)
           // Create token with
           const token = jwt.sign(
             // User email and id

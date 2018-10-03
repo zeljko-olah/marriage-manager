@@ -1,5 +1,6 @@
 // IMPORTS
 const io = require('./../index.js').io
+const moment = require('moment')
 
 const mongoose = require('mongoose')
 const Message = require("../api/models/message")
@@ -31,6 +32,11 @@ module.exports = (socket) => {
     */
 
     const room = defaultRoom.name
+
+    /*
+    * UPDATE_MESSAGE_TIME
+    * When user types a message
+    */
 
     socket.on(events.JOIN, (message, user) => {
       // Set the user on the socket
@@ -170,7 +176,7 @@ module.exports = (socket) => {
 
     socket.on(events.SHARE_LOCATION, (loc, user, callback)=>{
       // Extract adress and from user name
-      const {address, from} = loc
+      const {address, from, date} = loc
 
       // Create an save message to db
       const message = new Message({
@@ -194,7 +200,8 @@ module.exports = (socket) => {
           unread: doc.unread,
           type: doc.type,
           link: doc.link,
-          createdAt: doc.created_at
+          createdAt: doc.created_at,
+          createdAtFormatted: moment(doc.created_at).fromNow()
         }
         
         // Emit events to update
@@ -240,7 +247,7 @@ module.exports = (socket) => {
      // Create and save message to db
      const message = new Message({
       _id: mongoose.Types.ObjectId(),
-      text: todo.title,
+      text: `${todo.title} - ${moment(todo.date).format('MMM DD')}`,
       user: user.id,
       room: room,
       unread: true,
@@ -286,7 +293,7 @@ module.exports = (socket) => {
     // Create and save message to db
     const message = new Message({
       _id: mongoose.Types.ObjectId(),
-      text: reminder.title,
+      text: `${reminder.title} - ${moment(reminder.date).format('MMM DD, h:mm a')}`,
       user: user.id,
       room: room,
       unread: true,
@@ -345,17 +352,13 @@ module.exports = (socket) => {
     
     socket.on('disconnect', () => {
       console.log('Disconnected from server')
-
       const user = users.removeUser(socket.id)
-
       // If there is a user
       if(user) {
         // Update the room's users list
         io.to(room).emit(events.UPDATE_USER_LIST, users.getUserList(room))
         io.to(room).emit(events.NEW_MESSAGE, generateMessage('Admin', `${user.name} has left.`))
       }
-      
-      console.log(users.getUserList(room))
     })
   })
 }

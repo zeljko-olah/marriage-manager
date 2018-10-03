@@ -32,7 +32,7 @@ export const StyledMainHeading = styled.div`
     text-align: center;
     font-size: 30px;
     @media (max-width: 768px) {
-      font-size: 20px;
+      font-size: 25px;
     }
     font-style: italic;
     padding: 10px;
