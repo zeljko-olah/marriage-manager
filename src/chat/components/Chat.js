@@ -71,9 +71,9 @@ class Chat extends Component {
     window.addEventListener('resize', this.updateWindowDimensions)
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     const { socket } = this.state
-    const { showChat, getMessages } = this.props
+    const { showChat } = this.props
     if (showChat !== prevProps.showChat) {
       socket.emit(events.CHAT_STATUS, showChat)
     }

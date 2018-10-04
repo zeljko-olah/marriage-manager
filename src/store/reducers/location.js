@@ -6,6 +6,7 @@ const initialState = {
     lat: null,
     lng: null,
     from: '',
+    address: 'Home',
     createdAt: null,
     locations: []
 }

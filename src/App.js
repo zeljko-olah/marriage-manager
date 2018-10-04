@@ -1,6 +1,7 @@
 import React from 'react'
 
 import 'normalize.css/normalize.css'
+import './App.css'
 import styled, { injectGlobal } from 'styled-components'
 
 import AppRouter from './router/AppRouter'

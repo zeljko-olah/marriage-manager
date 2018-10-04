@@ -3,7 +3,6 @@ import * as colors from './variables'
 
 // PAGE SECTIONS
 export const StyledSection = styled.section`
-  position: relative;
   margin-top: 100px;
   background-color: ${colors.overlay};
   border: 3px solid ${colors.prim_color};

@@ -46,10 +46,6 @@ class ReminderTimer extends Component {
   }
 
   handleStartTimer = (reminder) => {
-    const { timerExpired } = this.state
-    if (timerExpired) {
-      alert('Timer Expired!')
-    }
     const eventTime = reminder.date
     const currentTime = moment().valueOf()
     const diffTime = eventTime - currentTime

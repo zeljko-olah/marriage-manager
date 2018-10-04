@@ -34,41 +34,23 @@ class Location extends Component {
     overide: false
   }
 
+  isCanceled = false
+
   componentDidMount = () => {
-    const { location, getLocations } = this.props
-    getLocations()
-    try {
-      this.setState({
-        lat: location.lat,
-        lng: location.lng,
-        address: 'Home'
-      })
-    } catch (error) {
-      console.log(error)
-    }
+    const { getLocations } = this.props
+    getLocations().then(() => {
+      this.getHomeLocation()
+    })
   }
   
-  componentDidUpdate = (prevProps, prevState) => {
+  componentDidUpdate = (prevProps) => {
     const { 
       socket,
-      user,
       lastLocation,
       getLocations,
-      getUserCoords,
       setFlashMessage
     } = this.props
-    const { lat } = this.state
-    
-    if (lat === null) {
-      getUserCoords(user.id)
-        .then(userLocation => {
-            this.setState({
-              lat: userLocation.lat,
-              lng: userLocation.lng,
-              address: 'Home'
-            })
-        })
-    }
+  
     if (socket !== null && prevProps.socket !== socket) {
       socket.on(events.LOCATION_SHARED, (loc) => {
         this.setState(loc)
@@ -80,7 +62,7 @@ class Location extends Component {
       })
     }
     if (lastLocation && lastLocation !== prevProps.lastLocation) {
-     this.setState({
+      this.setState({
        lat: lastLocation.lat,
        lng: lastLocation.lng,
        address: lastLocation.address
@@ -91,6 +73,20 @@ class Location extends Component {
   componentWillUnmount() {
     const { socket } = this.props
     socket.off(events.LOCATION_SHARED)
+    this.isCancelled = true
+  }
+
+  getHomeLocation = () => {
+    const { user, getUserCoords } = this.props
+    getUserCoords(user.id)
+      .then(userLocation => {
+        !this.isCancelled && this.setState({
+            lat: userLocation.lat,
+            lng: userLocation.lng,
+            address: 'Home',
+            createdAt: null
+          })
+      })
   }
 
   toggleLocations = () => {
@@ -127,7 +123,11 @@ class Location extends Component {
   handleClearRecent = (partnerId) => {
     const { clearLocations, getLocations } = this.props
     clearLocations(partnerId).then(() => {
-      getLocations()
+      getLocations().then((locations) => {
+        if (!locations.length) {
+          this.getHomeLocation()
+        }
+      })
     })
   }
   
@@ -136,115 +136,115 @@ class Location extends Component {
     const { user, partner, locations, lastLocation, loading } = this.props
     return (
       <StyledSection>
+        <StyledMainHeading user={ user } >
+          <h1>Location</h1>
+        </StyledMainHeading>
+      
         <StyledShadow>
+          { /* LOCATION INFO */ }
           <StyledShadow>
-            <StyledMainHeading user={ user } >
-              <h1>Location</h1>
+          <StyledLocationHeading>
+            <StyledShadow>
+              <div className="last-location">
+                <p className="last-address">
+                  {lastLocation && !overide ? lastLocation.address : address}              
+                </p>
+                <p className="last-time">
+                  {lastLocation && !overide ? lastLocation.createdAt : createdAt}              
+                </p>
+              </div>
+            </StyledShadow>
 
-              { /* LOCATION INFO */ }
-              <StyledLocationHeading>
-                <StyledShadow>
-                  <div className="last-location">
-                    <p className="last-address">
-                      {lastLocation && !overide ? lastLocation.address : address}              
-                    </p>
-                    <p className="last-time">
-                      {lastLocation && !overide ? lastLocation.createdAt : createdAt}              
-                    </p>
-                  </div>
-                </StyledShadow>
+            { /* ACTION BUTTONS */ }
+            <div className="actions">
+              <StyledButton 
+                onClick={this.sendLocation}>Share Location</StyledButton>
 
-                { /* ACTION BUTTONS */ }
-                <div className="actions">
-                  <StyledButton 
-                    onClick={this.sendLocation}>Share Location</StyledButton>
+            { /* RECENT PLACES */ }
+            <WithOutsideClick executeMethod={this.closeLocations}>
+              <StyledButton
+                className={recentLocationsOpen ? 'active': ''}
+                onClick={this.toggleLocations}>Recent Places
+              </StyledButton>
 
-                { /* RECENT PLACES */ }
-                <WithOutsideClick executeMethod={this.closeLocations}>
-                  <StyledButton
-                    className={recentLocationsOpen ? 'active': ''}
-                    onClick={this.toggleLocations}>Recent Places
-                  </StyledButton>
-
-                  { /* RECENT LOCATIONS */ }
-                  { recentLocationsOpen ? (
-                      <Fragment>
-                      <StyledLocations>
-                        <ul>
-                          { locations.length ? locations.map((location, index) => {
-                            return (
-                              <li
-                                key={location.id}
-                                onClick={() => {this.loadLocation(location, index)}} >
-                                <div className="avatar">
-                                  <Avatar
-                                    src={location.avatar}
-                                    name={location.user}/>
-                                </div>
-                                <div className="address">
-                                  <h4><strong>{index + 1}. {location.address}</strong></h4>  
-                                  <div className="location-time">
-                                    <span><strong>{ location.createdAt }</strong></span>
-                                  </div>                    
-                                </div>
-                              </li>
-                            )
-                          }
-                          ) : (
-                          <li>
-                            <div>
-                              <h4>{'No recent locations available'}</h4>                      
+              { /* RECENT LOCATIONS */ }
+              { recentLocationsOpen ? (
+                  <Fragment>
+                  <StyledLocations>
+                    <ul>
+                      { locations.length ? locations.map((location, index) => {
+                        return (
+                          <li
+                            key={location.id}
+                            onClick={() => {this.loadLocation(location, index)}} >
+                            <div className="avatar">
+                              <Avatar
+                                src={location.avatar}
+                                name={location.user}/>
+                            </div>
+                            <div className="address">
+                              <h4><strong>{index + 1}. {location.address}</strong></h4>  
+                              <div className="location-time">
+                                <span><strong>{ location.createdAt }</strong></span>
+                              </div>                    
                             </div>
                           </li>
-                        ) }
-                        { locations.length ? (
-                          <li 
-                          className="clear-recent"
-                          onClick={() => {this.handleClearRecent(partner.id)}}>Clear Recent<DeleteIcon /></li>
-                        ) : null }
-                        </ul>            
-                    
-                      </StyledLocations>
-                      </Fragment>
-                      ) : null }
-                  </WithOutsideClick>
-                </div>
-              </StyledLocationHeading>
-            </StyledMainHeading>
-          </StyledShadow>
-          
-          <StyledMainContent>
-            <StyledShadow>
-              <StyledContainer>
-
-                { /* LOCATION MAP */ }
-                { loading ? (
-                  
-                  <div className="no-location">Loading... <Loading /></div>
-                ) : (
-                  <Fragment>
-                  { lat && lng ? (
-                    <StyledMap>
-                      <StyledShadow>
-                        <Map
-                          lat={lat}
-                          lng={lng} />
-                      
-                      </StyledShadow>
-                    </StyledMap>
-                  ) : (
-                    <StyledMap>
-                      <StyledShadow>
-                        <h4 className="no-location">Location Feature Not Available</h4>
-                      </StyledShadow>
-                    </StyledMap>
-                  )}
+                        )
+                      }
+                      ) : (
+                      <li>
+                        <div>
+                          <h4>{'No recent locations available'}</h4>                      
+                        </div>
+                      </li>
+                    ) }
+                    { locations.length ? (
+                      <li 
+                      className="clear-recent"
+                      onClick={() => {this.handleClearRecent(partner.id)}}>Clear Recent<DeleteIcon /></li>
+                    ) : null }
+                    </ul>            
+                
+                  </StyledLocations>
                   </Fragment>
-                ) }
-              </StyledContainer>
-            </StyledShadow>
-          </StyledMainContent>
+                  ) : null }
+              </WithOutsideClick>
+            </div>
+          </StyledLocationHeading>
+          </StyledShadow>
         </StyledShadow>
+        
+        <StyledMainContent>
+          <StyledShadow>
+            <StyledContainer>
+
+              { /* LOCATION MAP */ }
+              { loading ? (
+                
+                <div className="no-location">Loading... <Loading /></div>
+              ) : (
+                <Fragment>
+                { lat && lng ? (
+                  <StyledMap>
+                    <StyledShadow>
+                      <Map
+                        lat={lat}
+                        lng={lng} />
+                    
+                    </StyledShadow>
+                  </StyledMap>
+                ) : (
+                  <StyledMap>
+                    <StyledShadow>
+                      <h4 className="no-location">Location Feature Not Available</h4>
+                    </StyledShadow>
+                  </StyledMap>
+                )}
+                </Fragment>
+              ) }
+            </StyledContainer>
+          </StyledShadow>
+        </StyledMainContent>
       </StyledSection>
     )
   }

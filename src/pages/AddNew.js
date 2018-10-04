@@ -30,7 +30,6 @@ class AddNew extends Component {
 
   componentDidMount () {
     const { history } = this.props
-    console.log(history.location.pathname)
     if (history.location.pathname.includes('reminder')) {
       this.setState({
         activeTab: 'reminder',

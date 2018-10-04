@@ -8,12 +8,16 @@ import registerServiceWorker from './registerServiceWorker'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
 import thunk from 'redux-thunk'
+
+// Reducers
 import authReducer from './store/reducers/auth'
 import chatReducer from './store/reducers/chat'
 import locationReducer from './store/reducers/location'
 import todoReducer from './store/reducers/todo'
 import reminderReducer from './store/reducers/reminder'
 import loadingReducer from './store/reducers/loading'
+
+// Styles
 
 // ACTION CREATORS
 // import {authCheckState, socketInit} from './store/actions/index'
