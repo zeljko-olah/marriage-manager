@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken")
 
 
 const User = require("../models/user")
-const Room = require("../models/room")
 
 /*
  * SIGNUP
@@ -13,8 +12,7 @@ const Room = require("../models/room")
 
 exports.user_signup = (req, res, next) => {
   // Find the user with email
-  const { email, password, name, room, partnerId } = req.body
-  User.find({ email })
+  User.find({ email: req.body.email })
     // Return promise
     .exec()
     // then get the user
@@ -28,7 +26,7 @@ exports.user_signup = (req, res, next) => {
         // Otherwise
       } else {
         // Hash the password
-        bcrypt.hash(password, 10, (err, hash) => {
+        bcrypt.hash(req.body.password, 10, (err, hash) => {
           // If error
           if (err) {
             // Handle error
@@ -40,49 +38,20 @@ exports.user_signup = (req, res, next) => {
             // Create user
             const user = new User({
               _id: new mongoose.Types.ObjectId(),
-              email,
-              name,
-              password: hash,
-              // req.file due to upload.single middleware
-              avatar: req.file.path.replace('public/', '')
+              email: req.body.email,
+              name: req.body.name,
+              password: hash
             })
 
             // Save the user
             user
               .save()
               // Success
-              .then(createdUser => {
-                Room.find({name: room})
-                  .exec()
-                  .then((existingRooms) => {
-                    if (!existingRooms.length) {
-                      const chatRoom = new Room({
-                        _id: new mongoose.Types.ObjectId(),
-                        name: room,
-                      })
-      
-                      chatRoom.users.push(createdUser._id)
-                      if (partnerId) {
-                        chatRoom.users.push(partnerId)
-                      }
-      
-                      chatRoom.save()
-                        .then((createdRoom) => {
-                          user.rooms.push(createdRoom._id)
-                          user.save()
-                            .then(() => {
-                              res.status(201).json({
-                                message: "User and room created"
-                              })
-                            })
-                        })
-                    } else {
-                      res.status(201).json({
-                        message: "Just user created"
-                      })
-                    }
-                    
-                  })
+              .then(result => {
+                console.log(result)
+                res.status(201).json({
+                  message: "User created"
+                })
               })
               // Catch potential errors
               .catch(err => {
@@ -102,11 +71,8 @@ exports.user_signup = (req, res, next) => {
  *
  */
 exports.user_login = (req, res, next) => {
-  const {email, password} = req.body
   // Find user with provided email
-  User.find({ email })
-    .select('_id email password name avatar')
-    .populate('rooms')
+  User.find({ email: req.body.email })
     .exec()
     // User is array of objects (just one if succesfull)
     .then(user => {
@@ -114,16 +80,16 @@ exports.user_login = (req, res, next) => {
       if (user.length < 1) {
         // Return auth failed
         return res.status(401).json({
-          message: "Nice try :)"
+          message: "Auth failed"
         })
       }
       // Compare provided pasword with hashed one from database
-      bcrypt.compare(password, user[0].password, (err, result) => {
+      bcrypt.compare(req.body.password, user[0].password, (err, result) => {
         // If error comparing
         if (err) {
           // Return auth failed
           return res.status(401).json({
-            message: "Nice try :)"
+            message: "Auth failed"
           })
         }
         // If there is a result
@@ -147,19 +113,14 @@ exports.user_login = (req, res, next) => {
             message: "Auth successful",
             token: token,
             userId: user[0]._id,
-            user: {
-              id: user[0]._id,
-              name: user[0].name,
-              email: user[0].email,
-              rooms: user[0].rooms,
-              avatar: user[0].avatar
-            }
+            user: user[0]
+
           })
         }
         // If there is no result
         res.status(401).json({
           // Return atu failed
-          message: "Nice try :)"
+          message: "Auth failed"
         })
       })
     })
