@@ -72,7 +72,9 @@ class Location extends Component {
 
   componentWillUnmount() {
     const { socket } = this.props
-    socket.off(events.LOCATION_SHARED)
+    if (socket) {
+      socket.off(events.LOCATION_SHARED)
+    }
     this.isCancelled = true
   }
 

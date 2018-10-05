@@ -34,8 +34,10 @@ class Header extends Component {
 
   componentWillUnmount() {
     const { socket } = this.props
-    socket.off(events.UNREAD_COUNT_UPDATED)
-    socket.off(events.IMPORTANT_COUNT_UPDATED)
+    if (socket) {
+      socket.off(events.UNREAD_COUNT_UPDATED)
+      socket.off(events.IMPORTANT_COUNT_UPDATED)
+    }
   }
 
   render () {

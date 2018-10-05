@@ -44,7 +44,7 @@ const AppRouter = () => (
             timeout={{ enter: 300, exit: 300 }}
             classNames='fade' >
             <section className="route-section">
-              <Switch location={location}>
+              <Switch>
                 <PublicRoute path="/" component={LoginPage} exact={true} />
                 <PrivateRoute path="/welcome" component={Welcome} />
                 <PrivateRoute path="/todos" component={Todos} />
