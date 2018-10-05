@@ -55,7 +55,9 @@ class Todos extends Component {
 
   componentWillUnmount() {
     const { socket } = this.props
-    socket.off(events.TODO_ADDED)
+    if (socket) {
+      socket.off(events.TODO_ADDED)
+    }
   }
 
   // HANDLERS  

@@ -59,8 +59,10 @@ class Welcome extends Component {
 
   componentWillUnmount() {
     const { socket } = this.props
-    socket.off(events.TODOS_UPDATED)
-    socket.off(events.REMINDERS_UPDATE)
+    if (socket) {
+      socket.off(events.TODOS_UPDATED)
+      socket.off(events.REMINDERS_UPDATE)
+    }
   }
 
   handleReloadReminder = () => {
