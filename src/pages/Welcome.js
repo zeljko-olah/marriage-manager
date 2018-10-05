@@ -388,6 +388,13 @@ const StyledInfo = styled.div`
 & .active-todos {
   color: ${colors.prim_color};
 }
+& .reminder-card {
+  flex-basis: 300px;
+  @media (max-width: 768px) {
+    flex-basis: auto;
+    width: 80%;
+  }
+}
 & .reminder-who {
   color: ${colors.sec_color};
   background-color: ${colors.overlay};    
@@ -399,12 +406,7 @@ const StyledInfo = styled.div`
   & span {
     color: ${colors.sec_light};
     font-size: 12px;
+    margin-top: 5px;
   }
-}
-& .with-border {
-  border: 2px dotted ${colors.prim_color};
-  border-top-left-radius: 10px;
-  padding: 5px;
-  margin: 5px;
 }
 `

@@ -6,7 +6,6 @@ import {history} from '../../router/AppRouter'
 
 // Styled components
 import styled from 'styled-components'
-import { StyledShadow } from '../../styles/section'
 import * as colors from '../../styles/variables'
 
 import Loading from '../../components/UI/Loading'
@@ -96,18 +95,16 @@ class ReminderTimer extends Component {
             <h3>Time remaining</h3>
             </div>
             <div>
-              <StyledShadow>
-                { months === 0 && days === 0 && hours === 0 && hours === 0 && minutes === 0 && seconds === 0 ? <Loading /> : (
-                  <Fragment>
-                    { months !== 0 ?  <p className="month"><span className="count-number">{months}</span> months</p> : null}
-                    { days !== 0 &&  <p className="days"><span className="count-number">{days}</span> days</p>}
-                    { months === 0 && hours !== 0 &&  <p className="hours"><span className="count-number">{hours}</span> hours</p>}
-                    { days === 0 && minutes !== 0 &&  <p className="minutes"><span className="count-number">{minutes}</span> minutes</p>}
-                    { months === 0 && days === 0 && seconds !== 0 && <p className="seconds"><span className="count-number">{seconds}</span> seconds</p>
-                    }
-                  </Fragment>
-                ) }
-              </StyledShadow>
+              { months === 0 && days === 0 && hours === 0 && hours === 0 && minutes === 0 && seconds === 0 ? <Loading /> : (
+                <Fragment>
+                  { months !== 0 ?  <p className="month"><span className="count-number">{months}</span> { months === 1 ? 'month' : 'months'}</p> : null}
+                  { days !== 0 &&  <p className="days"><span className="count-number">{days}</span> { days === 1 ? 'day' : 'days'}</p>}
+                  { months === 0 && hours !== 0 &&  <p className="hours"><span className="count-number">{hours}</span> { hours === 1 ? 'hour' : 'hours'}</p>}
+                  { days === 0 && minutes !== 0 &&  <p className="minutes"><span className="count-number">{minutes}</span> { minutes === 1 ? 'minute' : 'minutes'}</p>}
+                  { months === 0 && days === 0 && seconds !== 0 && <p className="seconds"><span className="count-number">{seconds}</span> { seconds === 1 ? 'second' : 'seconds'}</p>
+                  }
+                </Fragment>
+              ) }
             </div>
           </div>
         )}        
@@ -146,6 +143,7 @@ const StyledTimer = styled.div`
       font-size: 20px;
       @media (max-width: 768px) {
         font-size: 15px;
+        margin-right: 0;
       }
       padding: 10px;
     }

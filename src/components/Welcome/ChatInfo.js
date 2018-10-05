@@ -100,7 +100,7 @@ const ChatInfo = ({
             { partnerLastMessage ? (
             <p>{partnerLastMessage.text && ('"' + partnerLastMessage.text.substr(0, 150) + '..."') }</p>
             ) : (
-              <p>No meesages.</p>
+              <p>No messages.</p>
             ) }
 
           </StyledShadow>

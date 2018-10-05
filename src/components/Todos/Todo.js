@@ -272,7 +272,9 @@ export default Todo
 
 const StyledTodo = styled.div`
   position: relative;
-  padding-left: 5px;
+  @media (max-width: 768px) {
+    padding-left: 5px;
+  }
 
   & .todo-header {
     display: flex;
@@ -426,6 +428,9 @@ const StyledTodo = styled.div`
     opacity: 1;
     transform: scale(1);
     margin-right: 0;
+    & svg:hover {
+      cursor: pointer;
+    }
   }
   .hide-todo-actions {
     position: absolute;

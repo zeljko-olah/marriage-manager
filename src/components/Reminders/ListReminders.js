@@ -27,7 +27,7 @@ const ListReminders = ({reminderClass, reminders, users, removeReminder, show, s
 export default ListReminders
 
 const StyledReminders = styled.div`
-  width: 800px;
+  // width: 800px;
   padding: 10px;
   display: flex;
   flex-direction: row;

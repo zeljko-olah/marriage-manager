@@ -33,15 +33,19 @@ const ReminderInfo = ({
         </StyledShadow>
         { userLastReminder ? (
           <Fragment>
-              <StyledShadow className="with-border">
+              <StyledShadow className="reminder-card">
                 <h3>
                 Reminder for <span className="reminder-who">{userLastReminder.who}</span>
                 </h3>
-                <h4>
-                  <span className="last-reminder">
-                    { userLastReminder.title }
-                  </span>
-                </h4>
+                <StyledShadow>
+                <StyledShadow>
+                  <h4>
+                    <span className="last-reminder">
+                      { userLastReminder.title }
+                    </span>
+                  </h4>
+                </StyledShadow>
+                </StyledShadow>
                 <h4 className="last-reminder-time">
                   <span>
                     { moment(userLastReminder.date).format('MMM Do') }
