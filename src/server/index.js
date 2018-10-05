@@ -3,13 +3,10 @@
 const http = require('http')
 const app = require('./app')
 
-const server = http.createServer(app)
 const port = process.env.PORT || 3231
 
-const io = module.exports.io = require('socket.io')(server)
-const SocketManager = require('./chat/SocketManager')
 
-io.on('connection', SocketManager)
+const server = http.createServer(app)
 
 server.listen(port, () => {
   console.log('Server started!')

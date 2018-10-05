@@ -1,5 +1,5 @@
 // REACT
-import React, {Fragment} from 'react';
+import React from 'react';
 
 // REDUX
 import { connect } from 'react-redux';
@@ -7,12 +7,13 @@ import { connect } from 'react-redux';
 // ROUTER
 import { Route, Redirect } from 'react-router-dom';
 
-// NAVIGATION
-import Navigation from '../components/Navigation'
-
-// STYLED
-import styled from 'styled-components'
-
+/*
+ * DEFINE PRIVATE ROUTE COMPONENT
+ * @props {boolean} isAuthenticated - if user is authenticated
+ * @props {React Component} - component to render when route is matched
+ * @props { ...rest } - rest of the props spreaded
+ * @returns {<Route />} - Configured Route component
+ */
 export const PrivateRoute = ({
   isAuthenticated,
   component: Component,
@@ -24,16 +25,9 @@ export const PrivateRoute = ({
    */
   const cmp = (props) => (
     isAuthenticated ? (
-      <Fragment>
-        { /* NAVIGATION */ }
-        <Navigation />
-        
-        { /* MAIN CONTENT */ }
-        <StyledMain>
-          <Component {...props} />
-        </StyledMain>
-      
-      </Fragment>
+      <div>
+        <Component {...props} />
+      </div>
     ) : (
       <Redirect to="/" />
     )
@@ -53,17 +47,3 @@ const mapStateToProps = (state) => ({
 
 // EXPORT CONNECTED COMPONENT
 export default connect(mapStateToProps)(PrivateRoute);
-
-// STYLED
-const StyledMain = styled.main`
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  max-width: 800px;
-  padding: 10px;
-  margin: 0 auto;
-  @media (max-width: 768px) {
-    margin: 0 auto;
-  }
-`
