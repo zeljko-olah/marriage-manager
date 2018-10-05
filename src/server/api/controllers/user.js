@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
 
@@ -28,8 +28,16 @@ exports.user_signup = (req, res, next) => {
         // Otherwise
       } else {
         // Hash the password
-        bcrypt.hash(password, 10, (err, hash) => {
-          // If error
+        bcrypt.genSalt(10, function(err, salt) {
+          if (err) {
+            // Handle error
+            return res.status(500).json({
+              error: err
+            })
+            // Otherwise
+          } else {
+          bcrypt.hash(password, salt, function(err, hash) {
+              // If error
           if (err) {
             // Handle error
             return res.status(500).json({
@@ -92,7 +100,9 @@ exports.user_signup = (req, res, next) => {
                 })
               })
           }
-        })
+          })
+        }
+      })
       }
     })
 }

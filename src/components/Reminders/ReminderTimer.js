@@ -121,6 +121,7 @@ const StyledTimer = styled.div`
   }}
   @media (max-width: 768px) {
     position: static;
+    width: 100%;
   }
   display: inline-block;
   right: 50px;
@@ -143,7 +144,7 @@ const StyledTimer = styled.div`
       font-size: 20px;
       @media (max-width: 768px) {
         font-size: 15px;
-        margin-right: 0;
+        margin-right: 10px;
       }
       padding: 10px;
     }
@@ -151,6 +152,8 @@ const StyledTimer = styled.div`
     & p {
       flex: 0 100px auto;
       margin: 3px 0;
+      position: relative;
+      top: -5px;
 
       &.month {
         color: ${colors.sec_light};
