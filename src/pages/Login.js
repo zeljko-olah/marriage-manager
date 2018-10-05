@@ -3,57 +3,77 @@ import React, { Component } from 'react'
 import LoginForm from '../components/Login/LoginForm'
 
 import styled from 'styled-components'
-import * as colors from '../styles/variables'
+import { primary_color, danger } from '../styles/variables'
 
 import MDArrowUp from 'react-icons/lib/md/keyboard-arrow-up'
 import MDArrowDown from 'react-icons/lib/md/keyboard-arrow-down'
 
 import { connect } from 'react-redux'
-import * as actions from '../store/actions'
+import * as actions from '../store/actions/index'
 
 import { validateForm } from '../shared/utility'
 
 class Login extends Component {
+
+  /*
+   * STATE
+   *
+   */
   
   state = {
     openLogin: false
   }
 
-  submit = (payload) => {
-    const { login } = this.props
-    const { email, password } = payload
-    const error = validateForm(email.value, password.value)
-    if (error) {
-    // Dispatch setErrors
-    this.props.setErrors({ error })
-    return
-    }
-    // Dispatch login
-    login(email.value, password.value)
-      .then((res) => {
-    })
-  }
+  /*
+   * HANDLERS
+   *
+   */
 
-  // CLEAR THE FORM
-  // clearForm = (payload) => {
-  //   const { email, password } = payload
-  //   if (email && password) {
-  //     email.value = ''
-  //     password.value = ''
-  //   }
-  // }
+   // SUBMIT METHOD
+   submit = (payload) => {
+     const { login } = this.props
+     const { email, password } = payload
+     const error = validateForm(email.value, password.value)
+     if (error) {
+      // Dispatch setErrors
+      this.props.setErrors({ error })
+      return
+     }
+     // Dispatch login
+     login(email.value, password.value)
+        .then((res) => {
+        this.clearForm(payload)
+      })
 
-  onFocusHandler = () => {
-    this.props.setErrors({ error: null })
-  }
+   }
 
-  toggleLogin = () => {
-    this.setState({openLogin: !this.state.openLogin})
-  }
+   // CLEAR THE FORM
+   clearForm = (payload) => {
+     const { email, password } = payload
+     if (email && password) {
+       email.value = ''
+       password.value = ''
+     }
+   }
+
+   // CLEAR ERRORS ON INPUT FOCUS
+   onFocusHandler = () => {
+     this.props.setErrors({ error: null })
+   }
+
+   // TOGGLE LOGIN
+   toggleLogin = () => {
+      this.setState({openLogin: !this.state.openLogin})
+   }
+  
+  
+  /*
+   * RENDER METHOD
+   *
+   */
   
   render() {
     const { openLogin } = this.state
-    const { error } = this.props
 
     return (
       <LoginFormWrapper>
@@ -61,11 +81,11 @@ class Login extends Component {
         { /* FORM HEADER */ }
         <StyledFormHeader>
           <p 
-            className={ error ? 'error' : null }
+            className={ this.props.error ? 'error' : null }
             onClick={ this.toggleLogin }>
 
           { /* SIGN IN OR ERROR */ }
-          { error ? error : 'Sign In' }
+          { this.props.error ? this.props.error : 'Sign In' }
 
             { /* ICON */ }
             <i>
@@ -77,7 +97,7 @@ class Login extends Component {
         { /* LOGIN FORM */ }
         {openLogin ? (
           <LoginForm
-            error={ error }
+            error={ this.props.error }
             submit={this.submit}
             onFocus={this.onFocusHandler} />
         ) : null }  
@@ -88,7 +108,7 @@ class Login extends Component {
             This App is <strong>private :)</strong>
           </StyledFormFooter> 
           : 
-          null }
+          null }        
       </LoginFormWrapper>
     )
   }
@@ -122,24 +142,18 @@ const mapDispatchToProps = dispatch => {
  */
 
 const LoginFormWrapper = styled.div`
-  width: 350px;
+  width: 300px;
   position: fixed;
-  bottom: 10px;
-  right: 10px;
+  bottom: 0;
+  right: 20px;
   border: 1px solid WhiteSmoke;
-  border-top-left-radius: 10px;
-  background-color: ${colors.overlay};
+  border-top-left-radius: 25px;
+  background-color: WhiteSmoke;
   overflow: hidden;
   box-shadow: 0 0 5px #000000;
-  font-family: 'Cardo', serif;
+  font-family: 'Roboto', serif;
   font-weight: 400;
   font-size: 15px;
-
-  @media (max-width: 768px) {
-    bottom: 0;
-    right: 0;
-    width: 100vw;
-  }
 
   & span.error {
     position: absolute;
@@ -155,9 +169,8 @@ const LoginFormWrapper = styled.div`
   text-align: center;
   font-weight: 900;
   color: grey;
-  background-color: ${colors.prim_color};
+  background-color: ${primary_color};
   cursor: pointer;
-  
 
   & p {
     position: relative;
@@ -169,8 +182,7 @@ const LoginFormWrapper = styled.div`
   }
 
   & p.error {
-    color: ${colors.danger};
-    font-size: 14px;
+    color: ${danger};
   }
 
   & svg {
@@ -190,4 +202,4 @@ const StyledFormFooter = styled.p`
  *
  */
 
-export default connect( mapStateToProps, mapDispatchToProps )( Login )
+export default connect( mapStateToProps, mapDispatchToProps )( Login );

@@ -2,17 +2,8 @@
   box-sizing: border-box;
 }
 
-html, body {
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
 body {
   margin: 0;
   padding: 0;
-  font-family: Cardo, sans-serif;
-}
-
-::-webkit-scrollbar { 
-  display: none;
+  font-family: Roboto, sans-serif;
 }
