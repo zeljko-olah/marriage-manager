@@ -1,4 +1,5 @@
 import axios from '../../http'
+import qs from 'qs'
 import * as actionTypes from './actionTypes'
 
 import { setFlashMessage } from './index'
@@ -22,7 +23,7 @@ export const addReminderFail = (error) => {
 // ADD REMINDER
 export const addReminder = (reminder) => {
   return dispatch => {
-    return axios.post('api/reminders/create', reminder)
+    return axios.post('api/reminders/create', qs.stringify(reminder))
     .then(response => {
       dispatch(addReminderSuccess(response.data))
       return response.data
