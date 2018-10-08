@@ -61,12 +61,15 @@ class Chat extends Component {
 
   // LIFECYCLE HOOKS
   componentDidMount = () => {
-    const { user, getMessages, getDefaultRoomUsers } = this.props
+    const { user, getMessages, getDefaultRoomUsers, getLocations, getReminders, getTodosForDate } = this.props
     getDefaultRoomUsers(user.id)
     this.initSocket()
     getMessages().then(() => {
       this.setState({messages: this.props.loadedMessages})
     })
+    getLocations()
+    getReminders()
+    getTodosForDate(moment().valueOf())
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions)
   }
@@ -456,7 +459,10 @@ const mapDispatchToProps = (dispatch) => ({
   removeImportantMessage: (id) => dispatch( actions.removeImportantMessage(id) ),
   setFlashMessage: (flash) => dispatch( actions.setFlashMessage(flash) ),
   setLocation: (userLocation) => dispatch(actions.setLocation(userLocation)),
-  getUserCoords: (userId) => dispatch(actions.getUserCoords(userId))
+  getUserCoords: (userId) => dispatch(actions.getUserCoords(userId)),
+  getLocations: () => dispatch(actions.getLocations()),
+  getTodosForDate: (date) => dispatch(actions.getTodosForDate(date)),
+  getReminders: () => dispatch(actions.getReminders())
 })
 
 // EXPORT

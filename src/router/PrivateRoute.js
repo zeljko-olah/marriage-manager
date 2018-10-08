@@ -9,6 +9,8 @@ import { Route, Redirect } from 'react-router-dom';
 
 // NAVIGATION
 import Navigation from '../components/Navigation'
+import WithAnimation from './../hoc/WithAnimation'
+
 
 // STYLED
 import styled from 'styled-components'
@@ -29,9 +31,11 @@ export const PrivateRoute = ({
         <Navigation />
         
         { /* MAIN CONTENT */ }
-        <StyledMain>
-          <Component {...props} />
-        </StyledMain>
+        <WithAnimation>
+          <StyledMain>
+            <Component {...props} />
+          </StyledMain>
+        </WithAnimation>
       
       </Fragment>
     ) : (
@@ -52,7 +56,7 @@ const mapStateToProps = (state) => ({
 });
 
 // EXPORT CONNECTED COMPONENT
-export default connect(mapStateToProps)(PrivateRoute);
+export default connect(mapStateToProps)(PrivateRoute)
 
 // STYLED
 const StyledMain = styled.main`

@@ -52,7 +52,6 @@ class ReminderTimer extends Component {
     let interval = 1000
 
     if (duration._milliseconds < 0) {
-      // this.setState({timerExpired: true})
       this.handleReloadReminder()      
       return
     } else {
@@ -69,8 +68,6 @@ class ReminderTimer extends Component {
           clearInterval(countDown)
         }     
       }, interval)
-      
-      
     }
   }
 
@@ -123,6 +120,7 @@ const StyledTimer = styled.div`
     position: static;
     width: 100%;
   }
+  
   display: inline-block;
   right: 50px;
   color: #fff;
@@ -135,7 +133,6 @@ const StyledTimer = styled.div`
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    
 
     & .timer-headline h3 {
       color: ${colors.prim_color};
@@ -170,12 +167,11 @@ const StyledTimer = styled.div`
       &.seconds {
         color: ${colors.boy_color};
       }
-
       & .count-number {
         position: relative;
         display: inline-block;
         top: 7px;
-        font-size: 25px;
+        font-size: 20px;
         margin-right: 3px;
       }
     }

@@ -29,14 +29,14 @@ class TodosMenu extends Component {
 
   componentDidUpdate = (prevProps, prevState) => {
     const { time } = this.state
-    const { dateUpdate, todosDate, percentage, congratulations } = this.props
-    if (prevState.time.valueOf() !== time.valueOf()) {
+    const { todos, dateUpdate, todosDate, percentage, congratulations } = this.props
+    if (time.valueOf() !== prevState.time.valueOf()) {
       dateUpdate(time.valueOf())
     }
-    if (prevProps.todosDate !== todosDate) {
+    if (prevProps.todosDate.valueOf() !== todosDate.valueOf()) {
       this.onDateChange(moment(todosDate))
     }
-    if (prevProps.percentage !== percentage && percentage === 100) {
+    if (prevProps.percentage !== percentage && percentage === 100 && todos.length > 3) {
       congratulations()
     }
   }
@@ -44,9 +44,9 @@ class TodosMenu extends Component {
   // HANDLERS
   // Capture createdAt date
   onDateChange = (time) => {
-  if (time) {
-    this.setState(() => ({ time }))
-  }
+    if (time) {
+      this.setState(() => ({ time }))
+    }
 }
 
   // Capture focus change on datePicker

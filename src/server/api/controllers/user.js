@@ -14,6 +14,7 @@ const Room = require("../models/room")
 exports.user_signup = (req, res, next) => {
   // Find the user with email
   const { email, password, name, room, partnerId } = req.body
+  console.log('HERE!')
   User.find({ email })
     // Return promise
     .exec()
@@ -104,6 +105,11 @@ exports.user_signup = (req, res, next) => {
         }
       })
       }
+    })
+    .catch(e => {
+      console.log('ERROR LOGGING IN:::')
+      console.log(e.message)
+
     })
 }
 

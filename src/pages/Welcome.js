@@ -32,9 +32,7 @@ import * as events from '../events'
 class Welcome extends Component {
 
   componentDidMount () {
-    const { getLocations, getTodosForDate, getReminders } = this.props
-    getLocations()
-    getTodosForDate(moment().valueOf())
+    const { getReminders } = this.props
     getReminders()
   }
 
@@ -391,7 +389,7 @@ const StyledInfo = styled.div`
   color: ${colors.prim_color};
 }
 & .reminder-card {
-  flex-basis: 300px;
+  flex-basis: 250px;
   @media (max-width: 768px) {
     flex-basis: auto;
     width: 80%;

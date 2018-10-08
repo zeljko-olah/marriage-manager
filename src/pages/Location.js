@@ -37,10 +37,7 @@ class Location extends Component {
   isCanceled = false
 
   componentDidMount = () => {
-    const { getLocations } = this.props
-    getLocations().then(() => {
-      this.getHomeLocation()
-    })
+    this.getHomeLocation()
   }
   
   componentDidUpdate = (prevProps) => {
@@ -53,7 +50,7 @@ class Location extends Component {
   
     if (socket !== null && prevProps.socket !== socket) {
       socket.on(events.LOCATION_SHARED, (loc) => {
-        this.setState(loc)
+        !this.isCanceled && this.setState(loc)
         getLocations()
         setFlashMessage({
           type: 'success',
@@ -62,7 +59,7 @@ class Location extends Component {
       })
     }
     if (lastLocation && lastLocation !== prevProps.lastLocation) {
-      this.setState({
+      !this.isCanceled && this.setState({
        lat: lastLocation.lat,
        lng: lastLocation.lng,
        address: lastLocation.address
@@ -75,14 +72,14 @@ class Location extends Component {
     if (socket) {
       socket.off(events.LOCATION_SHARED)
     }
-    this.isCancelled = true
+    this.isCanceled = true
   }
 
   getHomeLocation = () => {
     const { user, getUserCoords } = this.props
     getUserCoords(user.id)
       .then(userLocation => {
-        !this.isCancelled && this.setState({
+        this.setState({
             lat: userLocation.lat,
             lng: userLocation.lng,
             address: 'Home',

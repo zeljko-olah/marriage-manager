@@ -38,15 +38,12 @@ class Reminders extends Component {
     loading: true
   }
 
-  isCancelled = false
-
   // LIFECYCLE HOOKS
   componentDidMount = () => {
     const { getReminders } = this.props
     getReminders().then((reminders) => {
-      // const current = reminders.find(r => r.date > moment().valueOf() && moment().isSame(moment(r.date), 'days'))
       const current = reminders.find(r => r.date > moment().valueOf())
-      !this.isCancelled && this.setState({
+      this.setState({
         currentReminder: current,
         loading: false
       })
@@ -54,7 +51,7 @@ class Reminders extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { socket, todayReminders, reminders, getReminders } = this.props
+    const { socket, todayReminders, getReminders } = this.props
     if (socket !== null && prevProps.socket !== socket) {
       socket.on(events.REMINDER_ADDED, (reminder, user) => {
         getReminders().then(() => {
@@ -67,16 +64,7 @@ class Reminders extends Component {
         const current = todayReminders.find(r => r.date > moment().valueOf())
         this.setState({currentReminder: current})
       } 
-    } else if (reminders.length) {
-      if (!prevProps.reminders.length && reminders !== prevProps.reminders) {
-        const current = reminders.find(r => r.date > moment().valueOf())
-        this.setState({currentReminder: current})
-      } 
     }
-  }
-
-  componentWillUnmount() {
-    this.isCancelled = true
   }
 
   // HANDLERS

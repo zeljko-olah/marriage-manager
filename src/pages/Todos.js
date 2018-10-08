@@ -33,9 +33,7 @@ class Todos extends Component {
   // LIFECYCLE HOOKS
   componentDidMount = () => {
     const { getTodosForDate } = this.props
-    getTodosForDate(moment().valueOf()).then(() => {
-      // sortUserTodos(user.name, 'user')
-    })
+    getTodosForDate(moment().valueOf())
   }
 
   componentDidUpdate = (prevProps) => {
@@ -139,7 +137,6 @@ class Todos extends Component {
     })
   }
   
-
   // RENDER METHOD
   render () {
     const { 
@@ -195,6 +192,7 @@ class Todos extends Component {
 
                 { /* TODOS */ }
                 <TodosMenu
+                  todos={todos}
                   dateUpdate={this.handleDateUpdate}
                   todosDate={moment(todosDate)}
                   percentage={percentage}

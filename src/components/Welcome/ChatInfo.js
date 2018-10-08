@@ -98,7 +98,9 @@ const ChatInfo = ({
           </h4>
           <StyledShadow>
             { partnerLastMessage ? (
-            <p>{partnerLastMessage.text && ('"' + partnerLastMessage.text.substr(0, 150) + '..."') }</p>
+            <p>{partnerLastMessage.text && (
+              '"' + partnerLastMessage.text.substr(0, 150) + (partnerLastMessage.text.length > 150 ? '..."' : '"')
+              ) }</p>
             ) : (
               <p>No messages.</p>
             ) }
