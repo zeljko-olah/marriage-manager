@@ -1,10 +1,7 @@
-/*
- * Dependencies
- *
- */
-import React from 'react';
-import { connect } from 'react-redux';
-import { Route, Redirect } from 'react-router-dom';
+// IMPORTS
+import React from 'react'
+import { connect } from 'react-redux'
+import { Route, Redirect } from 'react-router-dom'
 
 /*
  * Define PublicRoute component
@@ -30,19 +27,19 @@ export const PublicRoute = ({
       // otherwise render the COMPONENT
       <Component { ...props} />
     )
-  );
+  )
 
   // return ROUTE COMPONENT - And pass component to render
   return (
     <Route { ...rest} component={cmp} />
-  );
-};
+  )
+}
 
 // MAP STATE TO PROPS
 const mapStateToProps = (state) => ({
   // if user is auth casted to boolean
   isAuthenticated: !!state.auth.user
-});
+})
 
 // EXPORT CONNECTED COMPONENT
-export default connect(mapStateToProps)(PublicRoute);
+export default connect(mapStateToProps)(PublicRoute)

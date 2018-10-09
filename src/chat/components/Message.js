@@ -1,3 +1,4 @@
+// IMPORTS
 import React, {Component} from 'react'
 
 import { history }  from '../../router/AppRouter'
@@ -12,7 +13,7 @@ import TodoIcon from 'react-icons/lib/md/directions-run'
 import ReminderIcon from  'react-icons/lib/md/alarm'
 import HeartIcon from  'react-icons/lib/md/favorite'
 
-
+// COMPONENT
 class Message extends Component {
 
   handleImportant = (id, from) => {
@@ -42,7 +43,6 @@ class Message extends Component {
     history.push('/reminder')
     close()
   }
-  
   
   render () {
     const { message, user, pointer, stylingClass } = this.props
@@ -96,26 +96,36 @@ class Message extends Component {
                 ) : null}
 
                 { /* MESSAGE ICONS */ }
+
+                { /* UNREAD */ }
                 { message.unread && message.type === 'message' ? (
                   <span className='unread' >
                     <CheckIcon />
                   </span>) : null}
+
+                { /* IMPORTANT */ }
                 {message.type === 'important' ? (
                   <span
                     className="important"
                     onClick={() => {this.handleImportant(message._id, message.from)}}>
                     <ImportantIcon />
                   </span>) : null}
+
+                { /* LOCATION */ }
                 {message.type === 'location' ? (
                   <span
                     className={message.unread ? 'unread-location location' : 'location'} >
                     <LocationIcon />
                   </span>) : null}
+
+                { /* TODO */ }
                 {message.type === 'todo' ? (
                   <span
                     className={message.unread ? 'unread-todo todo' : 'todo'} >
                     <TodoIcon />
                   </span>) : null}
+
+                { /* REMINDER */ }
                 {message.type === 'reminder' ? (
                   <span
                     className={message.unread ? 'unread-reminder reminder' : 'reminder'} >
@@ -129,8 +139,10 @@ class Message extends Component {
   }
 }
 
+// EXPORT
 export default Message
 
+// STYLED
 const StyledMessage = styled.div`
 
 & div.message-wrapper {

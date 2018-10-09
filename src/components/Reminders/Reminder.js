@@ -1,19 +1,18 @@
+// IMPORTS
 import React from 'react'
-
 import moment from 'moment'
 
-import Avatar from '../../components/user/Avatar'
-
-// Styled components
 import styled from 'styled-components'
 import * as colors from '../../styles/variables'
 import { StyledShadow } from '../../styles/section'
 
-// ICONS
 import InfoIcon from 'react-icons/lib/md/info'
 import RemoveIcon from 'react-icons/lib/md/remove-circle'
 import TimerIcon from 'react-icons/lib/md/timer'
 
+import { handleAvatars } from '../../shared/helpers'
+
+// Format date and time helpers
 const formatReminderDate = (timestamp) => {
   return moment(timestamp).format('MMM Do')
 }
@@ -22,36 +21,22 @@ const formatReminderTime = (timestamp) => {
   return moment(timestamp).format('HH:mm')
 }
 
-const handleAvatars = (reminder, users) => {
-  if (!users.length) {
-    return null
-  } else {
-    const user = reminder.who
-    let avatar
-    if (user === 'both') {
-      avatar = [users[0], users[1]]
-    } else {
-      avatar = [users.find(u => u.name === user)]
-    }
-
-    return avatar.map(a => (
-      <Avatar
-        key={a.id}
-        name={a.name}
-        src={a.avatar} />
-    ))
-  }
-}
-
+// COMPONENT
 export default ({reminder, reminderClass, users, removeReminder, setTimer}) => {
   return (
     <StyledReminder>
       <div className={reminder.date < moment().valueOf() ? 'expired' : reminderClass}>
+
+        { /* AVATARS */ }
         <div className="reminder-avatar">
           {handleAvatars(reminder, users )}
         </div>
+
+        { /* REMINDER TITLE */ }
         <StyledShadow className="reminder-title-wrapper">
           <p className="reminder-title">{reminder.title}</p>
+
+          { /* REMINDER INDO AND DESCRIPTION */ }
           <div className="reminder-info-wrapper">
             <span className="reminder-info-icon"><InfoIcon/></span>
             <div className="reminder-info">
@@ -59,10 +44,14 @@ export default ({reminder, reminderClass, users, removeReminder, setTimer}) => {
             </div>
           </div>
         </StyledShadow>
+
+        { /* REMINDER DATE */ }
         <div className="reminder-date-wrapper">
           <p className="reminder-date">{formatReminderDate(reminder.date)}</p>
         </div>
         <StyledShadow>
+
+        { /* REMINDER TIME */ }
         <p className="reminder-time">{formatReminderTime(reminder.date)}</p>
         { reminderClass !== 'expired' &&
           reminderClass !== 'current' &&
@@ -75,6 +64,8 @@ export default ({reminder, reminderClass, users, removeReminder, setTimer}) => {
         ) : null }
         </StyledShadow>
       </div>
+
+      { /* REMOVE REMINDER ICON */ }
       <span
         className="remove-reminder"
         onClick={() => {removeReminder(reminder.id)}}>
@@ -84,6 +75,7 @@ export default ({reminder, reminderClass, users, removeReminder, setTimer}) => {
   )
 }
 
+// STYLED
 const StyledReminder = styled.div`
   position: relative;
   padding: 15px 10px;
@@ -116,21 +108,17 @@ const StyledReminder = styled.div`
     & div:first-child {
       flex: 1;
     }
-
   }
 
   & .current {
     background: ${colors.overlay};
   }
-
   & .today {
     background: ${colors.boy_color};
   }
-
   & .next {
     background: ${colors.overlay};
   }
-
   & .expired {
     background: ${colors.backdrop};
     color: ${colors.prim_font};

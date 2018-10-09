@@ -1,3 +1,4 @@
+// IMPORTS
 // Main import
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -17,10 +18,7 @@ import todoReducer from './store/reducers/todo'
 import reminderReducer from './store/reducers/reminder'
 import loadingReducer from './store/reducers/loading'
 
-// Styles
-
-// ACTION CREATORS
-// import {authCheckState, socketInit} from './store/actions/index'
+// Action Creators
 import {authCheckState} from './store/actions/index'
 
 // Redux devtools
@@ -41,8 +39,8 @@ const store = createStore(rootReducer, composeEnhancers(
     applyMiddleware(thunk)
 ))
 
+// Check auth state on page load and refresh when app starts
 store.dispatch(authCheckState())
-// store.dispatch(socketInit())
 
 // Inject redux
 const appRedux = (
@@ -51,5 +49,6 @@ const appRedux = (
     </Provider>
 )
 
+// RENDER
 ReactDOM.render(appRedux, document.getElementById('root'))
 registerServiceWorker()

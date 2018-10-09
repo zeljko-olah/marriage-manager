@@ -39,8 +39,8 @@ class ChatWrapper extends Component {
         <Sidebar
           width="100%"
           side="right"
-          open={show}
-        >
+          open={show} >
+
           { /* CHAT */ }
           <Chat />
           
@@ -60,6 +60,7 @@ const mapStateToProps = state => {
   }
 }
 
+// MAP DISPATCH TO PROPS
 const mapDispatchToProps = (dispatch) => ({
   socketInit: (socket) => dispatch(socketInit(socket)),
   toggleChat: (showChat) => dispatch( actions.toggleChat(showChat) )

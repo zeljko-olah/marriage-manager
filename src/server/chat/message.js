@@ -1,3 +1,4 @@
+// CREATE MESSAGES - USED FOR ADMIN MESSAGES
 const moment = require('moment')
 const uuidv4 = require('uuid/v4')
 

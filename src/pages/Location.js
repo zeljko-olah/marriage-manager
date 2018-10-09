@@ -34,6 +34,7 @@ class Location extends Component {
     overide: false
   }
 
+  // Disable setting state on unmounted component 
   isCanceled = false
 
   componentDidMount = () => {
@@ -140,76 +141,83 @@ class Location extends Component {
         </StyledMainHeading>
       
         <StyledShadow>
-          { /* LOCATION INFO */ }
+
+          { /* LAST LOCATION INFO */ }
           <StyledShadow>
-          <StyledLocationHeading>
-            <StyledShadow>
-              <div className="last-location">
-                <p className="last-address">
-                  {lastLocation && !overide ? lastLocation.address : address}              
-                </p>
-                <p className="last-time">
-                  {lastLocation && !overide ? lastLocation.createdAt : createdAt}              
-                </p>
-              </div>
-            </StyledShadow>
+            <StyledLocationHeading>
+              <StyledShadow>
+                <div className="last-location">
 
-            { /* ACTION BUTTONS */ }
-            <div className="actions">
-              <StyledButton 
-                onClick={this.sendLocation}>Share Location</StyledButton>
+                  { /* ADDRESS */ }
+                  <p className="last-address">
+                    {lastLocation && !overide ? lastLocation.address : address}              
+                  </p>
+                  
+                  { /* TIME */ }
+                  <p className="last-time">
+                    {lastLocation && !overide ? lastLocation.createdAt : createdAt}              
+                  </p>
+                </div>
+              </StyledShadow>
 
-            { /* RECENT PLACES */ }
-            <WithOutsideClick executeMethod={this.closeLocations}>
-              <StyledButton
-                className={recentLocationsOpen ? 'active': ''}
-                onClick={this.toggleLocations}>Recent Places
-              </StyledButton>
+              { /* ACTION BUTTONS */ }
+              <div className="actions">
 
-              { /* RECENT LOCATIONS */ }
-              { recentLocationsOpen ? (
-                  <Fragment>
-                  <StyledLocations>
-                    <ul>
-                      { locations.length ? locations.map((location, index) => {
-                        return (
-                          <li
-                            key={location.id}
-                            onClick={() => {this.loadLocation(location, index)}} >
-                            <div className="avatar">
-                              <Avatar
-                                src={location.avatar}
-                                name={location.user}/>
-                            </div>
-                            <div className="address">
-                              <h4><strong>{index + 1}. {location.address}</strong></h4>  
-                              <div className="location-time">
-                                <span><strong>{ location.createdAt }</strong></span>
-                              </div>                    
-                            </div>
-                          </li>
-                        )
-                      }
-                      ) : (
-                      <li>
-                        <div>
-                          <h4>{'No recent locations available'}</h4>                      
-                        </div>
-                      </li>
-                    ) }
-                    { locations.length ? (
-                      <li 
-                      className="clear-recent"
-                      onClick={() => {this.handleClearRecent(partner.id)}}>Clear Recent<DeleteIcon /></li>
+                { /* SHARE LOCATION */ }
+                <StyledButton 
+                  onClick={this.sendLocation}>Share Location</StyledButton>
+
+                { /* RECENT PLACES */ }
+                <WithOutsideClick executeMethod={this.closeLocations}>
+                  <StyledButton
+                    className={recentLocationsOpen ? 'active': ''}
+                    onClick={this.toggleLocations}>Recent Places
+                  </StyledButton>
+
+                  { /* RECENT LOCATIONS */ }
+                  { recentLocationsOpen ? (
+                    <Fragment>
+                    <StyledLocations>
+                      <ul>
+                        { locations.length ? locations.map((location, index) => {
+                          return (
+                            <li
+                              key={location.id}
+                              onClick={() => {this.loadLocation(location, index)}} >
+                              <div className="avatar">
+                                <Avatar
+                                  src={location.avatar}
+                                  name={location.user}/>
+                              </div>
+                              <div className="address">
+                                <h4><strong>{index + 1}. {location.address}</strong></h4>  
+                                <div className="location-time">
+                                  <span><strong>{ location.createdAt }</strong></span>
+                                </div>                    
+                              </div>
+                            </li>
+                          )
+                        }
+                        ) : (
+                        <li>
+                          <div>
+                            <h4>{'No recent locations available'}</h4>                      
+                          </div>
+                        </li>
+                      ) }
+                      { locations.length ? (
+                        <li 
+                        className="clear-recent"
+                        onClick={() => {this.handleClearRecent(partner.id)}}>Clear Recent<DeleteIcon /></li>
+                      ) : null }
+                      </ul>            
+                  
+                    </StyledLocations>
+                    </Fragment>
                     ) : null }
-                    </ul>            
-                
-                  </StyledLocations>
-                  </Fragment>
-                  ) : null }
-              </WithOutsideClick>
-            </div>
-          </StyledLocationHeading>
+                </WithOutsideClick>
+              </div>
+            </StyledLocationHeading>
           </StyledShadow>
         </StyledShadow>
         
@@ -263,6 +271,7 @@ const mapStateToProps = state => {
   }
 }
 
+// MAP DISPATCH TO PROPS
 const mapDispatchToProps = (dispatch) => ({
   setLocation: (userLocation) => dispatch(actions.setLocation(userLocation)),
   getUserCoords: (userId) => dispatch(actions.getUserCoords(userId)),
@@ -274,6 +283,7 @@ const mapDispatchToProps = (dispatch) => ({
 // EXPORT
 export default connect( mapStateToProps, mapDispatchToProps )( Location )
 
+// STYLED
 const StyledLocationHeading= styled.div`
   display: flex;
   align-items: center;

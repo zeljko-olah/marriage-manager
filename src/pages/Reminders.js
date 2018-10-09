@@ -1,19 +1,16 @@
+// IMPORTS
 import React, { Component } from 'react'
-
 import moment from 'moment'
 
-// Redux
 import { connect } from 'react-redux'
 import * as actions from '../store/actions'
 
-// Styled components
 import styled from 'styled-components'
 import * as colors from '../styles/variables'
 import {
   StyledSection, StyledMainHeading, StyledMainContent, StyledShadow, StyledNoItems
 } from '../styles/section'
 
-// Icons
 import AddIcon from  'react-icons/lib/md/add'
 import ArrowDownIcon from 'react-icons/lib/md/arrow-drop-down'
 import ArrowUpIcon from 'react-icons/lib/md/arrow-drop-up'
@@ -25,9 +22,9 @@ import Loading from '../components/UI/Loading'
 import { selectAllRoomUsers } from '../store/selectors/chat'
 import { selectRelevantRemindersFirst, selectTodaysReminders, selectExpiredReminders } from '../store/selectors/reminders'
 
-// Events
 import * as events from '../events'
 
+// COMPONENT
 class Reminders extends Component {
 
   state = {
@@ -38,13 +35,19 @@ class Reminders extends Component {
     loading: true
   }
 
-  // LIFECYCLE HOOKS
   componentDidMount = () => {
     const { getReminders } = this.props
-    getReminders().then((reminders) => {
+    getReminders()
+    .then((reminders) => {
       const current = reminders.find(r => r.date > moment().valueOf())
       this.setState({
         currentReminder: current,
+        loading: false
+      })
+    })
+    .catch(() => {
+      this.setState({
+        currentReminder: null,
         loading: false
       })
     })
@@ -67,7 +70,6 @@ class Reminders extends Component {
     }
   }
 
-  // HANDLERS
   handleRemoveReminder = (id) => {
     const { socket, deleteReminder, getReminders } = this.props
     this.setState({loading: true}) 
@@ -108,7 +110,6 @@ class Reminders extends Component {
     getReminders()
   }
   
-
   render () {
     const { 
       reminders, 
@@ -284,16 +285,17 @@ const mapStateToProps = state => {
   }
 }
 
+// MAP DISPATCH TO PROPS
 const mapDispatchToProps = (dispatch) => ({
   getReminders: () => dispatch(actions.getReminders()),
   setFlashMessage: () => dispatch(actions.setFlashMessage()),
   deleteReminder: (id) => dispatch(actions.deleteReminder(id))
-
 })
 
 // EXPORT
 export default connect( mapStateToProps, mapDispatchToProps )( Reminders )
 
+// STYLED
 const StyledHeadlines = styled.h2`
   font-style: italic;
   text-transform: uppercase;

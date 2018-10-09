@@ -1,4 +1,4 @@
-// IMPORTS
+// DEPENDENCIES
 const io = require('./../index.js').io
 const moment = require('moment')
 
@@ -9,10 +9,10 @@ const Room = require("../api/models/room")
 const events = require('../../events')
 const {generateMessage} = require('./message.js')
 
-// Instantiate users class
 const {Users} = require('./users')
 const users = new Users();
 
+// EXPORT FUNCTION
 module.exports = (socket) => {
   console.log("Socket Id:" + socket.id)
   
@@ -32,6 +32,12 @@ module.exports = (socket) => {
     */
 
     const room = defaultRoom.name
+
+     /**
+    |--------------------------------------------------
+    | CHAT
+    |--------------------------------------------------
+    */
 
     /*
     * UPDATE_MESSAGE_TIME

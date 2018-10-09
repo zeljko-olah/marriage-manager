@@ -1,26 +1,21 @@
 // IMPORTS
 import React, { Component } from 'react'
 
-// Styled components
 import {
   StyledForm, StyledButton, StyledShadow, StyledDatePicker
 } from '../../styles/section'
 
-// React dates
 import 'react-dates/lib/css/_datepicker.css'
 import 'react-dates/initialize'
 import { SingleDatePicker } from 'react-dates'
 
-// Moment
 import moment from 'moment'
 
-// Icons
 import TriangleIcon from 'react-icons/lib/md/arrow-drop-down'
 
 // COMPONENT
 class AddItem extends Component {
   
-  // STATE
   state = {
     showDescriptionInput: false,
     createdAt: moment(),
@@ -29,12 +24,10 @@ class AddItem extends Component {
     time: moment().format('HH:mm')
   }
 
-   // REFS
+   // Refs
    inputs = {}
   
-  // HANDLERS
-
-  submit = (e) => {
+  handleSubmit = (e) => {
     const { date, time } = this.state
     const { submit } = this.props
     e.preventDefault()
@@ -48,14 +41,14 @@ class AddItem extends Component {
     })    
   }
 
-   // Capture createdAt date
+  // Capture createdAt date
   onDateChange = (date) => {
     if (date) {
       this.setState(() => ({ date }))
     }
   }
 
-   // Capture createdAt date
+  // Capture createdAt time
   onTimeChange = ({target}) => {
     const time = target.value
     const pattern = /^([0-1]?\d|2[0-3])(:([0-5]?\d)|:?)$/
@@ -78,7 +71,9 @@ class AddItem extends Component {
         onClick={clearError}
         onBlur={clearError} >
         <form
-          onSubmit={this.submit}>
+          onSubmit={this.handleSubmit}>
+
+          { /* TITLE INPUT */ }
           <StyledShadow>
             <label><p>{title}</p></label>
             <p>
@@ -88,6 +83,8 @@ class AddItem extends Component {
                 ref={input => {this.inputs.title = input}} />
             </p>
           </StyledShadow>
+
+          { /* CHECKBOXES WHO */ }
           <StyledShadow>
             <label><p>{who}</p></label>
             <StyledShadow className={error === 'checkboxes' ? 'error-checkbox': ''}>
@@ -131,7 +128,8 @@ class AddItem extends Component {
                     isOutsideRange={day => moment().subtract(1, 'days').isSameOrAfter(day, 'day')}
                   />
                 </StyledDatePicker>
-              </div>            
+              </div>  
+              
               { /* TIME INPUT */ }
               { timeInput && (
                 <div className="time-picker">
@@ -145,6 +143,8 @@ class AddItem extends Component {
               ) }
               </div>            
           </StyledShadow>
+
+          { /* DESCRIPTION INPUT */ }
           <StyledShadow>
             <label
               className="drop-down" 
@@ -176,6 +176,7 @@ class AddItem extends Component {
             </StyledShadow>
           ) }
           
+          { /* SUBMIT BUTTON */ }
           <StyledButton type="submit">
             Add
           </StyledButton>
@@ -185,5 +186,6 @@ class AddItem extends Component {
   }
 }
 
+// EXPORT
 export default AddItem
 

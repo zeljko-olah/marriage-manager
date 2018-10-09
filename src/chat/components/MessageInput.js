@@ -8,7 +8,6 @@ import SendIcon from 'react-icons/lib/md/send'
 // COMPONENT
 class MessageInput extends PureComponent {
   
-  // State
   state = {
     message: '',
     isTyping : false
@@ -84,7 +83,7 @@ class MessageInput extends PureComponent {
         <form
           onSubmit={this.handleSubmit}>
           
-          { /* INPUT */ }
+          { /* INPUT MESSAGE */ }
           <StyledInput width={width}>
             <textarea
               id = "message"
@@ -102,6 +101,8 @@ class MessageInput extends PureComponent {
                   this.setState({ message: e.target.value })
                 }
               } />
+              
+            { /* SEND BUTTON ICON */ }
             { width && width < 768 ? (<button type="submit"><i><SendIcon /></i></button>) : null }
           </StyledInput>
         </form>

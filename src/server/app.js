@@ -34,28 +34,13 @@ const publicPath = path.join(__dirname, '../../build')
 *
 */
 
+// Use express middleware
 app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-// app.use(history());
 // Serve publicPath directory
 app.use(serveStatic(publicPath))
-// Use
 app.use(cors())
-
-// // Configure CORS
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-//   );
-//   if (req.method === "OPTIONS") {
-//     res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
-//     return res.status(200).json({});
-//   }
-//   next();
-// });
 
 /*
  * Routes
@@ -67,11 +52,6 @@ app.use("/api/chat", chatRoutes)
 app.use("/api/location", locationRoutes)
 app.use("/api/todos", todoRoutes)
 app.use("/api/reminders", reminderRoutes)
-
-// Serve React Build
-// app.get('/', (req, res) => {
-//   res.sendFile(publicPath)
-// });
 
 // Not found middleware
 app.use((req, res, next) => {

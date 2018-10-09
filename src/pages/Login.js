@@ -1,3 +1,4 @@
+// IMPORTS
 import React, { Component } from 'react'
 
 import LoginForm from '../components/Login/LoginForm'
@@ -13,6 +14,7 @@ import * as actions from '../store/actions'
 
 import { validateForm } from '../shared/utility'
 
+// COMPONENT
 class Login extends Component {
   
   state = {
@@ -33,15 +35,6 @@ class Login extends Component {
       .then((res) => {
     })
   }
-
-  // CLEAR THE FORM
-  // clearForm = (payload) => {
-  //   const { email, password } = payload
-  //   if (email && password) {
-  //     email.value = ''
-  //     password.value = ''
-  //   }
-  // }
 
   onFocusHandler = () => {
     this.props.setErrors({ error: null })
@@ -74,7 +67,7 @@ class Login extends Component {
           </p>
         </StyledFormHeader>
 
-        { /* LOGIN FORM */ }
+        { /* LOGIN FORM COMPONENT */ }
         {openLogin ? (
           <LoginForm
             error={ error }
@@ -94,12 +87,6 @@ class Login extends Component {
   }
 }
 
-/*
- * REDUX
- *
- */
-
-
 // MAP STATE TO PROPS
 const mapStateToProps = state => {
   return {
@@ -113,13 +100,13 @@ const mapDispatchToProps = dispatch => {
       // dispatch action when submit handler is called
       login: ( email, password ) => dispatch( actions.auth( email, password ) ),
       setErrors: (error) => dispatch( actions.setErrors(error) )
-  };
-};
+  }
+}
 
-/*
- * STYLED COMPONENTS
- *
- */
+// EXPORT
+export default connect( mapStateToProps, mapDispatchToProps )( Login )
+
+// STYLED COMPONENTS
 
 const LoginFormWrapper = styled.div`
   width: 350px;
@@ -157,7 +144,6 @@ const LoginFormWrapper = styled.div`
   color: grey;
   background-color: ${colors.prim_color};
   cursor: pointer;
-  
 
   & p {
     position: relative;
@@ -184,10 +170,3 @@ const LoginFormWrapper = styled.div`
 const StyledFormFooter = styled.p`
   text-align: center;
 `
-
-/*
- * EXPORT
- *
- */
-
-export default connect( mapStateToProps, mapDispatchToProps )( Login )

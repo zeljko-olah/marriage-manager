@@ -1,3 +1,4 @@
+// IMPORTS
 import React, {Fragment} from 'react'
 import styled from 'styled-components'
 import * as colors from '../../styles/variables'
@@ -9,6 +10,7 @@ import CheckIcon from 'react-icons/lib/md/visibility'
 
 import Avatar from '../../components/user/Avatar'
 
+// COMPONENT
 const ChatHeading = ({
   users,
   user,
@@ -28,18 +30,26 @@ const ChatHeading = ({
   return (
     <div>
       <StyledBar className="header-bar">
+
+        { /* MARKED ALL AS READ */ }
         <div className="mark-as">
           <div className="icon-wrapper">
             <i className="done-icon"><CheckIcon onClick={markAllRead} /></i>
           </div>
         </div>
         <div>
+
+          { /* EMAIL CHAT HOSTORY TO USER */ }
           <div className="icon-wrapper" onClick={saveChatHistory}>
             <span className="save"><i><SaveIcon/></i></span>
           </div>
+
+          { /* DELETE CHAT HISTORY */ }
           <div className="icon-wrapper" onClick={() => {deleteChatHistory(user, users)}}>
             <span><i><DeleteIcon/></i></span>
           </div>
+
+          { /* CLOSE CHAT WINDOW */ }
           <div className="close-wrapper" onClick={close}>
             <span><i><CloseIcon/></i></span>
           </div>
@@ -47,6 +57,8 @@ const ChatHeading = ({
         
       </StyledBar>
       <StyledChatHeading>
+
+        { /* USER NAME AND AVATAR */ }
         <div className="user">
           { sender ? (
             <Fragment>
@@ -63,8 +75,10 @@ const ChatHeading = ({
             </Fragment> 
           ) }
         </div>  
+
+        { /* PARTNER NAME AND AVATAR */ }
         <div className="user">
-          <span className="receiver">{receiver.name}</span> 
+          <span className="receiver">{receiver.name}</span>
           <Avatar 
             src={receiver.avatar}
             user={receiver.name} />
@@ -75,8 +89,10 @@ const ChatHeading = ({
   )
 }
 
+// EXPORT
 export default ChatHeading
 
+// STYLED
 const StyledBar = styled.div`
   display: flex;
   justify-content: flex-end;

@@ -20,7 +20,7 @@ import PrivateRoute from './PrivateRoute.js'
 // PUBLIC ROUTES
 import PublicRoute from './PublicRoute.js'
 
-// pass history to every component props
+// make possible to pass history to every component props
 // and export it to be consumed from other files
 export const history = createHistory()
 

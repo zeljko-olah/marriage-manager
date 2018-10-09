@@ -1,6 +1,8 @@
+// IMPORTS
 import React from 'react';
 import CircularProgressbar from 'react-circular-progressbar';
 
+// COMPONENT
 function StyledProgressbar(props) {
   return (
     <CircularProgressbar
@@ -40,4 +42,6 @@ function StyledProgressbar(props) {
     />
   );
 }
+
+// EXPORT
 export default StyledProgressbar;

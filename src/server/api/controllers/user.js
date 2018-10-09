@@ -12,95 +12,100 @@ const Room = require("../models/room")
  */
 
 exports.user_signup = (req, res, next) => {
-  // Find the user with email
+  // Extract data from request
   const { email, password, name, room, partnerId } = req.body
-  console.log('HERE!')
+
+  // Find the user with email
   User.find({ email })
-    // Return promise
     .exec()
     // then get the user
     .then(user => {
-      // If there are more than 1 user
+
+      // If there is more than 1 user
       if (user.length >= 1) {
         // Return mail exists
         return res.status(409).json({
           message: "Mail exists"
         })
+
         // Otherwise
       } else {
-        // Hash the password
+        // Genereate salt factor
         bcrypt.genSalt(10, function(err, salt) {
+          // Handle error if there is one
           if (err) {
-            // Handle error
             return res.status(500).json({
               error: err
             })
             // Otherwise
           } else {
+          
+          // Hash the password
           bcrypt.hash(password, salt, function(err, hash) {
               // If error
-          if (err) {
-            // Handle error
-            return res.status(500).json({
-              error: err
-            })
-            // Otherwise
-          } else {
-            // Create user
-            const user = new User({
-              _id: new mongoose.Types.ObjectId(),
-              email,
-              name,
-              password: hash,
-              // req.file due to upload.single middleware
-              avatar: req.file.path.replace('public/', '')
-            })
+            if (err) {
+              // Handle error
+              return res.status(500).json({
+                error: err
+              })
+              // Otherwise
+            } else {
 
-            // Save the user
-            user
-              .save()
-              // Success
-              .then(createdUser => {
-                Room.find({name: room})
-                  .exec()
-                  .then((existingRooms) => {
-                    if (!existingRooms.length) {
-                      const chatRoom = new Room({
-                        _id: new mongoose.Types.ObjectId(),
-                        name: room,
-                      })
-      
-                      chatRoom.users.push(createdUser._id)
-                      if (partnerId) {
-                        chatRoom.users.push(partnerId)
-                      }
-      
-                      chatRoom.save()
-                        .then((createdRoom) => {
-                          user.rooms.push(createdRoom._id)
-                          user.save()
-                            .then(() => {
-                              res.status(201).json({
-                                message: "User and room created"
-                              })
-                            })
+              // Create user
+              const user = new User({
+                _id: new mongoose.Types.ObjectId(),
+                email,
+                name,
+                password: hash,
+                // req.file due to upload.single middleware
+                avatar: req.file.path.replace('public/', '')
+              })
+
+              // Save the user to databse
+              user
+                .save()
+                // Success
+                .then(createdUser => {
+                  Room.find({name: room})
+                    .exec()
+                    .then((existingRooms) => {
+                      if (!existingRooms.length) {
+                        const chatRoom = new Room({
+                          _id: new mongoose.Types.ObjectId(),
+                          name: room,
                         })
-                    } else {
-                      res.status(201).json({
-                        message: "Just user created"
-                      })
-                    }
-                    
-                  })
-              })
-              // Catch potential errors
-              .catch(err => {
-                console.log(err)
-                res.status(500).json({
-                  error: err
+        
+                        chatRoom.users.push(createdUser._id)
+                        if (partnerId) {
+                          chatRoom.users.push(partnerId)
+                        }
+                        
+                        // Save chat room
+                        chatRoom.save()
+                          .then((createdRoom) => {
+                            user.rooms.push(createdRoom._id)
+                            user.save()
+                              .then(() => {
+                                res.status(201).json({
+                                  message: "User and room created"
+                                })
+                              })
+                          })
+                      } else {
+                        res.status(201).json({
+                          message: "Just user created"
+                        })
+                      }
+                    })
                 })
-              })
-          }
+                // Catch potential errors
+                .catch(err => {
+                  console.log(err)
+                  res.status(500).json({
+                    error: err
+                  })
+                })
+            }
           })
         }
       })
@@ -109,7 +114,6 @@ exports.user_signup = (req, res, next) => {
     .catch(e => {
       console.log('ERROR LOGGING IN:::')
       console.log(e.message)
-
     })
 }
 
@@ -117,6 +121,7 @@ exports.user_signup = (req, res, next) => {
  * LOGIN
  *
  */
+
 exports.user_login = (req, res, next) => {
   const {email, password} = req.body
   // Find user with provided email
@@ -190,7 +195,7 @@ exports.user_login = (req, res, next) => {
 
 /*
  * DELETE USER
- *
+ * @TODO on client
  */
 
 exports.user_delete = (req, res, next) => {

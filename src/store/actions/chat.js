@@ -62,7 +62,7 @@ export const getMessages = () => {
         dispatch(getMessagesSuccess(response.data.messages))
       })
       .catch(err => {
-        console.log(err)
+        console.log(err.message)
         dispatch(setFlashMessage({
           type: 'error',
           flashMessage: 'Something went wrong'

@@ -1,16 +1,19 @@
+// IMPORTS
 import React from 'react'
 
 import Reminder from '../../components/Reminders/Reminder'
 
-// Styled components
 import styled from 'styled-components'
 
+// COMPONENT
 const ListReminders = ({reminderClass, reminders, users, removeReminder, show, setTimer}) => {
   return (
     <StyledReminders className={show === true ? 'show' : 'hide'}> 
           
       { reminders.map(reminder => {
         return (
+          
+          // REMINDER COMPONENT
           <Reminder
             key={reminder.id}
             reminder={reminder}
@@ -23,9 +26,11 @@ const ListReminders = ({reminderClass, reminders, users, removeReminder, show, s
     </StyledReminders> 
   )
 }
-    
+   
+// EXPORT
 export default ListReminders
 
+// STYLED
 const StyledReminders = styled.div`
   // width: 800px;
   padding: 10px;

@@ -76,5 +76,4 @@ export const getCoordsPromise = () => {
       reject('Unable to fetch location.')
     })
   })
-
 }

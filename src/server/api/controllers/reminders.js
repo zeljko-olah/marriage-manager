@@ -8,7 +8,6 @@ const Reminder = require('../models/reminder')
 exports.saveReminder = (req, res, next) => {
   const {title, who, priority, userId, date, description} = req.body
 
-
   const reminder = new Reminder({
     _id: mongoose.Types.ObjectId(),
     user: userId,
@@ -85,7 +84,6 @@ exports.getReminders = (req, res, next) => {
 // DELETE REMINDER
 exports.deleteReminder = (req, res, next) =>  {
 const { id } = req.query
-
 
 Reminder.deleteOne({ _id: id })
   .exec()

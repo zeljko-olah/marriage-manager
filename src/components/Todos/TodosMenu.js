@@ -1,9 +1,9 @@
+// IMPORTS
 import React, { Component } from 'react'
 
 import moment from 'moment'
 import { SingleDatePicker } from 'react-dates'
 
-// Styled components
 import styled from 'styled-components'
 import * as colors from '../../styles/variables'
 import { StyledShadow, StyledDatePicker, StyledButton } from '../../styles/section'
@@ -15,9 +15,9 @@ import 'react-circular-progressbar/dist/styles.css'
 import StyledProgressbar from './StyledProgressbar';
 import WithOutsideClick from '../../hoc/WithOutsideClick'
 
+// COMPONENT
 class TodosMenu extends Component {
 
-   // STATE
   state = {
     showAditionalMenu: false,
     calendarFocused: false,
@@ -41,7 +41,6 @@ class TodosMenu extends Component {
     }
   }
 
-  // HANDLERS
   // Capture createdAt date
   onDateChange = (time) => {
     if (time) {
@@ -108,7 +107,6 @@ class TodosMenu extends Component {
     this.handleSortByPriority('')
   }
   
-
   render() {
     const {
       users, percentage, statusCount, filterByUser, filterByStatus, filterByPriority
@@ -169,6 +167,8 @@ class TodosMenu extends Component {
 
           { /* FILTERS */ }
           <div className="todo-filters">
+                
+            { /* FILTER BY USER */ }
             <div className="filter-by-user">
               <span
                 className="label"
@@ -194,6 +194,8 @@ class TodosMenu extends Component {
                 </div> 
               )}         
             </div>
+
+            { /* FILTER BY STATUS */ }
             <div className="filter-by-status">
               <span
                 className="label"
@@ -219,6 +221,8 @@ class TodosMenu extends Component {
                 </div>  
               )}
             </div>
+
+            { /* FILTER BY PRIORITY */ }
             <div className="filter-by-priority">
               <span
                 className="label"
@@ -247,6 +251,8 @@ class TodosMenu extends Component {
                 </div>  
               )}
             </div>
+
+            { /* RESET FILTERS */ }
             <StyledButton
               small
               onClick={this.handleResetFilters}
@@ -261,8 +267,10 @@ class TodosMenu extends Component {
   }
 }
 
+// EXPORT
 export default TodosMenu
 
+// STYLED
 const StyledTodosMenu = styled.div`
   display: flex;
   flex-direction: column;

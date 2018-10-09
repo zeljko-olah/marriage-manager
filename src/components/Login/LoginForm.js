@@ -1,6 +1,8 @@
+// IMPORTS
 import React from 'react'
 import { StyledButton, StyledForm, StyledShadow } from '../../styles/section'
 
+// COMPONENT
 const LoginFrom = ({ submit, onFocus, error }) => {
   let payload = {}
   
@@ -9,6 +11,7 @@ const LoginFrom = ({ submit, onFocus, error }) => {
       <StyledForm>
         <StyledShadow>
           <StyledShadow>
+
             { /* EMAIL */ }
             <div>
               <label htmlFor="email">
@@ -56,4 +59,5 @@ const LoginFrom = ({ submit, onFocus, error }) => {
   )
 }
 
+// EXPORT
 export default LoginFrom

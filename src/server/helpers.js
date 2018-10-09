@@ -1,6 +1,7 @@
 const moment = require('moment')
 const request = require('request')
 
+// Format message time
 const formatMessageTime = (timestamp) => {
   
   const messageTime = moment(timestamp)
@@ -23,6 +24,7 @@ const formatMessageTime = (timestamp) => {
   return messageTime.fromNow()
 }
 
+// Get address from given coordinates - lat, lng
 const getAddressFromCoords = (lat, lng) => {
   let url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyDw-v2qMe3SY_AQcfMFYrNu2P4L1H8Z0vc`
   let address = ''

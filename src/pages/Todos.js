@@ -1,9 +1,10 @@
+// IMPORTS
 import React, {Component} from 'react'
 
 // Moment
 import moment from 'moment'
 
-// REDUX
+// Redux
 import { connect } from 'react-redux'
 import * as actions from '../store/actions'
 import { selectAllRoomUsers } from '../store/selectors/chat'
@@ -22,15 +23,15 @@ import {
   StyledSection, StyledMainHeading, StyledMainContent, StyledShadow, StyledNoItems
 } from '../styles/section'
 
-// ICONS
+// Icons
 import AddIcon from  'react-icons/lib/md/add'
 
 // Events
 import * as events from '../events'
 
+// COMPONENT
 class Todos extends Component {
 
-  // LIFECYCLE HOOKS
   componentDidMount = () => {
     const { getTodosForDate } = this.props
     getTodosForDate(moment().valueOf())
@@ -58,12 +59,10 @@ class Todos extends Component {
     }
   }
 
-  // HANDLERS  
   handleDateUpdate = (date) => {
     const { getTodosForDate, setCurrentDate } = this.props
     setCurrentDate(moment(date))
     getTodosForDate(date).then(() => {
-      // @TODO - loading
     })
   }
 
@@ -137,7 +136,6 @@ class Todos extends Component {
     })
   }
   
-  // RENDER METHOD
   render () {
     const { 
       todos, user, users, isToday, todosDate, percentage, filterByUser, filterByStatus, filterByPriority, statusCount, history
@@ -247,6 +245,7 @@ const mapStateToProps = state => {
   }
 }
 
+// MAP DISPATCH PROPS
 const mapDispatchToProps = (dispatch) => ({
   setFlashMessage: (flash) => dispatch(actions.setFlashMessage(flash)),
   getTodos: () => dispatch(actions.getTodos()),
@@ -264,6 +263,8 @@ const mapDispatchToProps = (dispatch) => ({
 // EXPORT
 export default connect( mapStateToProps, mapDispatchToProps )( Todos )
 
+
+// STYLED
 const StyledTodos = styled.div`
 
   & .completed {

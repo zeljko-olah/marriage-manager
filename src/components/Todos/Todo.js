@@ -1,10 +1,11 @@
+// IMPORTS
 import React, {Component} from 'react'
 import moment from 'moment'
 
 import WithOutsideClick from '../../hoc/WithOutsideClick'
-import Avatar from '../../components/user/Avatar'
 
-// Styled components
+import { handleAvatars } from '../../shared/helpers'
+
 import styled from 'styled-components'
 import { StyledShadow } from '../../styles/section'
 import * as colors from '../../styles/variables'
@@ -18,27 +19,6 @@ import DeleteIcon from  'react-icons/lib/md/delete'
 import EditIcon from  'react-icons/lib/md/edit'
 import RenewIcon from  'react-icons/lib/md/refresh'
 
-const handleAvatars = (todo, users) => {
-  if (!users.length) {
-    return null
-  } else {
-    const user = todo.who
-    let avatar
-    if (user === 'both') {
-      avatar = [users[0], users[1]]
-    } else {
-      avatar = [users.find(u => u.name === user)]
-    }
-
-    return avatar.map(a => (
-      <Avatar
-        key={a.id}
-        name={a.name}
-        src={a.avatar} />
-    ))
-  }
-}
-
 // COMPONENT
 class Todo extends Component {
 
@@ -49,7 +29,9 @@ class Todo extends Component {
     editTitle: 'Zeljko je car'
   }
   
+  // Todo id for edit mode
   todoId = ''
+  // Ref to capture title input
   titleInput = React.createRef()
 
   handleShowMore = () => {
@@ -127,7 +109,6 @@ class Todo extends Component {
     })
   }
   
-
   render () {
     const { showMoreInfo, showMarkTodo, showEditMode, editTitle } = this.state
     const {todo, user, users, isToday} = this.props
@@ -213,29 +194,41 @@ class Todo extends Component {
               <WithOutsideClick executeMethod={this.closeMarkTodos}>
                 <div 
                   className={showMarkTodo ? 'show-todo-actions todo-actions': 'hide-todo-actions todo-actions'} >
+
+                  { /* MARK AS COMPLETED */ }
                   { todo.completed !== 'completed' ? (
                     <CheckIcon
                       className="done"
                       onClick={() => {this.handleUpdateTodoStatus(todo.id, 'completed')}} />
                   ) : null }
+
+                  { /* MARK AS ACTIVE */ }
                   { todo.completed !== 'active' && isToday ? (
                     <ActiveIcon 
                       className="active"
                       onClick={() => {this.handleUpdateTodoStatus(todo.id, 'active')}} />
                   ) : null }
+
+                  { /* MARK AS FAILED */ }
                   { todo.completed !== 'failed' ? (
                     <FailIcon
                       className="fail"
                       onClick={() => {this.handleUpdateTodoStatus(todo.id, 'failed')}} />
                   ) : null }
+
+                  { /* RENEW PAST TODO */ }
                   { !isToday ? (
                     <RenewIcon
                     className="renew"
                     onClick={() => {this.handleRenewTodo(todo.id)}} />
                   ) : null }
+
+                  { /* EDIT TODO */ }
                   <EditIcon
                     className="edit"
                     onClick={() => {this.handleEditMode(todo)}}/>
+
+                  { /* DELETE ICON */ }
                   { user.name === todo.who || todo.who === 'both' ? (
                     <DeleteIcon
                     className="delete"
@@ -268,8 +261,10 @@ class Todo extends Component {
   }
 }
 
+// EXPORT
 export default Todo
 
+// EXPORT
 const StyledTodo = styled.div`
   position: relative;
   @media (max-width: 768px) {

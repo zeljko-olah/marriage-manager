@@ -1,10 +1,9 @@
-// REACT
+// IMPORTS
 import React from 'react'
 
-// Styled components
 import styled from 'styled-components'
 
-// DEFINE LOADING PAGE COMPONENT
+// COMPONENT
 const Loading = () => (
   <StyledLoader>
     { /* USE GIF IMAGE LOADER */ }
@@ -12,8 +11,10 @@ const Loading = () => (
   </StyledLoader>
 )
 
+// EXPORT
 export default Loading
 
+// STYLED
 const StyledLoader = styled.div`
   display: flex;
   justify-content: center;

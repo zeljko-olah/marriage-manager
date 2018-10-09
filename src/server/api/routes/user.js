@@ -1,8 +1,9 @@
-
+// USER ROUTES
 
 const express = require("express")
 const router = express.Router()
 
+// UPLOAD FILES WITH MULTER
 const multer = require('multer')
 
 // Multer storage
@@ -47,9 +48,7 @@ const checkAuth = require('../middleware/check-auth')
 
 // Multer Uploader middleware - Upload.single
 router.post("/signup", upload.single('avatar'), UserController.user_signup)
-
 router.post("/login", UserController.user_login)
-
 router.delete("/:userId", checkAuth, UserController.user_delete)
 
 module.exports = router

@@ -42,18 +42,22 @@ class Messages extends Component {
                 pointer = false
               }     
                      
-              return (<Message
-                        key={message._id}
-                        message={message}
-                        user={user}
-                        pointer={pointer}
-                        markAsRead={markAsRead}
-                        removeImportant={removeImportant}
-                        close={close} />)
+              return (
+
+                // MESSAGE COMPONENT
+                <Message
+                  key={message._id}
+                  message={message}
+                  user={user}
+                  pointer={pointer}
+                  markAsRead={markAsRead}
+                  removeImportant={removeImportant}
+                  close={close} />)
               }) : (
                 <p>Chat history is not available</p>
               )
             }
+            { /* USER IS TYPING */ }
             {isTyping ? (
               <Message
                 stylingClass={"typing"}

@@ -1,7 +1,7 @@
+// IMPORTS
 import React from 'react'
 
 import 'normalize.css/normalize.css'
-import './App.css'
 import styled, { injectGlobal } from 'styled-components'
 
 import AppRouter from './router/AppRouter'
@@ -13,6 +13,7 @@ import NotificationWrapper from './components/UI/NotificationWrapper'
 const App = () => {
   return (
     <PageWrapper>
+
       { /* APP ROUTER */ }
       <AppRouter />
       
@@ -25,7 +26,6 @@ const App = () => {
     </PageWrapper>
   )
 }
-
 
 // EXPORT
 export default(App)
@@ -40,6 +40,15 @@ injectGlobal`
     margin: 0;
     padding: 0;
     font-family: Cardo, sans-serif;
+  }
+
+  html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+  }
+
+  ::-webkit-scrollbar { 
+  display: none;
   }
 `
 const PageWrapper = styled.div`

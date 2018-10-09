@@ -3,6 +3,7 @@
  *
  */
 
+ // IMPORTS
 import React, { Component } from 'react'
 
 import { connect } from 'react-redux'
@@ -27,6 +28,8 @@ if (process.env.NODE_ENV === 'development') {
   socketUrl = 'http://localhost:3231'
 }
 
+const ONE_MINUTE = 60 * 1000
+
 class Chat extends Component {
   
   // STATE
@@ -41,9 +44,9 @@ class Chat extends Component {
     isTyping: false,
   }
   
-  // List of selected message ids
-  ids = []
   chatPartnerOpened = false
+
+  // Dynamically update message times
   updateMessageTime = setInterval(() => {
     const { showChat } = this.props
     const { messages } = this.state
@@ -54,8 +57,9 @@ class Chat extends Component {
       })
       this.setState({ messages: newMessages })
     }
-  }, 60 * 1000)
-
+  }, ONE_MINUTE)
+  
+  // Audio sounds form messages
   audioDefault = new Audio(default_sound)
   audioImportant = new Audio(important_sound)
 
@@ -252,6 +256,8 @@ class Chat extends Component {
         type = 'important'
       }
       message = message.replace('@!!!', '')
+
+      // Check for empty messages
       if (!message) {
         setFlashMessage({
           type: 'error',
@@ -365,7 +371,6 @@ class Chat extends Component {
     })
   }
   
-  
   // Remove important flag from message
   handleRemoveImportant = (id) => {
     const { messages, socket } = this.state
@@ -388,7 +393,6 @@ class Chat extends Component {
     const { user } = this.props
     socket.emit(events.TYPING, isTyping, user.name)
   }
-  
   
   // Update browser dimensions
   updateWindowDimensions = () => {
@@ -436,7 +440,7 @@ class Chat extends Component {
   }
 }
 
-// MAP REDUX STATE AND DISPATCH TO PROPS
+// MAP REDUX STATE TO PROPS
 const mapStateToProps = state => {
   return {
     user: state.auth.user,
@@ -446,6 +450,7 @@ const mapStateToProps = state => {
   }
 }
 
+// MAP DISPATCH TO PROPS
 const mapDispatchToProps = (dispatch) => ({
   socketInit: (socket) => dispatch(actions.socketInit(socket)),
   getDefaultRoomUsers: (userId) => dispatch(actions.getDefaultRoomUsers(userId)),
@@ -467,7 +472,6 @@ const mapDispatchToProps = (dispatch) => ({
 
 // EXPORT
 export default connect(mapStateToProps, mapDispatchToProps)(Chat)
-
 
 // STYLED
 const StyledSection = styled.section`

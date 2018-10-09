@@ -1,25 +1,23 @@
+// IMPORTS
 import React, {Component} from 'react'
 
-// REDUX
 import { connect } from 'react-redux'
 import * as actions from '../store/actions'
 import { selectAllRoomUserNames } from '../store/selectors/chat'
 
 import AddItem from '../components/AddNew/AddItem'
 
-// Clear form
 import { clearForm } from '../shared/utility'
 
-// Styled components
 import styled from 'styled-components'
 import {
   StyledSection, StyledMainHeading, StyledMainContent, StyledShadow
 } from '../styles/section'
 import * as colors from '../styles/variables'
 
-// Events
 import * as events from '../events'
 
+// COMPONENT
 class AddNew extends Component {
 
   // STATE
@@ -97,7 +95,7 @@ class AddNew extends Component {
       desc = description.value
     }
     
-    // Time for reminder task
+    // Validate time for reminder task
     if (task === 'reminder' && time === '') {
       setFlashMessage({
         type: 'error',
@@ -177,56 +175,64 @@ class AddNew extends Component {
     const { roomUsers } = this.props
     return (
       <StyledSection>
-          <StyledMainHeading>
-            <h1>Add New</h1>
-          </StyledMainHeading>
-    
-          <StyledMainContent>
-            <StyledShadow>
+        <StyledMainHeading>
+          <h1>Add New</h1>
+        </StyledMainHeading>
+  
+        <StyledMainContent>
+          <StyledShadow>
 
-              { /* TABS */ }
-              <StyledTabsWrapper>
+            { /* TABS */ }
+            <StyledTabsWrapper>
 
-                { /* TAB HEADER */ }
-                <StyledTabHeader>
-                  <div
-                    className={activeTab === 'todo' ? 'active': ''}
-                    onClick={() => {this.setActiveTab('todo')}} >
-                    <h2>Todo</h2>
-                  </div>
-                  <div className={activeTab === 'reminder' ? 'active': ''}
-                  onClick={() => {this.setActiveTab('reminder')}} >
-                    <h2>Reminder</h2>
-                  </div>
-                </StyledTabHeader>
+              { /* TAB HEADER */ }
+              <StyledTabHeader>
 
-                { /* TABS */ }
-                <StyledTabs>
-                  { activeTab === 'todo' ? (
-                    <AddItem
-                      todo
-                      title="Define"
-                      who="Who's gonna do it?"
-                      roomUsers={roomUsers}
-                      error={error}
-                      clearError={this.handleClearError}
-                      submit={this.handleSubmit} />
-                  ) : (
-                    <AddItem
-                      reminder
-                      title="Set a reminder for"
-                      who="Who to remind?"
-                      timeInput
-                      roomUsers={roomUsers}
-                      error={error}
-                      clearError={this.handleClearError}
-                      submit={this.handleSubmit} />
-                  ) }
-                </StyledTabs>
-              </StyledTabsWrapper>
-            </StyledShadow>            
-          </StyledMainContent>
-        </StyledSection>
+                { /* TODO HEADER */ }
+                <div
+                  className={activeTab === 'todo' ? 'active': ''}
+                  onClick={() => {this.setActiveTab('todo')}} >
+                  <h2>Todo</h2>
+                </div>
+
+                { /* REMINDER HEADER */ }
+                <div className={activeTab === 'reminder' ? 'active': ''}
+                onClick={() => {this.setActiveTab('reminder')}} >
+                  <h2>Reminder</h2>
+                </div>
+              </StyledTabHeader>
+
+              { /* TABS CONTENT */ }
+              <StyledTabs>
+                { activeTab === 'todo' ? (
+
+                  // ADD TODO FORM
+                  <AddItem
+                    todo
+                    title="Define"
+                    who="Who's gonna do it?"
+                    roomUsers={roomUsers}
+                    error={error}
+                    clearError={this.handleClearError}
+                    submit={this.handleSubmit} />
+                ) : (
+
+                  // ADD REMINDER FORM
+                  <AddItem
+                    reminder
+                    title="Set a reminder for"
+                    who="Who to remind?"
+                    timeInput
+                    roomUsers={roomUsers}
+                    error={error}
+                    clearError={this.handleClearError}
+                    submit={this.handleSubmit} />
+                ) }
+              </StyledTabs>
+            </StyledTabsWrapper>
+          </StyledShadow>            
+        </StyledMainContent>
+      </StyledSection>
     )
   }
 } 
@@ -240,6 +246,7 @@ const mapStateToProps = state => {
   }
 }
 
+// MAP DISPATCH TO PROPS
 const mapDispatchToProps = (dispatch) => ({
   addTodo: (todo) => dispatch(actions.addTodo(todo)),
   addReminder: (reminder) => dispatch(actions.addReminder(reminder)),
@@ -249,6 +256,7 @@ const mapDispatchToProps = (dispatch) => ({
 // EXPORT
 export default connect( mapStateToProps, mapDispatchToProps )( AddNew )
 
+// STYLED
 const StyledTabsWrapper = styled.div`
   padding: 10px 50px;
   @media (max-width: 768px) {

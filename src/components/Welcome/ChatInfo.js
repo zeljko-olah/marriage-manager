@@ -1,3 +1,4 @@
+// IMPORTS
 import React, { Fragment } from 'react'
 
 import Loading from '../../components/UI/Loading'
@@ -7,6 +8,7 @@ import ChatIcon from 'react-icons/lib/md/forum'
 
 import { StyledShadow } from '../../styles/section'
 
+// COMPONENT
 const ChatInfo = ({
   partner,
   partnerChatIsOpen,
@@ -20,6 +22,7 @@ const ChatInfo = ({
  }) => {
   return (
     <Fragment>
+    
       { /* CHAT ICON */ }
       <StyledShadow>
         <StyledShadow onClick={ () => {toggleChat(partnerChatIsOpen)} }>
@@ -36,7 +39,7 @@ const ChatInfo = ({
             { partnerOnline ? ' online': ' offline' }
             </span></h3>
 
-            { /* CHAT WINDOW */ }
+            { /* CHAT WINDOW STATUS */ }
             <h4>
               {partner.name}'s chat window is
               <span className={partnerChatIsOpen ? 'partner-chat open':'partner-chat closed'}>
@@ -112,4 +115,5 @@ const ChatInfo = ({
   )
 }
 
+// EXPORT
 export default ChatInfo

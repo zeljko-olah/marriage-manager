@@ -1,17 +1,19 @@
+// IMPORT
 import React, { Component, Fragment } from 'react'
 
-// Moment
 import moment from 'moment'
+
 import {history} from '../../router/AppRouter'
 
-// Styled components
 import styled from 'styled-components'
 import * as colors from '../../styles/variables'
 
 import Loading from '../../components/UI/Loading'
 
+// Store timer
 let countDown
 
+// COMPOENT
 class ReminderTimer extends Component {
 
   state = {
@@ -86,32 +88,40 @@ class ReminderTimer extends Component {
     
     return (
       <StyledTimer redirectTo={redirectTo}>
-        {reminder && (
+        {reminder ? (
           <div className="timer-wrapper">
+
+            { /* TIMER HEADLINE */ }
             <div className="timer-headline">
             <h3>Time remaining</h3>
             </div>
+
+            { /* COUNT DOWN */ }
             <div>
               { months === 0 && days === 0 && hours === 0 && hours === 0 && minutes === 0 && seconds === 0 ? <Loading /> : (
                 <Fragment>
-                  { months !== 0 ?  <p className="month"><span className="count-number">{months}</span> { months === 1 ? 'month' : 'months'}</p> : null}
-                  { days !== 0 &&  <p className="days"><span className="count-number">{days}</span> { days === 1 ? 'day' : 'days'}</p>}
-                  { months === 0 && hours !== 0 &&  <p className="hours"><span className="count-number">{hours}</span> { hours === 1 ? 'hour' : 'hours'}</p>}
-                  { days === 0 && minutes !== 0 &&  <p className="minutes"><span className="count-number">{minutes}</span> { minutes === 1 ? 'minute' : 'minutes'}</p>}
-                  { months === 0 && days === 0 && seconds !== 0 && <p className="seconds"><span className="count-number">{seconds}</span> { seconds === 1 ? 'second' : 'seconds'}</p>
+                  { months !== 0 ?  <p className="month"><span className="count-number">{'' + months}</span> { months === 1 ? 'month' : 'months'}</p> : null}
+                  { days !== 0 &&  <p className="days"><span className="count-number">{'' + days}</span> { days === 1 ? 'day' : 'days'}</p>}
+                  { months === 0 && hours !== 0 &&  <p className="hours"><span className="count-number">{'' + hours}</span> { hours === 1 ? 'hour' : 'hours'}</p>}
+                  { days === 0 && minutes !== 0 &&  <p className="minutes"><span className="count-number">{'' + minutes}</span> { minutes === 1 ? 'minute' : 'minutes'}</p>}
+                  { months === 0 && days === 0 && seconds !== 0 && <p className="seconds"><span className="count-number">{'' + seconds}</span> { seconds === 1 ? 'second' : 'seconds'}</p>
                   }
                 </Fragment>
               ) }
             </div>
           </div>
+        ) : (
+          <div>No reminders.</div>
         )}        
       </StyledTimer>
     )
   }
 }
 
+// EXPORT
 export default ReminderTimer
 
+// STYLED
 const StyledTimer = styled.div`
   ${props => {
     return props.redirectTo === '/reminder' && 'position: absolute'

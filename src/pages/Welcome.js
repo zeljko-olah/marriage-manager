@@ -180,6 +180,7 @@ const mapStateToProps = state => {
   }
 }
 
+// MAP DISPATCH TO PROPS
 const mapDispatchToProps = (dispatch) => ({
   setFlashMessage: (flash) => dispatch(actions.setFlashMessage(flash)),
   toggleChat: (showChat) => dispatch( actions.toggleChat(showChat) ),  
@@ -191,6 +192,7 @@ const mapDispatchToProps = (dispatch) => ({
 // EXPORT
 export default connect( mapStateToProps, mapDispatchToProps )( Welcome )
 
+// STYLED
 const StyledWelcome = styled.div`
 
 & h3,
