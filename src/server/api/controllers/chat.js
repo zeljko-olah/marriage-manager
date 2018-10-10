@@ -24,7 +24,6 @@ exports.get_all_users = (req, res, next) => {
     })
 }
 
-
 // SAVE NEW MESSAGE
 exports.new_message = (req, res, next) => {
   const { text, userId, type, link, unread } = req.body.message

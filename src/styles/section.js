@@ -32,7 +32,7 @@ export const StyledMainHeading = styled.div`
   // background: ${colors.sec_grad};
 
   & h1 {
-    text-align: center;
+    text-align: left;
     font-size: 30px;
     @media (max-width: 768px) {
       font-size: 25px;
@@ -40,6 +40,7 @@ export const StyledMainHeading = styled.div`
     font-style: italic;
     padding: 10px;
     margin: 0;
+    margin-left: 30px;
     text-shadow: ${colors.text_shadow};
     color: tomato;
   }

@@ -61,24 +61,32 @@ export default connect(mapStateToProps, mapDispatchToProps)(Notification)
 const StyledNotify = styled.div`
   position: fixed;
   z-index: 100000;
-  top: 0;
-  left: 50%;
+  top: 108px;
+  left: 60%;
   transition: all 0.5s linear;
   cursor: wait;
   @media (max-width: 768px) {
-    top: 0%;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
   }
 
   &.close {
     opacity: 0;
-    transform: translateY(-100%);
+    transform: translateX(50%) translateY(-200%) scale(0);
+    @media (max-width: 768px) {
+      transform: scale(0) translateX(-50%);
+    }
     pointer-events: none;
   }
 
   &.open {
     opacity: 1;
-    transform: translateY(0%);
-  transform: translateX(-50%);
+    transform: translateX(-50%) translateY(0%) scale(1);
+    @media (max-width: 768px) {
+      transform: scale(1) translateX(-50%);
+    }
     pointer-events: auto;
   }
 
